@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script src="http://code.highcharts.com/highcharts.js"></script>
+	<script src="http://code.highcharts.com/highcharts-more.js"></script>
+	<script src="http://code.highcharts.com/modules/exporting.js"></script>
+
+
+
+</head>
+<body>
+	<div id="chart_panel" class="panel-body" style="width:50%;height:400px"></div>
+	<script type="text/javascript">
+			$(function () {
+
+	partidos = [
+		{name:"La U", color: "#FF6600", data:[34, 45, 4, 8]},
+		{name:"Conservador", color: "#000099", data:[12, 34, 90, 5]},
+		{name:"Centro Democrático", color: "#00CCFF", data:[12, 21, 35, 19]},
+		{name:"Liberal", color: "#CC0000", data:[4, 45, 27, 23]},
+		{name:"Cambio Radical", color: "#FF3366", data:[20, 37, 25, 10]},
+		{name:"Verde", color: "#339900", data:[9, 12, 29, 34]},
+		{name:"Polo", color: "#FFCC00", data:[29, 10, 20, 9]},
+		{name:"Opción Ciudadana", color: "#990066", data:[0, 2, 48, 52]},
+		{name:"AICO", color: "#330000", data:[0, 0, 21, 39]},
+		];
+
+	fijox = 7;
+	fijoy = 1.5;
+	votos = [];
+    for(partido of partidos){
+    	votos = partido.data;
+    	temps = [];
+    	for (v = 0; v < 4; v++) {
+    		if(votos[v] > 0){
+    			temp = [fijox, fijoy+3*v, votos[v]];
+    			temps.push(temp);
+    		}
+    	}
+    	partido.data = temps;
+    	fijox += 2;
+    }
+    partidos.push(
+    	{
+        	enableMouseTracking: false,
+        	color: 'transparent',
+        	showInLegend: false,
+            data: [[3, 1.5, 0]]
+        },{
+        	enableMouseTracking: false,
+        	color: 'transparent',
+        	showInLegend: false,
+            data: [[5, 1.5, 0]]
+        });
+
+    $('#chart_panel').highcharts({
+
+        chart: {
+            type: 'bubble',
+            zoomType: 'none'
+        },
+
+        title: {
+            text: 'Highcharts Bubbles'
+        },
+        tooltip: {
+    		formatter: function() {
+        		return this.series.name + ': '+this.x+'%';
+    		}
+		},
+
+        xAxis: {
+            lineWidth: 0,
+            minorGridLineWidth: 0,
+            lineColor: 'transparent',
+            labels: {
+                enabled: false
+            },
+            minorTickLength: 0,
+            tickLength: 0,
+        },
+
+        yAxis: {
+            gridLineWidth: 0,
+            lineWidth: 0,
+            minorGridLineWidth: 0,
+            lineColor: 'transparent',
+            labels: {
+                enabled: false
+            },
+            title: {
+                text: ''
+            },
+            minorTickLength: 0,
+            tickLength: 1,
+            plotLines: [
+            {
+                color: 'grey', // Color value
+                value: 0,
+                width: 2, // Width of the line    
+                label: {
+                    text: 'Abstenciones',
+                    align: 'left',
+                    y: -20,
+                    style: {
+                        fontWeight: 'bold',
+                    },
+                },
+            },
+            {
+                color: 'grey', // Color value
+                value: 3,
+                width: 2, // Width of the line    
+                label: {
+                    text: 'Sí',
+                    align: 'left',
+                    y: -20,
+                    style: {
+                        fontWeight: 'bold',
+                    },
+                },
+            },
+            {
+                color: 'grey', // Color value
+                value: 6,
+                width: 2, // Width of the line    
+                label: {
+                    text: 'No',
+                    align: 'left',
+                    y: -20,
+                    style: {
+                        fontWeight: 'bold',
+                    },
+                },
+            },
+            {
+                color: 'grey', // Color value
+                value: 9,
+                width: 2, // Width of the line    
+                label: {
+                    text: 'Inasistencias',
+                    align: 'left',
+                    y: -20,
+                    style: {
+                        fontWeight: 'bold',
+                    },
+                },
+            }],
+        },
+
+        series: partidos,
+    });
+});
+	</script>
+
+</body>

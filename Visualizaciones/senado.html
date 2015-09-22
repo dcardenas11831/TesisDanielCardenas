@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/highcharts-more.js"></script>
+
+
+
+</head>
+<body>
+	<div id="chart_panel" class="panel-body" style="width:45%;height:500px"></div>
+	<script type="text/javascript">
+		$(function () {
+
+		//Simulador de partidos y gente
+		partidos = [
+		{name:"La U", num_curules:21, color: "#FF6600", data:[]},
+		{name:"Conservador", num_curules:19, color: "#000099", data:[]},
+		{name:"Centro Democrático", num_curules:19, color: "#00CCFF", data:[]},
+		{name:"Liberal", num_curules:17, color: "#CC0000", data:[]},
+		{name:"Cambio Radical", num_curules:9, color: "#FF3366", data:[]},
+		{name:"Verde", num_curules:5, color: "#339900", data:[]},
+		{name:"Polo", num_curules:5, color: "#FFCC00", data:[]},
+		{name:"Opción Ciudadana", num_curules:5, color: "#990066", data:[]},
+		{name:"Circunscripción Indígena", num_curules:2, color: "#330000", data:[]},
+		];
+
+
+
+		//Para obtener las coordenadas de las bolas
+    	xs = [];
+    	ys = [];
+    	coor = [];
+    	para_adelante = true;
+    	for (ang=0; ang<=Math.PI+0.02 && xs.length<102; ang+=Math.PI/16){
+    		if (para_adelante){
+    			for (bola = 0; bola < 6; bola++) {
+    				x = (35+7*bola)*Math.cos(ang);
+	                y = (35+7*bola)*Math.sin(ang);
+	                xs.push(x);
+    				ys.push(y);
+    				coor.push([x, y, 1]);
+    			}
+    			para_adelante = false;
+    		}
+    		else{
+    			for (bola = 5; bola >= 0; bola--) {
+    				x = (35+7*bola)*Math.cos(ang);
+	                y = (35+7*bola)*Math.sin(ang);
+	                xs.push(x);
+    				ys.push(y);
+    				coor.push([x, y, 1]);
+    			}
+    			para_adelante = true;
+    		}    		
+    	}
+
+    	//asignar coordenadas a los partidos
+    	i = 0;
+    	for(partido of partidos){
+    		for (c = 0; c < partido.num_curules; c++) {
+    			congresista = {
+    				x: xs[i+c],
+    				y: ys[i+c],
+    				size: 1,
+    				nombre: "Congresista ",
+    			};
+    			partido.data.push(congresista);
+    		}
+    		i += c;
+    	}
+
+
+    	//grafica
+    	$('#chart_panel').highcharts({
+
+		        chart: {
+		            type: 'bubble',
+		        },
+		        xAxis: {
+		            lineWidth: 0,
+		            minorGridLineWidth: 0,
+		            lineColor: 'transparent',
+		            labels: {
+		                enabled: false
+		            },
+		            minorTickLength: 0,
+		            tickLength: 0,
+		        },
+
+		        yAxis: {
+		            gridLineWidth: 0,
+		            lineWidth: 0,
+		            minorGridLineWidth: 0,
+		            lineColor: 'transparent',
+		            labels: {
+		                enabled: false
+		            },
+		            title: '',
+		        },
+		        title: {
+		            text: 'Senado'
+		        },
+
+		        plotOptions: {
+		            bubble:{
+		                minSIze:'1%',
+		                maxSize:'6%',		
+		            }
+		        },
+
+		        tooltip: {
+		                    enabled: false,
+		        },
+
+		        /*tooltip: {
+			        formatter: function () {
+			            return 'Extra data: <b>' + this.point.size + '</b>';
+			        }
+			    },*/
+
+		        series: partidos,
+		        //[
+		        //{
+		        //    data: coor,
+		        //},
+		        //]
+		    });
+		});
+	</script>
+
+</body>

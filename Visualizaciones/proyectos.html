@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+	<script src="http://code.highcharts.com/modules/heatmap.js"></script>
+	<script src="http://code.highcharts.com/modules/treemap.js"></script>
+
+
+
+</head>
+<body>
+	<div id="chart_panel" class="panel-body" style="width:70%;height:600px"></div>
+	<script type="text/javascript">
+			$(function () {
+    var data = {
+        "Agropecuario y agrícola":{
+			"Sancionados": "1",
+			"En debate": "1",
+			"Archivados": "0",
+		},
+		"Bienestar y pobreza":{
+			"Sancionados": "0",
+			"En debate": "3",
+			"Archivados": "2",
+		},
+		"Celebraciones, honores y monumentos":{
+			"Sancionados": "0",
+			"En debate": "1",
+			"Archivados": "0",
+		},
+		"Comunicaciones, medios y tecnologías de la información":{
+			"Sancionados": "2",
+			"En debate": "0",
+			"Archivados": "0",
+		},
+		"Conflicto armado":{
+			"Sancionados": "4",
+			"En debate": "7",
+			"Archivados": "3",
+		},
+		"Economía":{
+			"Sancionados": "2",
+			"En debate": "5",
+			"Archivados": "1",
+		},
+		"Educación, cultura, ciencia y tecnología":{
+			"Sancionados": "1",
+			"En debate": "7",
+			"Archivados": "1",
+		},
+		"Impuestos":{
+			"Sancionados": "1",
+			"En debate": "12",
+			"Archivados": "5",
+		},
+		"Infraestructura":{
+			"Sancionados": "0",
+			"En debate": "9",
+			"Archivados": "0",
+		},
+		"Justicia":{
+			"Sancionados": "1",
+			"En debate": "5",
+			"Archivados": "3",
+		},
+		"Laboral":{
+			"Sancionados": "3",
+			"En debate": "0",
+			"Archivados": "0",
+		},
+		"Medio Ambiente":{
+			"Sancionados": "1",
+			"En debate": "1",
+			"Archivados": "0",
+		},
+		"Minas y energía":{
+			"Sancionados": "0",
+			"En debate": "1",
+			"Archivados": "2",
+		},
+		"Organismos de Control y Ministerio público":{
+			"Sancionados": "0",
+			"En debate": "3",
+			"Archivados": "2",
+		},
+		"Organización Electoral":{
+			"Sancionados": "3",
+			"En debate": "0",
+			"Archivados": "0",
+		},
+		"Participación ciudadana":{
+			"Sancionados": "2",
+			"En debate": "2",
+			"Archivados": "0",
+		},
+		"Política Internacional":{
+			"Sancionados": "1",
+			"En debate": "7",
+			"Archivados": "1",
+		},
+		"Presupuesto":{
+			"Sancionados": "4",
+			"En debate": "1",
+			"Archivados": "0",
+		},
+		"Profesiones":{
+			"Sancionados": "0",
+			"En debate": "2",
+			"Archivados": "0",
+		},
+		"Rama Ejecutiva":{
+			"Sancionados": "16",
+			"En debate": "14",
+			"Archivados": "26",
+		},
+		"Rama Judicial":{
+			"Sancionados": "4",
+			"En debate": "1",
+			"Archivados": "1",
+		},
+		"Rama Legislativa":{
+			"Sancionados": "3",
+			"En debate": "0",
+			"Archivados": "0",
+		},
+		"Recreación y deporte":{
+			"Sancionados": "0",
+			"En debate": "1",
+			"Archivados": "0",
+		},
+		"Seguridad Social y salud":{
+			"Sancionados": "3",
+			"En debate": "5",
+			"Archivados": "2",
+		},
+		"Seguridad, defensa y fuerza pública":{
+			"Sancionados": "7",
+			"En debate": "6",
+			"Archivados": "3",
+		},
+		"Servicios Públicos":{
+			"Sancionados": "1",
+			"En debate": "1",
+			"Archivados": "0",
+		},
+		"Tránsito y transporte":{
+			"Sancionados": "0",
+			"En debate": "3",
+			"Archivados": "0",
+		},
+		"Vivienda":{
+			"Sancionados": "1",
+			"En debate": "1",
+			"Archivados": "0",
+		}
+
+    },
+        points = [],
+        tema_p,
+        tema_val,
+        tema_i,
+        estado_p,
+        estado_i,
+        tema,
+        estado;
+    colors = ["#34362D", "#001C1E", "#00A6AA", "#452C2C", "#636375", "#A3C8C9", "#7E6405", "#938A81",
+        "#575329", "#D68E01", "#B05B6F", "#8CD0FF", "#3B9700", "#E21227", "#C8A1A1", "#1E6E00",
+        "#7900D7", "#A77500", "#6367A9", "#A05837", "#6B002C", "#772600", "#D790FF", "#9B9700",
+        "#549E79", "#FFF69F", "#201625", "#72418F", "#BC23FF", "#99ADC0", "#3A2465", "#922329",];
+    tema_i = 0;
+    for (tema in data) {
+        if (data.hasOwnProperty(tema)) {
+            tema_val = 0;
+            tema_p = {
+                id: "id_" + tema_i,
+                name: tema,
+                color: colors[tema_i]
+            };
+            estado_i = 0;
+            for (estado in data[tema]) {
+                if (data[tema].hasOwnProperty(estado)) {
+                    estado_p = {
+                        id: tema_p.id + "_" + estado_i,
+                        name: estado,
+                        parent: tema_p.id,
+                        value: Math.round(+data[tema][estado]),
+                    };
+                    tema_val += estado_p.value;
+                    points.push(estado_p);
+                    estado_i = estado_i + 1;
+                }
+            }
+            tema_p.value = tema_val;
+            points.push(tema_p);
+            tema_i = tema_i + 1;
+        }
+    }
+    console.log(points);
+    $('#chart_panel').highcharts({
+        series: [{
+            type: "treemap",
+            layoutAlgorithm: 'strip',
+            allowDrillToNode: true,
+            dataLabels: {
+                enabled: false
+            },
+            levelIsConstant: false,
+            levels: [{
+                level: 1,
+                dataLabels: {
+                    enabled: true,
+                    align: 'center',
+                    verticalAlign: 'middle',
+                    style: {
+                        fontSize: '10px',
+                    }
+                },
+                borderWidth: 1
+            }],
+            data: points
+        }],
+        subtitle: {
+            text: 'Haga clic en un tema para ver cuántos proyectos de este tipo se han aprobado, archivado o siguen en debate'
+        },
+        title: {
+            text: 'Proyectos de ley para el periodo 2014-2018'
+        }
+    });
+});
+	</script>
+
+</body>
