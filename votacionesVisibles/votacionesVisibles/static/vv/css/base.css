@@ -1,0 +1,106 @@
+/* Fuente para toda la pagina */
+@font-face {
+  font-family: flama basico;
+  src: url(../fonts/Flama-Basic.otf);
+  src: local(../fonts/Flama-Basic.otf);
+}
+/* Seccion con el logo, proyectos clave y el buscador */
+#header {
+    text-align:left;
+    padding:5px 220px;
+}
+img.header-img {
+    width: 40%;
+    height: 40%;
+}
+ul#pclave {
+    text-align: left;
+    background-color: white;
+    border: 2px solid #9D999A;
+    box-shadow: 3px 5px 3px #393536;
+    padding: 10px 10px;
+    float: right;
+}
+ul#pclave li {
+       display: inline;
+       text-align: center;
+       color: black;
+       font-family: flama basico;
+       font-weight: bold;
+       padding: 0px 4px;
+       text-decoration: none;
+       overflow: hidden;
+}
+ul#pclave li a {
+       font-weight: normal;
+       color: #393536;
+       padding: 0px 0.5px;
+       text-decoration: none;
+}
+
+/* Bara de navegacion lateral */
+#sidebar {
+    line-height:30px;
+    height:800px;
+    width:200px;
+    padding:5px;
+}
+ul.sidebar-secciones {
+      padding: 0;
+      list-style-type: none;
+      overflow: hidden;
+    }
+ul.sidebar-secciones li {
+      display: block;
+      padding: 9px 0px;
+    }
+ul.sidebar-secciones li a {
+       display: block;
+       width: 170px;
+       text-align: center;
+       font-family: flama basico;
+       font-weight: bold;
+       background-color: #37AB9C;
+       color: white;
+       padding: 0.5px 5px;
+       text-decoration: none;
+       text-transform: uppercase;
+    }
+ul.sidebar-detalle{
+    padding: 0;
+      list-style-type: none;
+      overflow: hidden;
+}
+ul.sidebar-detalle li {
+      list-style-type: none;
+      overflow: hidden;
+      display: block;
+      padding: 1px 0px;
+    }
+ul.sidebar-detalle li a {
+       display: block;
+       width: 150px;
+       text-align: right;
+       background-color: white;
+       font-family: flama basico;
+       font-weight: normal;
+       color: #231F20;
+       padding: 1px 0px;
+       text-decoration: none;
+       text-transform: none;
+       border-bottom: solid #37AB9C;
+    }
+
+
+#section {
+    width:350px;
+    float:left;
+    padding:10px;
+}
+#footer {
+    background-color:black;
+    color:white;
+    clear:both;
+    text-align:center;
+   padding:5px;
+}
