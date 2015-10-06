@@ -1,46 +1,112 @@
+/*Colores de la pagina */
+/*
+$aguamarina= #37AB9C;
+$gris_claro= #9D999A;
+$gris_oscuro= #393536;
+*/
+
 /* Fuente para toda la pagina */
 @font-face {
   font-family: flama basico;
   src: url(../fonts/Flama-Basic.otf);
   src: local(../fonts/Flama-Basic.otf);
 }
+@font-face {
+  font-family: flama light;
+  src: url(../fonts/Flama-Light.otf);
+  src: local(../fonts/Flama-Light.otf);
+}
+
 /* Seccion con el logo, proyectos clave y el buscador */
 #header {
     text-align:left;
-    padding:5px 220px;
+    padding:5px 200px;
 }
 img.header-img {
-    width: 40%;
-    height: 40%;
+    width: 35%;
+    height: 35%;
+    padding:10px 0px;
 }
-ul#pclave {
+ul#header-pclave {
+    position: relative;
+    left: -20px;
+    top: 27px;
     text-align: left;
     background-color: white;
     border: 2px solid #9D999A;
-    box-shadow: 3px 5px 3px #393536;
+    box-shadow: 2px 3px 2px #393536;
     padding: 10px 10px;
     float: right;
 }
-ul#pclave li {
-       display: inline;
-       text-align: center;
-       color: black;
-       font-family: flama basico;
-       font-weight: bold;
-       padding: 0px 4px;
-       text-decoration: none;
-       overflow: hidden;
+ul#header-pclave li {
+    display: inline;
+    text-align: center;
+    color: #393536;
+    font-family: flama light;
+    font-weight: bold;
+    font-size: small;
+    padding: 0px 4px;
+    text-decoration: none;
+    overflow: hidden;
 }
-ul#pclave li a {
-       font-weight: normal;
-       color: #393536;
-       padding: 0px 0.5px;
-       text-decoration: none;
+ul#header-pclave li a {
+    font-weight: normal;
+    color: #9D999A;
+    padding: 0px 0.5px;
+    text-decoration: none;
+}
+table.header-tabla {
+    position: absolute;
+    right: 20px;
+    top: 33px;
+    border: 1px solid #9D999A;
+    padding: 0px 0px;
+}
+input.btn-buscar {
+    background: url(../images/buscar.png) no-repeat center;
+    cursor: pointer;
+    padding: 4px 7px;
+    border: 0;
+}
+input.txt-buscar {
+    font-size: small;
+    border: 0px solid white;
+    border-left: 1px solid #9D999A;
+    padding: 0px 4px;
+    width: 100px;
+}
+p.header-tabla {
+    font-family: flama light;
+    font-size: small;
+    text-align: right;
+    color: #393536;
+    padding: 0px 4px;
+    text-transform: uppercase;
+    margin: 0;
+}
+p.header-tabla b{
+    font-family: flama light;
+    font-size: small;
+    text-align: right;
+    color: #393536;
+    padding: 0px 1px;
+    text-transform: none;
+    margin: 0;
+}
+tr.header-tabla td{
+    border-bottom:1pt solid #9D999A;
+    color: #393536;
+    padding: 0px 0px;
+}
+tr.header-tabla2 td{
+    color: #393536;
+    padding: 0;
 }
 
-/* Bara de navegacion lateral */
+/* Bara de navegacion lateral -------------------------*/
 #sidebar {
-    line-height:30px;
+    float:left;
+    line-height:25px;
     height:800px;
     width:200px;
     padding:5px;
@@ -52,17 +118,29 @@ ul.sidebar-secciones {
     }
 ul.sidebar-secciones li {
       display: block;
-      padding: 9px 0px;
+      width: 160px;
+      padding: 7px 0px;
     }
 ul.sidebar-secciones li a {
        display: block;
-       width: 170px;
+       width: 160px;
        text-align: center;
-       font-family: flama basico;
-       font-weight: bold;
+       font-family: flama light;
        background-color: #37AB9C;
        color: white;
        padding: 0.5px 5px;
+       text-decoration: none;
+       text-transform: uppercase;
+    }
+ul.sidebar-secciones li p {
+       display: block;
+       width: 160px;
+       text-align: center;
+       font-family: flama light;
+       background-color: #37AB9C;
+       color: white;
+       padding: 0px 5px;
+       margin: 0;
        text-decoration: none;
        text-transform: uppercase;
     }
@@ -82,9 +160,9 @@ ul.sidebar-detalle li a {
        width: 150px;
        text-align: right;
        background-color: white;
-       font-family: flama basico;
+       font-family: flama light;
        font-weight: normal;
-       color: #231F20;
+       color: #393536;
        padding: 1px 0px;
        text-decoration: none;
        text-transform: none;
@@ -92,15 +170,18 @@ ul.sidebar-detalle li a {
     }
 
 
-#section {
-    width:350px;
-    float:left;
-    padding:10px;
+#content {
+    width: 80%;
+    height: 1000;
+    float: left;
+    margin-left: -10px;
+    padding: 5px 20px;
 }
 #footer {
-    background-color:black;
+    font-family: flama light;
+    background-color:#37AB9C;
     color:white;
     clear:both;
-    text-align:center;
-   padding:5px;
+    text-align: center;
+    padding:0px;
 }

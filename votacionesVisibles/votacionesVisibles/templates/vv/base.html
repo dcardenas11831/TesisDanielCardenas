@@ -11,17 +11,25 @@
     {% block header %}
     <div id="header">
         <img class="header-img" src= "{% static 'vv/images/logo.png' %}" />
-
-            <ul id="pclave">
-                <li>PROYECTOS CLAVE: </li>
-                <li><a href=#>Proyecto 1 /</a></li>
-                <li><a href=#>Proyecto 2 /</a></li>
-                <li><a href=#>Proyecto 3 /</a></li>
-                <li><a href=#>Proyecto 4 /</a></li>
-            </ul>
-        <form method="get" action="/resultados/" class="navbar-form pull-right">
-            <input type="text" id="searchBox" class="input-medium search-query" name="q" placeholder="Search">
-            <input type="submit" class="btn" value="Search" >
+        <ul id="header-pclave">
+            <li>PROYECTOS CLAVE: </li>
+            <li><a href=#>Proyecto 1 /</a></li>
+            <li><a href=#>Proyecto 2 /</a></li>
+            <li><a href=#>Proyecto 3 /</a></li>
+            <li><a href=#>Proyecto 4 /</a></li>
+        </ul>
+        <form method="post" action="#" class="header-buscar">
+        <table class="header-tabla">
+            <tr class="header-tabla">
+                <td><input type="submit" class="btn-buscar" value="">
+                <input type="text" class="txt-buscar" name="q" placeholder="Buscar"></td>
+            </tr>
+            <tr class="header-tabla2">
+                <td>
+                    <p class="header-tabla"><b>{% now "F j" %}</b><br>{% now "l" %}</p>
+                </td>
+            </tr>
+        </table>
         </form>
     </div>
     {% endblock %}
@@ -35,7 +43,7 @@
                 <li><a href=#>Cámara</a></li>
             </ul>
             <li><a href=#>Proyectos de Ley</a></li>
-            <li><a href=#>    Partidos    </a></li>
+            <li><p class="sidebar-secciones">    Partidos    </p></li>
             <ul class="sidebar-detalle">
                 <li><a href=#>ASI</a></li>
                 <li><a href=#>Alianza Verde</a></li>
@@ -58,7 +66,16 @@
     </div>
 
     <div id="content">
-        {% block content %}{% endblock %}
+        {% block content %}
+
+        {% endblock %}
     </div>
 </body>
+<footer id="footer">
+        {% block footer %}
+        <p> Votaciones Visibles es un producto desarrollado por Daniel Cárdenas<br>
+        Toda la información mostrada proviene de Congreso Visible<br>
+        2015</p>
+        {% endblock %}
+</footer>
 </html>
