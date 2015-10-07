@@ -3,8 +3,9 @@
 <head>
     {% load staticfiles %}
     <link rel="stylesheet" type="text/css" href="{% static 'vv/css/base.css' %}" />
-    <title>{% block title %}Votaciones Visibles{% endblock %}</title>
     <meta charset="utf-8">
+    {% block imports %}{% endblock %}
+    <title>{% block title %}Votaciones Visibles{% endblock %}</title>
 </head>
 
 <body>
@@ -37,12 +38,12 @@
     {% block sidebar %}
     <div id="sidebar">
         <ul class="sidebar-secciones">
-            <li><a href=#>    Congreso    </a></li>
+            <li><a href=#>Congreso</a></li>
             <ul class="sidebar-detalle">
                 <li><a href=#>Senado</a></li>
                 <li><a href=#>Cámara</a></li>
             </ul>
-            <li><a href=#>Proyectos de Ley</a></li>
+            <li><a href='/proyectos'>Proyectos de Ley</a></li>
             <li><p class="sidebar-secciones">    Partidos    </p></li>
             <ul class="sidebar-detalle">
                 <li><a href=#>ASI</a></li>

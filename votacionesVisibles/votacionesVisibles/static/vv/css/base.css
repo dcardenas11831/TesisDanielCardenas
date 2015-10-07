@@ -2,7 +2,7 @@
 /*
 $aguamarina= #37AB9C;
 $gris_claro= #9D999A;
-$gris_oscuro= #393536;
+$gris_oscuro= #575354;
 */
 
 /* Fuente para toda la pagina */
@@ -34,14 +34,14 @@ ul#header-pclave {
     text-align: left;
     background-color: white;
     border: 2px solid #9D999A;
-    box-shadow: 2px 3px 2px #393536;
+    box-shadow: 1px 2px 1px #575354;
     padding: 10px 10px;
     float: right;
 }
 ul#header-pclave li {
     display: inline;
     text-align: center;
-    color: #393536;
+    color: #575354;
     font-family: flama light;
     font-weight: bold;
     font-size: small;
@@ -79,7 +79,7 @@ p.header-tabla {
     font-family: flama light;
     font-size: small;
     text-align: right;
-    color: #393536;
+    color: #575354;
     padding: 0px 4px;
     text-transform: uppercase;
     margin: 0;
@@ -88,18 +88,18 @@ p.header-tabla b{
     font-family: flama light;
     font-size: small;
     text-align: right;
-    color: #393536;
+    color: #575354;
     padding: 0px 1px;
     text-transform: none;
     margin: 0;
 }
 tr.header-tabla td{
     border-bottom:1pt solid #9D999A;
-    color: #393536;
+    color: #575354;
     padding: 0px 0px;
 }
 tr.header-tabla2 td{
-    color: #393536;
+    color: #575354;
     padding: 0;
 }
 
@@ -162,21 +162,24 @@ ul.sidebar-detalle li a {
        background-color: white;
        font-family: flama light;
        font-weight: normal;
-       color: #393536;
+       color: #575354;
        padding: 1px 0px;
        text-decoration: none;
        text-transform: none;
        border-bottom: solid #37AB9C;
     }
 
-
+/*Div con el contenido de cada pagina */
 #content {
     width: 80%;
     height: 1000;
     float: left;
     margin-left: -10px;
     padding: 5px 20px;
+    font-family: flama light;
 }
+
+/*footer de la pagina */
 #footer {
     font-family: flama light;
     background-color:#37AB9C;
@@ -184,4 +187,17 @@ ul.sidebar-detalle li a {
     clear:both;
     text-align: center;
     padding:0px;
+}
+
+.treemap {
+    font-family: flama light;
+    background-color:#37AB9C;
+    color:white;
+    clear:both;
+    text-align: center;
+    padding:0px;
+}
+
+h1 {
+    color: #575354;
 }

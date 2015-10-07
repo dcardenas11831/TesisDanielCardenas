@@ -1,0 +1,117 @@
+{% extends "vv/base.html" %}
+
+{% block imports%}
+{% load staticfiles %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/modules/heatmap.js"></script>
+<script src="http://code.highcharts.com/modules/treemap.js"></script>
+{% endblock %}
+{% block title %}Proyectos de Ley - Votaciones Visibles{% endblock %}
+
+{% block content %}
+    <h1>PROYECTOS DE LEY</h1>
+    <p>Este gráfico hace referencia a todos los proyextos que ha debatido o está debatiendo el Congreso en el periodo
+    2014-2018. <br> Haga clic en un tema para ver cuántos y cuáles de esos proyectos han sido archivados, sancionados o están en
+    debate.</p>
+    <div id="chart_panel" class="panel-body" style="width:70%;height:600px"></div>
+	<script type="text/javascript">
+    $(function () {
+        var data = {{ data|safe }},
+        points = [],
+        tema_p,
+        tema_val,
+        tema_i,
+        estado_p,
+        estado_i,
+        tema,
+        estado;
+        colors = ["#34362D", "#001C1E", "#00A6AA", "#452C2C", "#636375", "#A3C8C9", "#7E6405", "#938A81",
+            "#575329", "#D68E01", "#B05B6F", "#8CD0FF", "#3B9700", "#E21227", "#C8A1A1", "#1E6E00",
+            "#7900D7", "#A77500", "#6367A9", "#A05837", "#6B002C", "#772600", "#D790FF", "#9B9700",
+            "#549E79", "#FFF69F", "#201625", "#72418F", "#BC23FF", "#99ADC0", "#3A2465", "#922329",];
+        tema_i = 0;
+        for (tema in data) {
+            if (data.hasOwnProperty(tema)) {
+                tema_val = 0;
+                tema_p = {
+                    id: "id_" + tema_i,
+                    name: tema,
+                    color: colors[tema_i]
+                };
+                estado_i = 0;
+                for (estado in data[tema]) {
+                    if (data[tema].hasOwnProperty(estado)) {
+                        estado_p = {
+                            id: tema_p.id + "_" + estado_i,
+                            name: estado,
+                            parent: tema_p.id,
+                            value: Math.round(+data[tema][estado]),
+                        };
+                        tema_val += estado_p.value;
+                        points.push(estado_p);
+                        estado_i = estado_i + 1;
+                    }
+                }
+                tema_p.value = tema_val;
+                points.push(tema_p);
+                tema_i = tema_i + 1;
+            }
+        }
+        console.log(points);
+        $('#chart_panel').highcharts({
+            series: [{
+                type: "treemap",
+                layoutAlgorithm: 'squarified',
+                allowDrillToNode: true,
+                dataLabels: {
+                    enabled: false
+                },
+               drillUpButton: {
+                text: 'Volver',
+                position: {
+                    align: 'right',
+                    x: -30,
+                    y: 30,
+                },
+                theme: {
+                    fill: 'white',
+                    'stroke-width': 1,
+                    stroke: 'white',
+                    states: {
+                        hover: {
+                            fill: '#9D999A'
+                        }
+                    }
+                }
+                },
+                levelIsConstant: false,
+                levels: [{
+                    level: 1,
+                    dataLabels: {
+                        enabled: true,
+                        align: 'center',
+                        verticalAlign: 'middle',
+                        style: {
+                            fontSize: '10px',
+                        }
+                    },
+                    borderWidth: 1
+                }],
+                data: points
+            }],
+            title: '',
+            chart: {
+                events: {
+                    drilldown: function (e) {
+                },
+                style: {
+                    fontFamily: 'sans-serif',
+                },
+            }
+        });
+    });
+	</script>
+
+
+{% endblock %}
