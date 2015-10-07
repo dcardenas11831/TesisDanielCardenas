@@ -10,11 +10,15 @@
 {% block title %}Proyectos de Ley - Votaciones Visibles{% endblock %}
 
 {% block content %}
-    <h1>PROYECTOS DE LEY</h1>
-    <p>Este gráfico hace referencia a todos los proyextos que ha debatido o está debatiendo el Congreso en el periodo
-    2014-2018. <br> Haga clic en un tema para ver cuántos y cuáles de esos proyectos han sido archivados, sancionados o están en
-    debate.</p>
-    <div id="chart_panel" class="panel-body" style="width:70%;height:600px"></div>
+    <h1 id="tema_seleccionado">PROYECTOS DE LEY</h1>
+    <div id="chart_panel"></div>
+    <div id="info_grafica" class="info">
+        <h3>Gráfica proyectos de ley</h3>
+        <p>Este gráfico hace referencia a todos los proyectos que ha debatido o está debatiendo el Congreso en el periodo
+        2014-2018. <br> <br> Haga clic en un tema para ver cuántos y cuáles de esos proyectos han sido archivados,
+            sancionados o están en debate. <br> <br> En la parte de abajo se ve una tabla con los proyectos del estado
+            seleccionado</p>
+    </div>
 	<script type="text/javascript">
     $(function () {
         var data = {{ data|safe }},
@@ -31,6 +35,7 @@
             "#7900D7", "#A77500", "#6367A9", "#A05837", "#6B002C", "#772600", "#D790FF", "#9B9700",
             "#549E79", "#FFF69F", "#201625", "#72418F", "#BC23FF", "#99ADC0", "#3A2465", "#922329",];
         tema_i = 0;
+        var nombre_padre;
         for (tema in data) {
             if (data.hasOwnProperty(tema)) {
                 tema_val = 0;
@@ -43,7 +48,7 @@
                 for (estado in data[tema]) {
                     if (data[tema].hasOwnProperty(estado)) {
                         estado_p = {
-                            id: tema_p.id + "_" + estado_i,
+                            id: tema_p.id + "-" + estado_i,
                             name: estado,
                             parent: tema_p.id,
                             value: Math.round(+data[tema][estado]),
@@ -58,7 +63,6 @@
                 tema_i = tema_i + 1;
             }
         }
-        console.log(points);
         $('#chart_panel').highcharts({
             series: [{
                 type: "treemap",
@@ -67,23 +71,39 @@
                 dataLabels: {
                     enabled: false
                 },
-               drillUpButton: {
-                text: 'Volver',
-                position: {
-                    align: 'right',
-                    x: -30,
-                    y: 30,
+                point: {
+                    events: {
+                        //Evento para manejar manejar cuando se selecciona un punto
+                        click: function() {
+                            if (this.id.indexOf("-") == -1){
+                                console.log(this);
+                                //alert('Category: '+ this.category +', name: '+ this.name);
+                                document.getElementById("tema_seleccionado").innerHTML = "PROYECTOS DE LEY / "+this.name;
+                                nombre_padre = this.name;
+                            }
+                            else {
+                                //get proyectos del parametro que no se ha usado y llama a una funcion externa
+                                dibujarTabla(nombre_padre, this.name, this.color);
+                            }
+                        }
+                    },
                 },
-                theme: {
-                    fill: 'white',
-                    'stroke-width': 1,
-                    stroke: 'white',
-                    states: {
-                        hover: {
-                            fill: '#9D999A'
+               drillUpButton: {
+                    text: 'Volver',
+                    position: {
+                        align: 'right',
+                        x: -30,
+                        y: 30,
+                    },
+                    theme: {
+                        fill: 'white',
+                        'stroke-width': 0,
+                        states: {
+                            hover: {
+                                fill: '#9D999A'
+                            }
                         }
                     }
-                }
                 },
                 levelIsConstant: false,
                 levels: [{
@@ -103,15 +123,37 @@
             title: '',
             chart: {
                 events: {
-                    drilldown: function (e) {
+                    click: function (e) {
+                        document.getElementById("tema_seleccionado").innerHTML = "PROYECTOS DE LEY";
+                        nombre_padre = '';
+                        borrarTabla();
+                    },
                 },
                 style: {
                     fontFamily: 'sans-serif',
                 },
             }
         });
+        function dibujarTabla(nombre_padre, nombre_hijo, color){
+            document.getElementById("tabla").innerHTML = "<h2>Proyectos de "+nombre_padre+
+            " "+nombre_hijo.toLowerCase()+"</h2><br>"+
+            "<table>"+
+            "    <tr>"+
+            "        <th> Nombre proyecto </th>"+
+            "        <th> Estado actual </th>"+
+            "        <th> Iniciativa </th>"+
+            "    </tr>"+
+            "    <tr>"+
+            "        <td> Proyecto1 </td>"+
+            "        <td> Aprobado en primer debate </td>"+
+            "        <td> Gubernamental </td>"+
+            "    </tr>"+
+            "</table>";
+        };
+        function borrarTabla(){
+            document.getElementById("tabla").innerHTML = "";
+        }
     });
 	</script>
-
-
+    <div id="tabla" class="tabla"></div>
 {% endblock %}

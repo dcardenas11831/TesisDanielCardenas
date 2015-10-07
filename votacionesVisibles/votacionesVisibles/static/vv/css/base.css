@@ -29,7 +29,7 @@ img.header-img {
 }
 ul#header-pclave {
     position: relative;
-    left: -20px;
+    left: 30px;
     top: 27px;
     text-align: left;
     background-color: white;
@@ -177,6 +177,7 @@ ul.sidebar-detalle li a {
     margin-left: -10px;
     padding: 5px 20px;
     font-family: flama light;
+    color: #575354;
 }
 
 /*footer de la pagina */
@@ -198,6 +199,36 @@ ul.sidebar-detalle li a {
     padding:0px;
 }
 
-h1 {
+/*css para los div que contienen las graficas */
+#chart_panel {
+    float: left;
+    width: 70%;
+    height: 580px
+}
+.info {
+    background-color: #9D999A;
+    position: relative;
+    text-align: justify;
+    float: left;
+    color: black;
+    right: 10px;
+    width: 25%;
+    padding: 2px 5px;
+    margin: 10px 17px;
+}
+.info h3 {
+    color: white;
+    text-align: center;
+}
+.info p {
+    margin: 20px 20px;
+}
+
+.tabla{
+    position: relative;
+    top: 0px;
+    left: 10px;
+    width: 60%;
+    float: left;
     color: #575354;
 }
