@@ -228,7 +228,12 @@ ul.sidebar-detalle li a {
     position: relative;
     top: 0px;
     left: 10px;
-    width: 60%;
+    width: 80%;
     float: left;
     color: #575354;
+}
+.tabla td {
+    border: 1px solid #9D999A;
+    padding: 5px 10px;
+    margin: 0px;
 }

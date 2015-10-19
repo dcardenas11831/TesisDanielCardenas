@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from django.shortcuts import render
 import json
+from .models import ProyectoDeLeyProyectoley
+from .models import GeneralTema
 
 # Metodo para controlar la pagina home
 
@@ -10,147 +13,45 @@ def index(request):
 
 
 def main_proyectos(request):
-    data = {
-            "Agropecuario y agrícola":{
-                "Sancionados": "1",
-                "En debate": "1",
-                "Archivados": "0",
-            },
-            "Bienestar y pobreza":{
-                "Sancionados": "0",
-                "En debate": "3",
-                "Archivados": "2",
-            },
-            "Celebraciones, honores y monumentos":{
-                "Sancionados": "0",
-                "En debate": "1",
-                "Archivados": "0",
-            },
-            "Comunicaciones, medios y tecnologías de la información":{
-                "Sancionados": "2",
-                "En debate": "0",
-                "Archivados": "0",
-            },
-            "Conflicto armado":{
-                "Sancionados": "4",
-                "En debate": "7",
-                "Archivados": "3",
-            },
-            "Economía":{
-                "Sancionados": "2",
-                "En debate": "5",
-                "Archivados": "1",
-            },
-            "Educación, cultura, ciencia y tecnología":{
-                "Sancionados": "1",
-                "En debate": "7",
-                "Archivados": "1",
-            },
-            "Impuestos":{
-                "Sancionados": "1",
-                "En debate": "12",
-                "Archivados": "5",
-            },
-            "Infraestructura":{
-                "Sancionados": "0",
-                "En debate": "9",
-                "Archivados": "0",
-            },
-            "Justicia":{
-                "Sancionados": "1",
-                "En debate": "5",
-                "Archivados": "3",
-            },
-            "Laboral":{
-                "Sancionados": "3",
-                "En debate": "0",
-                "Archivados": "0",
-            },
-            "Medio Ambiente":{
-                "Sancionados": "1",
-                "En debate": "1",
-                "Archivados": "0",
-            },
-            "Minas y energía":{
-                "Sancionados": "0",
-                "En debate": "1",
-                "Archivados": "2",
-            },
-            "Organismos de Control y Ministerio público":{
-                "Sancionados": "0",
-                "En debate": "3",
-                "Archivados": "2",
-            },
-            "Organización Electoral":{
-                "Sancionados": "3",
-                "En debate": "0",
-                "Archivados": "0",
-            },
-            "Participación ciudadana":{
-                "Sancionados": "2",
-                "En debate": "2",
-                "Archivados": "0",
-            },
-            "Política Internacional":{
-                "Sancionados": "1",
-                "En debate": "7",
-                "Archivados": "1",
-            },
-            "Presupuesto":{
-                "Sancionados": "4",
-                "En debate": "1",
-                "Archivados": "0",
-            },
-            "Profesiones":{
-                "Sancionados": "0",
-                "En debate": "2",
-                "Archivados": "0",
-            },
-            "Rama Ejecutiva":{
-                "Sancionados": "16",
-                "En debate": "14",
-                "Archivados": "26",
-            },
-            "Rama Judicial":{
-                "Sancionados": "4",
-                "En debate": "1",
-                "Archivados": "1",
-            },
-            "Rama Legislativa":{
-                "Sancionados": "3",
-                "En debate": "0",
-                "Archivados": "0",
-            },
-            "Recreación y deporte":{
-                "Sancionados": "0",
-                "En debate": "1",
-                "Archivados": "0",
-            },
-            "Seguridad Social y salud":{
-                "Sancionados": "3",
-                "En debate": "5",
-                "Archivados": "2",
-            },
-            "Seguridad, defensa y fuerza pública":{
-                "Sancionados": "7",
-                "En debate": "6",
-                "Archivados": "3",
-            },
-            "Servicios Públicos": {
-                "Sancionados": "1",
-                "En debate": "1",
-                "Archivados": "0",
-            },
-            "Tránsito y transporte": {
-                "Sancionados": "0",
-                "En debate": "3",
-                "Archivados": "0",
-            },
-            "Vivienda": {
-                "Sancionados": "1",
-                "En debate": "1",
-                "Archivados": "0",
-            }
+    proyectos_periodo = ProyectoDeLeyProyectoley.objects.filter(periodo__id=7).order_by('-fecha_radicacion')
+    temas = GeneralTema.objects.all()
+    data = {}
+    data_proyectos = {}
 
+    for tema in temas:
+        data[tema.nombre] = {
+            'Sancionados': 0,
+            'En debate': 0,
+            'Archivados': 0,
         }
-    return render(request, 'vv/main_proyectos.html', {'data': json.dumps(data)})
+        data_proyectos[tema.nombre] = {
+            'Sancionados': [],
+            'En debate': [],
+            'Archivados': [],
+        }
+    print len(temas)
+    for proyecto in proyectos_periodo:
+        estado = proyecto.estado_proyecto_ley_actual.estado
+        json_proyecto = {
+            'id': proyecto.id,
+            'titulo': proyecto.titulo,
+            'iniciativa': proyecto.iniciativa.nombre,
+            'estado': estado.nombre,
+        }
+
+        # temp = str(proyecto.tema_principal.nombre)
+        temp = proyecto.tema_principal.nombre
+        if estado.id == 40 or estado.id == 41:
+            data[temp]['Sancionados'] += 1
+            data_proyectos[temp]['Sancionados'].append(json_proyecto)
+        elif estado.id in range(32, 35):
+            data[temp]['Archivados'] += 1
+            data_proyectos[temp]['Archivados'].append(json_proyecto)
+        else:
+            data[temp]['En debate'] += 1
+            data_proyectos[temp]['En debate'].append(json_proyecto)
+
+    # print data
+    return render(request, 'vv/main_proyectos.html',
+                  {'data': json.dumps(data), 'proyectos': json.dumps(data_proyectos)})
+
