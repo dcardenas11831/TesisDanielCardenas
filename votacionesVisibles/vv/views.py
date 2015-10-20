@@ -11,6 +11,8 @@ from .models import GeneralTema
 def index(request):
     return render(request, 'vv/base.html')
 
+# Metodo que contiene la informacion necesari aora mostrar todos los proyectos en el treemap
+
 
 def main_proyectos(request):
     proyectos_periodo = ProyectoDeLeyProyectoley.objects.filter(periodo__id=7).order_by('-fecha_radicacion')
@@ -55,3 +57,8 @@ def main_proyectos(request):
     return render(request, 'vv/main_proyectos.html',
                   {'data': json.dumps(data), 'proyectos': json.dumps(data_proyectos)})
 
+
+def detalle_proyecto(request, proyecto_id):
+    proyecto = ProyectoDeLeyProyectoley.objects.get(id=proyecto_id)
+
+    return render(request, 'vv/detalle_proyecto.html', {'proyecto': proyecto})

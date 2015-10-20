@@ -201,10 +201,23 @@ ul.sidebar-detalle li a {
 
 /*css para los div que contienen las graficas */
 #chart_panel {
+    margin: 0px 0px;
+    padding: 0px 0px;
     float: left;
-    width: 70%;
-    height: 580px
+    width: 100%;
+    height: 400px
 }
+#tema_seleccionado h1 {
+    padding: 0px 0px;
+    margin: 0px 0px;
+    color: #9D999A;
+}
+#proyecto_seleccionado h2 {
+    padding: 0px 0px;
+    margin: 0px 0px;
+    color: #575354;
+}
+
 .info {
     background-color: #9D999A;
     position: relative;
@@ -232,8 +245,35 @@ ul.sidebar-detalle li a {
     float: left;
     color: #575354;
 }
+.tabla table {
+    border-collapse: collapse;
+}
 .tabla td {
-    border: 1px solid #9D999A;
     padding: 5px 10px;
-    margin: 0px;
+    border: 0.5px solid #9D999A;
+}
+.tabla a{
+    color: #575354;
+    text-decoration: none;
+}
+.tabla a:hover{
+    color: #37AB9C;
+}
+/*Para las paginas divididas por 2 columnas*/
+#columna_derecha {
+  float: right;
+  width: 50%;
+  background-color: #CCF;
+}
+#columna_derecha h4{
+    padding: 5px 5px;
+    margin: 2px 2px;
+    text-transform: none;
+}
+#columna_izquierda {
+  float: left;
+  width: 50%;
+  margin-left: 0px;
+  background-color: #FFA;
+  text-align: left;
 }

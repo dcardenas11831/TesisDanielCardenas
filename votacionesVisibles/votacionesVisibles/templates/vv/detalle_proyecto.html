@@ -4,13 +4,24 @@
 {% load staticfiles %}
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
-<script src="http://code.highcharts.com/modules/heatmap.js"></script>
-<script src="http://code.highcharts.com/modules/treemap.js"></script>
 {% endblock %}
-{% block title %}Proyectos de Ley - Votaciones Visibles{% endblock %}
+{% block title %}Proyecto de ley - Votaciones Visibles{% endblock %}
 
 {% block content %}
-    <h1 id="tema_seleccionado">PROYECTOS DE LEY</h1>
+    <h1 id="tema_seleccionado">PROYECTO DE LEY</h1>
+    <h2 id="proyecto_seleccionado"> {{proyecto.titulo}}</h2>
+
+    <div id="columna_izquierda">
+        <h4>TEMA PRINCIPAL: {{proyecto.tema_principal.nombre}}</h4>
+        <h4>RESUMEN:</h4><p> {{proyecto.sinapsis}}</p>
+        <h4>ESTADO ACTUAL: {{proyecto.estado_proyecto_ley_actual.estado.nombre}}</h4>
+        <h4>PALABRAS CLAVE: {{proyecto.tags}}</h4>
+        <h4>INICIATIVA: {{proyecto.iniciativa.nombre}}</h4>
+    </div>
+    <div id="columna_derecha">
+        <h4> {{proyecto.sinapsis}}</h4>
+    </div>
+
     <div id="chart_panel"></div>
 	<script type="text/javascript">
     $(function () {
