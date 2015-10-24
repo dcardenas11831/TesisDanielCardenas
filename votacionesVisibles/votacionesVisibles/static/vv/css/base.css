@@ -145,7 +145,7 @@ ul.sidebar-secciones li p {
        text-transform: uppercase;
     }
 ul.sidebar-detalle{
-    padding: 0;
+      padding: 0;
       list-style-type: none;
       overflow: hidden;
 }
@@ -262,18 +262,44 @@ ul.sidebar-detalle li a {
 /*Para las paginas divididas por 2 columnas*/
 #columna_derecha {
   float: right;
-  width: 50%;
-  background-color: #CCF;
-}
-#columna_derecha h4{
-    padding: 5px 5px;
-    margin: 2px 2px;
-    text-transform: none;
+  width: 38%;
 }
 #columna_izquierda {
   float: left;
-  width: 50%;
+  width: 57%;
   margin-left: 0px;
-  background-color: #FFA;
+  margin-right: 10px;
   text-align: left;
+}
+#columna_izquierda mark{
+    font-weight: bold;
+    background: none;
+    color: #575354;
+}
+
+#busqueda{
+    width: 84%;
+    font-family: flama light;
+    color: #575354;
+    border: 0.5px solid #9D999A;
+    font-size: medium;
+}
+.ui-widget{
+    font-family: flama light;
+
+}
+.ui-widget ul{
+    color: #575354;
+    list-style-type: none;
+    overflow: hidden;
+    float: left;
+}
+.ui-widget li{
+    list-style-type: none;
+    font-size: small;
+    padding: 0px 0px;
+    text-decoration: none;
+    width: 30%;
+    overflow: hidden;
+    display: block;
 }

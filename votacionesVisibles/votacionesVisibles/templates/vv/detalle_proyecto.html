@@ -2,8 +2,13 @@
 
 {% block imports%}
 {% load staticfiles %}
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.2/themes/base/jquery-ui.css" type="text/css" media="all" />
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/highcharts-more.js"></script>
+<meta charset="utf-8">
+
 {% endblock %}
 {% block title %}Proyecto de ley - Votaciones Visibles{% endblock %}
 
@@ -12,170 +17,190 @@
     <h2 id="proyecto_seleccionado"> {{proyecto.titulo}}</h2>
 
     <div id="columna_izquierda">
-        <h4>TEMA PRINCIPAL: {{proyecto.tema_principal.nombre}}</h4>
-        <h4>RESUMEN:</h4><p> {{proyecto.sinapsis}}</p>
-        <h4>ESTADO ACTUAL: {{proyecto.estado_proyecto_ley_actual.estado.nombre}}</h4>
-        <h4>PALABRAS CLAVE: {{proyecto.tags}}</h4>
-        <h4>INICIATIVA: {{proyecto.iniciativa.nombre}}</h4>
+        <p>
+            <mark>TEMA PRINCIPAL:</mark> {{proyecto.tema_principal.nombre}}<br><br>
+            <mark>RESUMEN:</mark> {{proyecto.sinapsis}}<br><br>
+            <mark>ESTADO ACTUAL:</mark> {{proyecto.estado_proyecto_ley_actual.estado.nombre}}<br><br>
+            <mark>PALABRAS CLAVE:</mark> {{proyecto.tags}}<br><br>
+            <mark>INICIATIVA:</mark> {{proyecto.iniciativa.nombre}}<br><br>
+            <mark>TIPO PROYECTO:</mark> {{proyecto.tipo_proyecto.nombre}}<br><br>
+            <mark>FECHA RADICACION:</mark> {{proyecto.fecha_radicacion}}<br><br>
+        </p>
+
+        <div id="chart_panel"></div>
     </div>
     <div id="columna_derecha">
-        <h4> {{proyecto.sinapsis}}</h4>
+        <p>Digite el nombre del congresista o partido de su inter&#233;s para ver sus votos en este proyecto</p>
+        <div class="ui-widget">
+            <input id="busqueda">
+            <input type="submit" class="btn-buscar" value="">
+        </div>
+
+        <ul>
+            {% for votacion in votaciones %}
+            <li> {{votacion}}</li>
+                <ul>
+                    {% for v in votacion %}
+                    <li> {{v.motivo}}</li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        </ul>
     </div>
 
-    <div id="chart_panel"></div>
-	<script type="text/javascript">
-    $(function () {
-        var data = {{ data|safe }},
-        data_proyectos = {{ proyectos|safe }},
-        points = [],
-        tema_p,
-        tema_val,
-        tema_i,
-        estado_p,
-        estado_i,
-        tema,
-        estado;
-        colors = ["#34362D", "#001C1E", "#00A6AA", "#452C2C", "#636375", "#A3C8C9", "#7E6405", "#938A81",
-            "#575329", "#D68E01", "#B05B6F", "#8CD0FF", "#3B9700", "#E21227", "#C8A1A1", "#1E6E00",
-            "#7900D7", "#A77500", "#6367A9", "#A05837", "#6B002C", "#772600", "#D790FF", "#9B9700",
-            "#549E79", "#FFF69F", "#201625", "#72418F", "#BC23FF", "#99ADC0", "#3A2465", "#922329",
-            "#7900D7", "#A77500", "#6367A9", "#A05837", "#6B002C", "#772600", "#D790FF", "#9B9700",
-            "#34362D", "#001C1E", "#00A6AA", "#452C2C", "#636375", "#A3C8C9", "#7E6405", "#938A81",
-            "#7900D7", "#A77500", "#6367A9", "#A05837", "#6B002C", "#772600", "#D790FF", "#9B9700",
-            "#549E79", "#FFF69F", "#201625", "#72418F", "#BC23FF", "#99ADC0", "#3A2465", "#922329",];
-        tema_i = 0;
-        var nombre_padre;
-        for (tema in data) {
-            if (data.hasOwnProperty(tema)) {
-                tema_val = 0;
-                tema_p = {
-                    id: "id_" + tema_i,
-                    name: tema,
-                    color: colors[tema_i]
-                };
-                estado_i = 0;
-                for (estado in data[tema]) {
-                    if (data[tema].hasOwnProperty(estado)) {
-                        estado_p = {
-                            id: tema_p.id + "-" + estado_i,
-                            name: estado,
-                            parent: tema_p.id,
-                            value: Math.round(+data[tema][estado]),
-                        };
-                        tema_val += estado_p.value;
-                        points.push(estado_p);
-                        estado_i = estado_i + 1;
-                    }
-                }
-                tema_p.value = tema_val;
-                points.push(tema_p);
-                tema_i = tema_i + 1;
-            }
-        }
-        $('#chart_panel').highcharts({
-            series: [{
-                type: "treemap",
-                layoutAlgorithm: 'squarified',
-                allowDrillToNode: true,
-                dataLabels: {
-                    enabled: false
-                },
-                point: {
-                    events: {
-                        //Evento para manejar manejar cuando se selecciona un punto
-                        click: function() {
-                            if (this.id.indexOf("-") == -1){
-                                console.log(this);
-                                //alert('Category: '+ this.category +', name: '+ this.name);
-                                document.getElementById("tema_seleccionado").innerHTML = "PROYECTOS DE LEY / "+this.name;
-                                nombre_padre = this.name;
-                            }
-                            else {
-                                //get proyectos del parametro que no se ha usado y llama a una funcion externa
-                                dibujarTabla(nombre_padre, this.name, this.color);
-                            }
-                        }
-                    },
-                },
-               drillUpButton: {
-                    text: 'Volver',
-                    position: {
-                        align: 'right',
-                        x: -30,
-                        y: 30,
-                    },
-                    theme: {
-                        fill: 'white',
-                        'stroke-width': 0,
-                        states: {
-                            hover: {
-                                fill: '#9D999A'
-                            }
-                        }
-                    }
-                },
-                levelIsConstant: false,
-                levels: [{
-                    level: 1,
-                    dataLabels: {
-                        enabled: true,
-                        align: 'center',
-                        verticalAlign: 'middle',
-                        style: {
-                            fontSize: '10px',
-                        }
-                    },
-                    borderWidth: 1
-                }],
-                data: points
-            }],
-            title: '',
-            chart: {
-                events: {
-                    click: function (e) {
-                        document.getElementById("tema_seleccionado").innerHTML = "PROYECTOS DE LEY";
-                        nombre_padre = '';
-                        borrarTabla();
-                    },
-                },
-                style: {
-                    fontFamily: 'sans-serif',
-                },
-            }
+
+    <script type="text/javascript" charset="UTF-8">
+			$(function () {
+
+	var partidos = {{ partidos|safe }};
+
+	fijox = 7;
+	fijoy = 1.5;
+	votos = [];
+    for(partido of partidos){
+    	votos = partido.data;
+    	temps = [];
+    	for (v = 0; v < 4; v++) {
+    		if(votos[v] > 0){
+    			temp = [fijox, fijoy+3*v, votos[v]];
+    			temps.push(temp);
+    		}
+    	}
+    	partido.data = temps;
+    	fijox += 2;
+    }
+    partidos.push(
+    	{
+        	enableMouseTracking: false,
+        	color: 'transparent',
+        	showInLegend: false,
+            data: [[3, 1.5, 0]]
+        },{
+        	enableMouseTracking: false,
+        	color: 'transparent',
+        	showInLegend: false,
+            data: [[5, 1.5, 0]]
         });
-        function dibujarTabla(nombre_padre, nombre_hijo, color){
-            var html = '<h2>Proyectos de <mark style="color:'+color+'; background: none;">'+nombre_padre+"</mark>"+
-                " "+nombre_hijo.toLowerCase()+"</h2><br>"+
-                "<table>"+
-                "    <tr>"+
-                "        <th> Nombre proyecto </th>"+
-                "        <th> Estado actual </th>"+
-                "        <th> Iniciativa </th>"+
-                "    </tr>";
-            console.log(data_proyectos);
-            tema = data_proyectos[nombre_padre]
-            console.log(tema);
-            var proyectos = tema[nombre_hijo];
-            var index;
-            for (index = 0; index < proyectos.length; ++index) {
-                console.log(proyectos[index]);
-                var url = "{% url 'proyecto' 990 %}".replace("990",  proyectos[index].id);
-                html += "<tr>"+
-                     '        <td><a href=" '+url+' ">'+ proyectos[index].titulo +"</a></td>"+
-                     "        <td>"+ proyectos[index].estado +"</td>"+
-                     "        <td>"+ proyectos[index].iniciativa +"</td>"+
-                     "    </tr>";
-            }
 
-            html += "</table>";
+    $('#chart_panel').highcharts({
 
-            document.getElementById("tabla").innerHTML = html;
-        }
+        chart: {
+            type: 'bubble',
+            zoomType: 'none',
+            style: {
+                    fontFamily: 'sans-serif',
+            },
+        },
 
-        function borrarTabla(){
-            document.getElementById("tabla").innerHTML = "";
-        }
+        title: {
+            text: ''
+        },
+        tooltip: {
+    		formatter: function() {
+        		return this.series.name + ': '+this.point.shapeArgs.r+'%';
+    		}
+		},
+        plotOptions: {
+            bubble: {
+                marker: {
+                    lineWidth: 0,
+                },
+            },
+        },
+        xAxis: {
+            lineWidth: 0,
+            minorGridLineWidth: 0,
+            lineColor: 'transparent',
+            labels: {
+                enabled: false
+            },
+            minorTickLength: 0,
+            tickLength: 0,
+        },
+
+        yAxis: {
+            gridLineWidth: 0,
+            lineWidth: 0,
+            minorGridLineWidth: 0,
+            lineColor: 'transparent',
+            labels: {
+                enabled: false
+            },
+            title: {
+                text: ''
+            },
+            minorTickLength: 0,
+            tickLength: 1,
+            plotLines: [
+            {
+                color: 'grey', // Color value
+                value: 0,
+                width: 2, // Width of the line
+                label: {
+                    text: 'Inasistencias',
+                    align: 'left',
+                    y: -20,
+                    style: {
+                        color: 'grey',
+                        fontWeight: 'bold',
+                    },
+                },
+            },
+            {
+                color: 'grey', // Color value
+                value: 3,
+                width: 2, // Width of the line
+                label: {
+                    text: 'Abstenciones',
+                    align: 'left',
+                    y: -20,
+                    style: {
+                        color: 'grey',
+                        fontWeight: 'bold',
+                    },
+                },
+            },
+            {
+                color: 'grey', // Color value
+                value: 6,
+                width: 2, // Width of the line
+                label: {
+                    text: 'No',
+                    align: 'left',
+                    y: -20,
+                    style: {
+                        color: 'grey',
+                        fontWeight: 'bold',
+                    },
+                },
+            },
+            {
+                color: 'grey', // Color value
+                value: 9,
+                width: 2, // Width of the line
+                label: {
+                    text: 'Si',
+                    align: 'left',
+                    y: -20,
+                    style: {
+                        color: 'grey',
+                        fontWeight: 'bold',
+                    },
+                },
+            }],
+        },
+
+        series: partidos,
     });
+});
 	</script>
+    <script type="text/javascript" charset="UTF-8">
+        $(function() {
+            $("#busqueda").autocomplete({
+                source: "/busqueda/autocompletar/",
+                minLength: 2,
+            });
+        });
+    </script>
     <div id="tabla" class="tabla"></div>
 {% endblock %}
