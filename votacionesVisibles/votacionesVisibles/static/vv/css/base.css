@@ -20,22 +20,25 @@ $gris_oscuro= #575354;
 /* Seccion con el logo, proyectos clave y el buscador */
 #header {
     text-align:left;
-    padding:5px 200px;
+    padding: 0.3em 12.5em;
+    background-color: black;
 }
 img.header-img {
     width: 35%;
     height: 35%;
-    padding:10px 0px;
+    padding: 0.625em 0em;
+    position: relative;
+    left: 0em;
+    top: 0.2em;
 }
 ul#header-pclave {
-    position: relative;
-    left: 30px;
-    top: 27px;
+    position: absolute;
+    left: 32.2em;
+    top: 2em;
     text-align: left;
-    background-color: white;
-    border: 2px solid #9D999A;
-    box-shadow: 1px 2px 1px #575354;
-    padding: 10px 10px;
+    border: 0.125em solid #9D999A;
+    box-shadow: 0.0625em 0.125em 0.0625em #575354;
+    padding: 0.625em 0.625em;
     float: right;
 }
 ul#header-pclave li {
@@ -45,58 +48,58 @@ ul#header-pclave li {
     font-family: flama light;
     font-weight: bold;
     font-size: small;
-    padding: 0px 4px;
+    padding: 0em 0.3em;
     text-decoration: none;
     overflow: hidden;
 }
 ul#header-pclave li a {
     font-weight: normal;
     color: #9D999A;
-    padding: 0px 0.5px;
+    padding: 0em 0.03125em;
     text-decoration: none;
 }
 table.header-tabla {
     position: absolute;
-    right: 20px;
-    top: 33px;
-    border: 1px solid #9D999A;
-    padding: 0px 0px;
+    right: 1.25em;
+    top: 1.7em;
+    border: 0.0625em solid #9D999A;
+    padding: 0em 0em;
 }
 input.btn-buscar {
     background: url(../images/buscar.png) no-repeat center;
     cursor: pointer;
-    padding: 4px 7px;
+    padding: 0.25em 0.4375em;
     border: 0;
 }
 input.txt-buscar {
     font-size: small;
-    border: 0px solid white;
+    border: 0em solid white;
     border-left: 1px solid #9D999A;
-    padding: 0px 4px;
-    width: 100px;
+    padding: 0em 0.25em;
+    width: 6.25em;
 }
 p.header-tabla {
     font-family: flama light;
     font-size: small;
     text-align: right;
     color: #575354;
-    padding: 0px 4px;
+    padding: 0em 0.25em;
     text-transform: uppercase;
-    margin: 0;
+    margin: 0em 0em;
 }
 p.header-tabla b{
     font-family: flama light;
     font-size: small;
     text-align: right;
     color: #575354;
-    padding: 0px 1px;
+    padding: 0em 0.0625em;
     text-transform: none;
     margin: 0;
 }
 tr.header-tabla td{
     border-bottom:1pt solid #9D999A;
     color: #575354;
-    padding: 0px 0px;
+    padding: 0em 0em;
 }
 tr.header-tabla2 td{
     color: #575354;
@@ -106,10 +109,10 @@ tr.header-tabla2 td{
 /* Bara de navegacion lateral -------------------------*/
 #sidebar {
     float:left;
-    line-height:25px;
-    height:800px;
-    width:200px;
-    padding:5px;
+    line-height: 1.5625em;
+    width: 11em;
+    padding: 0.3em;
+    background-color: red;
 }
 ul.sidebar-secciones {
       padding: 0;
@@ -118,28 +121,28 @@ ul.sidebar-secciones {
     }
 ul.sidebar-secciones li {
       display: block;
-      width: 160px;
-      padding: 7px 0px;
+      width: 10em;
+      padding: 0.4375em 0em;
     }
 ul.sidebar-secciones li a {
        display: block;
-       width: 160px;
+       width: 10em;
        text-align: center;
        font-family: flama light;
        background-color: #37AB9C;
        color: white;
-       padding: 0.5px 5px;
+       padding: 0.03125em 0.3125em;
        text-decoration: none;
        text-transform: uppercase;
     }
 ul.sidebar-secciones li p {
        display: block;
-       width: 160px;
+       width: 10em;
        text-align: center;
        font-family: flama light;
        background-color: #37AB9C;
        color: white;
-       padding: 0px 5px;
+       padding: 0em 0.3125em;
        margin: 0;
        text-decoration: none;
        text-transform: uppercase;
@@ -153,17 +156,17 @@ ul.sidebar-detalle li {
       list-style-type: none;
       overflow: hidden;
       display: block;
-      padding: 1px 0px;
+      padding: 0.0625em 0em;
     }
 ul.sidebar-detalle li a {
        display: block;
-       width: 150px;
+       width: 9.375em;
        text-align: right;
        background-color: white;
        font-family: flama light;
        font-weight: normal;
        color: #575354;
-       padding: 1px 0px;
+       padding: 0.0625e 0em;
        text-decoration: none;
        text-transform: none;
        border-bottom: solid #37AB9C;
@@ -172,12 +175,12 @@ ul.sidebar-detalle li a {
 /*Div con el contenido de cada pagina */
 #content {
     width: 80%;
-    height: 1000;
     float: left;
-    margin-left: -10px;
-    padding: 5px 20px;
+    margin-left: -0.625em;
+    padding: 0.3125em 1.25em;
     font-family: flama light;
     color: #575354;
+    background-color: green;
 }
 
 /*footer de la pagina */
@@ -187,34 +190,36 @@ ul.sidebar-detalle li a {
     color:white;
     clear:both;
     text-align: center;
-    padding:0px;
+    padding: 0em;
+    margin-bottom: 0em;
 }
 
 .treemap {
     font-family: flama light;
-    background-color:#37AB9C;
-    color:white;
-    clear:both;
+    background-color: #37AB9C;
+    color: white;
+    clear: both;
     text-align: center;
-    padding:0px;
+    padding: 0em;
 }
 
 /*css para los div que contienen las graficas */
 #chart_panel {
-    margin: 0px 0px;
-    padding: 0px 0px;
+    background: none;
+    margin: 0em 0em;
+    padding: 0em 0em;
     float: left;
     width: 100%;
-    height: 400px
+    height: 30em;
 }
 #tema_seleccionado h1 {
-    padding: 0px 0px;
-    margin: 0px 0px;
+    padding: 0em 0em;
+    margin: 0em 0em;
     color: #9D999A;
 }
 #proyecto_seleccionado h2 {
-    padding: 0px 0px;
-    margin: 0px 0px;
+    padding: 0em 0em;
+    margin: 0em 0em;
     color: #575354;
 }
 
@@ -224,23 +229,23 @@ ul.sidebar-detalle li a {
     text-align: justify;
     float: left;
     color: black;
-    right: 10px;
+    right: 0.625em;
     width: 25%;
-    padding: 2px 5px;
-    margin: 10px 17px;
+    padding: 0.125em 0.3125em;
+    margin: 0.625em 1.0625em;
 }
 .info h3 {
     color: white;
     text-align: center;
 }
 .info p {
-    margin: 20px 20px;
+    margin: 1.25em 1.25em;
 }
 
 .tabla{
     position: relative;
-    top: 0px;
-    left: 10px;
+    top: 0em;
+    left: 0.625em;
     width: 80%;
     float: left;
     color: #575354;
@@ -249,8 +254,8 @@ ul.sidebar-detalle li a {
     border-collapse: collapse;
 }
 .tabla td {
-    padding: 5px 10px;
-    border: 0.5px solid #9D999A;
+    padding: 0.3125em 0.625em;
+    border: 0.03125em solid #9D999A;
 }
 .tabla a{
     color: #575354;
@@ -267,7 +272,7 @@ ul.sidebar-detalle li a {
 #columna_izquierda {
   float: left;
   width: 57%;
-  margin-left: 0px;
+  margin-left: 0em;
   margin-right: 10px;
   text-align: left;
 }
@@ -276,12 +281,16 @@ ul.sidebar-detalle li a {
     background: none;
     color: #575354;
 }
+#columna_izquierda p{
+    padding: 0em 0em;
+    margin-left: 0em;
+}
 
 #busqueda{
     width: 84%;
     font-family: flama light;
     color: #575354;
-    border: 0.5px solid #9D999A;
+    border: 0.03125em solid #9D999A;
     font-size: medium;
 }
 .ui-widget{
@@ -297,9 +306,34 @@ ul.sidebar-detalle li a {
 .ui-widget li{
     list-style-type: none;
     font-size: small;
-    padding: 0px 0px;
+    padding: 0em 0em;
     text-decoration: none;
     width: 30%;
     overflow: hidden;
     display: block;
+}
+#tabs {
+    font-family: flama light;
+    color: #575354;
+    border: 0em solid transparent;
+    font-size: small;
+    background: none;
+}
+.tabrow {
+    font-family: flama light;
+    background: none;
+}
+.tabrow ul {
+    color: #575354;
+    list-style-type: none;
+    overflow: hidden;
+    float: left;
+    background: none;
+    border: 0em solid transparent;
+}
+.tabrow li {
+    white-space: pre;
+    margin-bottom: 0.0625em;
+	padding-bottom: 0.0625em;
+	border: 0em solid transparent;
 }

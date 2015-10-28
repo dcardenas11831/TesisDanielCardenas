@@ -2,10 +2,11 @@
 from __future__ import unicode_literals
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.db.models import Q
 import json
 from .models import ProyectoDeLeyProyectoley, ProyectoDeLeyEstadodeproyectodeley, ProyectoDeLeyVotacion, \
     CongresoPartido, \
-    CongresoCongresista
+    CongresoCongresista, ProyectoDeLeyVoto
 from .models import GeneralTema
 
 
@@ -17,7 +18,8 @@ def index(request):
     return render(request, 'vv/base.html')
 
 
-# Metodo que contiene la informacion necesari aora mostrar todos los proyectos en el treemap
+# /proyectos/ Pagina principal de PROYECTOS-----------------------------------------------------------------------------
+# Metodo que contiene la informacion necesari para mostrar todos los proyectos en el treemap
 
 
 def main_proyectos(request):
@@ -59,9 +61,11 @@ def main_proyectos(request):
             data[temp]['En debate'] += 1
             data_proyectos[temp]['En debate'].append(json_proyecto)
 
-    # print data
     return render(request, 'vv/main_proyectos.html',
                   {'data': json.dumps(data), 'proyectos': json.dumps(data_proyectos)})
+
+
+# /proyectos/#### Pagina detalle de un proyecto-------------------------------------------------------------------------
 
 
 def detalle_proyecto(request, proyecto_id):
@@ -71,74 +75,201 @@ def detalle_proyecto(request, proyecto_id):
     print "-------------------------------------------------------------"
     fecha_anterior = ""
     votaciones = []
+    votaciones_grafico = []
+    str_votaciones = ""
     for estado in estados:
         print "nuemero de estados........................................"
         print str(len(estados)) + "estado: " + estado.estado.nombre
-        if estado.estado.id in range(16, 32):
+        votaciones_estado = []
+        if estado.estado.id in range(16, 32) or estado.estado.id == 73:  # el ultimo es para los aprobados en 1 y 3 deb
             estados_cambio_debate.append(estado)
             if fecha_anterior != "":
-                votaciones_estado = ProyectoDeLeyVotacion.objects.filter(proyecto_id=proyecto_id,
+                votaciones_estado = ProyectoDeLeyVotacion.objects.filter((Q(motivo__icontains="tránsito") |
+                                                                          Q(motivo__icontains="título ")),
+                                                                         proyecto_id=proyecto_id,
                                                                          tipo_votacion_id__lte=3,
                                                                          fecha__lte=estado.fecha,
-                                                                         fecha__gte=fecha_anterior,
-                                                                         # motivo__icontains="debate"
+                                                                         fecha__gt=fecha_anterior,
                                                                          ).order_by('fecha')
             else:
-                votaciones_estado = ProyectoDeLeyVotacion.objects.filter(proyecto_id=proyecto_id,
+                votaciones_estado = ProyectoDeLeyVotacion.objects.filter((Q(motivo__icontains="tránsito") |
+                                                                          Q(motivo__icontains="título ")),
+                                                                         proyecto_id=proyecto_id,
                                                                          tipo_votacion_id__lte=3,
                                                                          fecha__lte=estado.fecha,
-                                                                         # motivo__icontains="debate"
                                                                          ).order_by('fecha')
             votaciones.append(votaciones_estado)
-            print "nuemero de votaciones........................................"
-            print len(votaciones)
+            if len(votaciones_estado) > 0:
+                ultima = votaciones_estado[len(votaciones_estado) - 1]
+                votaciones_grafico.append(ultima)
+                str_votaciones += str(ultima.id) + "-"
+                # se toma la ultima para mostrar en el grafico
+            else:
+                votaciones_grafico.append(None)
+                str_votaciones += "0-"
             fecha_anterior = estado.fecha
 
-    partidos = [
-        {'name': "La U", 'color': "#FF6600", 'data': [34, 45, 4, 8]},
-        {'name': "Conservador", 'color': "#000099", 'data': [12, 34, 90, 5]},
-        {'name': "Centro Democrático", 'color': "#00CCFF", 'data': [12, 21, 35, 19]},
-        {'name': "Liberal", 'color': "#CC0000", 'data': [4, 45, 27, 23]},
-        {'name': "Cambio Radical", 'color': "#FF3366", 'data': [20, 37, 25, 10]},
-        {'name': "Verde", 'color': "#339900", 'data': [9, 12, 29, 34]},
-        {'name': "Polo", 'color': "#FFCC00", 'data': [29, 10, 20, 9]},
-        {'name': "Opción Ciudadana", 'color': "#990066", 'data': [0, 2, 48, 52]},
-        {'name': "AICO", 'color': "#330000", 'data': [0, 0, 21, 39]},
-    ]
-    return render(request, 'vv/detalle_proyecto.html', {'proyecto': proyecto, 'partidos': json.dumps(partidos),
-                                                        'votaciones': votaciones})
+        elif estado.estado.id == 32:
+            estados_cambio_debate.append(estado)
+            votaciones_estado = ProyectoDeLeyVotacion.objects.filter(proyecto_id=proyecto_id, tipo_votacion_id__lte=3,
+                                                                     fecha__lte=estado.fecha, fecha__gt=fecha_anterior,
+                                                                     ).order_by('fecha')
+            votaciones.append(votaciones_estado)
+            if len(votaciones_estado) > 0:
+                ultima = votaciones_estado[len(votaciones_estado) - 1]
+                votaciones_grafico.append(ultima)
+                str_votaciones += str(ultima.id) + "-"
+                # se toma la ultima para mostrar en el grafico
+            else:
+                votaciones_grafico.append(None)
+                str_votaciones += "0-"
+            fecha_anterior = estado.fecha
 
+        print votaciones_estado
+        print "nuemero de votaciones........................................"
+        print len(votaciones)
+
+    # Todas las votaciones tienen que estar en un dict que contenga como clave el id del estado
+    # TODO es necesario mandar toda la informacion al template de una vez, asi no busca mucha sveces lo mismo
+
+    json_votaciones_proyecto = {}
+    e = 0  # indice para los estados
+    for votacion in votaciones_grafico:
+        json_votacion = []
+        json_index = {}
+        if votacion is not None:
+            votos = ProyectoDeLeyVoto.objects.filter(votacion=votacion).select_related('congresista__partido_politico')
+            for voto in votos:
+                partido = voto.congresista.partido_politico
+                if partido.id not in json_index:
+                    json_index[partido.id] = len(json_votacion)
+                    p = {
+                        'name': partido.nombre,
+                        'color': partido.get_color(),
+                        'data': {'inasistencias': 0, 'abstenciones': 0, 'no': 0, 'si': 0},
+                        'total_votos': 0,
+                    }
+                    json_votacion.append(p)
+                if voto.voto == 0:  # abstenciones en la bd
+                    json_votacion[json_index[partido.id]]['data']['abstenciones'] += 1
+                elif voto.voto == 1:  # no en la bd
+                    json_votacion[json_index[partido.id]]['data']['no'] += 1
+                elif voto.voto == 2:  # si en la bd
+                    json_votacion[json_index[partido.id]]['data']['si'] += 1
+                elif voto.voto == 3:  # no asistio en la bd
+                    json_votacion[json_index[partido.id]]['data']['inasistencias'] += 1
+                json_votacion[json_index[partido.id]]['total_votos'] += 1
+        e += 1
+        # Si la votacion es None significa que fue aprobada por pupitrazo y se pone un dict vacio
+        json_votaciones_proyecto[estados_cambio_debate[e].id] = json_votacion
+
+    str_estados = '-'.join([str(e.id) for e in estados_cambio_debate])
+    return render(request, 'vv/detalle_proyecto.html', {'proyecto': proyecto,
+                                                        'partidos': json.dumps(json_votaciones_proyecto),
+                                                        'ids_votaciones': str_votaciones, 'ids_estados': str_estados,
+                                                        'estados': estados_cambio_debate})
+
+
+# ajax para manejar el autocompletar y el buscar los votos de una persona o partido
 
 def autocompletar(request):
     if request.is_ajax():
         q = request.GET.get('term', '')
-        # Toma todos los partidos activos que tienen el item buscado
+        # Toma los 10 priemro partidos activos que tienen el item buscado
         partidos = CongresoPartido.objects.filter(nombre__icontains=q, estado_id=1)[:10]
-        congresistas_apellido = CongresoCongresista.objects.filter(persona_ptr__apellidos__icontains=q,
-                                                                   es_congresista=True)[:5]
-        congresistas_nombre = CongresoCongresista.objects.filter(persona_ptr__nombres__icontains=q,
-                                                                 es_congresista=True)[:5]
+        # Busca por el apellido que contenga el item y luego el nombre
+        congresistas = CongresoCongresista.objects.filter((Q(persona_ptr__apellidos__icontains=q) |
+                                                           Q(persona_ptr__nombres__icontains=q)),
+                                                          es_congresista=True)[:10]
+
         results = []
         for partido in partidos:
-            drug_json = {'id': partido.id, 'label': partido.nombre, 'value': partido.nombre}
+            drug_json = {'value_id': partido.id, 'label': partido.nombre, 'value': partido.nombre}
             results.append(drug_json)
-        for congresista in congresistas_apellido:
-            nombre = congresista.persona_ptr.nombres
-            if not nombre.endswith(" "):
-                nombre += " "
-            nombre += congresista.persona_ptr.apellidos
-            drug_json = {'id': congresista.persona_ptr.id, 'label': nombre, 'value': nombre}
+        for congresista in congresistas:
+            nombre = congresista.persona_ptr.nombre_completo()
+            drug_json = {'value_id': congresista.persona_ptr.id, 'label': nombre, 'value': nombre}
             results.append(drug_json)
-        for congresista in congresistas_nombre:
-            nombre = congresista.persona_ptr.nombres
-            if not nombre.endswith(" "):
-                nombre += " "
-            nombre += congresista.persona_ptr.apellidos
-            drug_json = {'id': congresista.persona_ptr.id, 'label': nombre, 'value': nombre}
-            results.append(drug_json)
+
         data = json.dumps(results)
     else:
         data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+
+def ver_votos(request):
+    if request.is_ajax():
+        # se toman los parametros del ajax
+        q = request.GET.get('busqueda')
+        estados = request.GET.get('ids_estados').split('-')
+        votaciones = request.GET.get('ids_votaciones').split('-')[:-1]  # toma todos menos el ultimo que es vacio
+        results = {}  # es un diccionario con los nombres de los estados por un lado y los votos por le otro
+        try:  # se mira si es un partido
+            partido = CongresoPartido.objects.get(nombre=q, estado_id=1)
+            # Se sacan los votos del partido por los proyectos seleccionados
+            json_congresistas = []
+            json_index = {}  # indice de json_congresistas contiene el id y la posicion en el arreglo
+            e = 0  # contador de estados
+            str_estados = []
+            for votacion in votaciones:
+                if votacion != 0:
+                    votos = ProyectoDeLeyVoto.objects.filter(votacion=votacion, congresista__partido_politico=partido)
+                    estado = ProyectoDeLeyEstadodeproyectodeley.objects.get(id=estados[e])
+                    str_estados.append(estado.estado.nombre)
+                    for voto in votos:
+                        congresista = voto.congresista
+                        if congresista.persona_ptr.id not in json_index:
+                            c = {
+                                'nombre': congresista.persona_ptr.nombre_completo(),
+                                'camara': 'senador' if congresista.es_senador else 'representante',
+                                'votos': [-1] * len(estados)
+                            }
+                            json_index[congresista.persona_ptr.id] = len(json_congresistas)
+                            json_congresistas.append(c)
+                        json_congresistas[json_index[congresista.persona_ptr.id]]['votos'][e] = voto.voto
+                e += 1
+            results['estados'] = str_estados
+            results['datos'] = json_congresistas
+            results['tipo'] = 0  # le dice a la interfaz que es una repsuesta para un partido y no un congresista
+        except CongresoPartido.DoesNotExist:  # si llega aca es que no es un partido ys e busca si es un congresista
+            q = q.strip()
+            qsplit = q.split(' ')
+            nombres = u' '.join(qsplit[:1])
+            apellidos = u' '.join(qsplit[-2:])
+            try:  # se mira si es un congresista
+                congresista = CongresoCongresista.objects.get(persona_ptr__nombres__icontains=nombres,
+                                                              persona_ptr__apellidos__icontains=apellidos)
+                # Se sacan los votos del congresista por los proyectos seleccionados
+                json_congresista = {
+                    'nombre': congresista.persona_ptr.nombre_completo(),
+                    'camara': 'senador(a)' if congresista.es_senador else 'representante',
+                    'votos': [-1] * len(estados)
+                }
+                e = 0  # contador de estados
+                str_estados = []
+                for votacion in votaciones:
+                    estado = ProyectoDeLeyEstadodeproyectodeley.objects.get(id=estados[e])
+                    str_estados.append(estado.estado.nombre)
+                    if votacion != 0:
+                        try:
+                            voto = ProyectoDeLeyVoto.objects.get(votacion=votacion, congresista=congresista)
+                            json_congresista['votos'][e] = voto.voto
+                        except ProyectoDeLeyVoto.DoesNotExist:
+                            pass  # quiere decir que el congresista no participo de esta votacion
+                    e += 1
+                results['estados'] = str_estados
+                results['datos'] = json_congresista
+                results['tipo'] = 1  # le dice a la interfaz que es un congresista
+
+            except CongresoCongresista.DoesNotExist:  # si llega aca no es ninguna de las dos
+                results = 'No se encontró el término buscado'
+
+        data = json.dumps(results)
+
+    else:
+        data = 'fail'
+
     mimetype = 'application/json'
     print data
     return HttpResponse(data, mimetype)

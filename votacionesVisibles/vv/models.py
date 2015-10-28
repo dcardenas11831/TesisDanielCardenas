@@ -43,6 +43,7 @@ class ActividadTipoactividad(models.Model):
         managed = False
         db_table = 'actividad_tipoactividad'
 
+
 '''
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=80)
@@ -162,6 +163,7 @@ class AyudaPreguntarespuesta(models.Model):
     class Meta:
         managed = False
         db_table = 'ayuda_preguntarespuesta'
+
 
 '''
 class BlogBlog(models.Model):
@@ -507,7 +509,8 @@ class CongresoCongresista(models.Model):
     ha_sido_reemplazo = models.NullBooleanField()
     tiene_formula_electoral_aspirante_a_la_otra_camara = models.NullBooleanField()
     formula_electoral = models.CharField(max_length=50, blank=True, null=True)
-    partido_formula_electoral = models.ForeignKey('CongresoPartido', related_name='partido_formula', blank=True, null=True)
+    partido_formula_electoral = models.ForeignKey('CongresoPartido', related_name='partido_formula', blank=True,
+                                                  null=True)
     ha_estado_en_bancada_diferente = models.NullBooleanField()
     ha_ejercido_cargo_diferente = models.NullBooleanField()
     cargo_popular = models.CharField(max_length=20, blank=True, null=True)
@@ -638,6 +641,27 @@ class CongresoLink(models.Model):
 
 
 class CongresoPartido(models.Model):
+    COLORES = {
+        'Alianza Social Independiente': "#CD6428",
+        'Alianza Verde': "#339900",
+        'Autoridades Indígenas de Colombia AICO': "#474900",
+        'Bancada Afrocolombiana ': "#0F0000",
+        'Bancada Indígena': "#554B0F",
+        'Cambio Radical': "#FF3366",
+        'Centro Democrático': "#00CCFF",
+        'Conservador Colombiano': "#000099",
+        'Fundación Ébano de Colombia Funeco': "#FF00FF",
+        'Liberal Colombiano': "#CC0000",
+        'MIRA': "#000019",
+        'Movimiento Alternativo Indígena y Social - MAIS': "#FF0000",
+        'Movimiento de Integración Regional - MIR': "#373737",
+        'Movimiento Político Cien por Ciento por Colombia': "#6A2952",
+        'Opción Ciudadana': "#CD9500",
+        'Partido Social de Unidad Nacional - Partido de la U': "#FF6600",
+        'Polo Democrático Alternativo': "#FFCC00",
+        'Por un Huila Mejor': "#AB2B00",
+    }
+
     created_at = models.DateTimeField()
     edited_at = models.DateTimeField(blank=True, null=True)
     nombre = models.CharField(max_length=100)
@@ -653,7 +677,8 @@ class CongresoPartido(models.Model):
     propuestas = models.TextField(blank=True, null=True)
     director = models.ForeignKey('CongresoPersona', related_name='director', blank=True, null=True)
     secretario = models.ForeignKey('CongresoPersona', related_name='secretario', blank=True, null=True)
-    representante_legal = models.ForeignKey('CongresoPersona', related_name='representante_legal', blank=True, null=True)
+    representante_legal = models.ForeignKey('CongresoPersona', related_name='representante_legal', blank=True,
+                                            null=True)
     fundador = models.CharField(max_length=140, blank=True, null=True)
     posicion_ideologica = models.IntegerField(blank=True, null=True)
     sistema_avales = models.IntegerField(blank=True, null=True)
@@ -674,6 +699,9 @@ class CongresoPartido(models.Model):
     class Meta:
         managed = False
         db_table = 'congreso_partido'
+
+    def get_color(self):
+        return self.COLORES[self.nombre]
 
 
 class CongresoPartidoAvales(models.Model):
@@ -743,8 +771,10 @@ class CongresoPersona(models.Model):
     lugar_cedula = models.ForeignKey('GeneralMunicipio', related_name='cedula_lugar', blank=True, null=True)
     imagen = models.CharField(max_length=100, blank=True, null=True)
     anio_nacimiento = models.DateField(blank=True, null=True)
-    departamento_nacimiento = models.ForeignKey('GeneralDepartamento', related_name='departamento_nacimiento', blank=True, null=True)
-    municipio_nacimiento = models.ForeignKey('GeneralMunicipio', related_name='municipio_nacimiento', blank=True, null=True)
+    departamento_nacimiento = models.ForeignKey('GeneralDepartamento', related_name='departamento_nacimiento',
+                                                blank=True, null=True)
+    municipio_nacimiento = models.ForeignKey('GeneralMunicipio', related_name='municipio_nacimiento', blank=True,
+                                             null=True)
     nivel_educativo = models.CharField(max_length=50, blank=True, null=True)
     rango_edad = models.ForeignKey('GeneralRangoedad', models.DO_NOTHING, blank=True, null=True)
     profesion = models.ForeignKey('GeneralProfesion', models.DO_NOTHING, blank=True, null=True)
@@ -765,6 +795,9 @@ class CongresoPersona(models.Model):
     estado_civil = models.CharField(max_length=20, blank=True, null=True)
     religion = models.CharField(max_length=30, blank=True, null=True)
     frecuencia_actos_religiosos = models.CharField(max_length=20, blank=True, null=True)
+
+    def nombre_completo(self):
+        return u'%s %s' % (self.nombres.strip(), self.apellidos.strip())
 
     class Meta:
         managed = False
@@ -978,6 +1011,7 @@ class DbsettingsSetting(models.Model):
         managed = False
         db_table = 'dbsettings_setting'
 
+
 '''
 class DjangoAdminLog(models.Model):
     action_time = models.DateTimeField()
@@ -1034,6 +1068,7 @@ class DjangoContentType(models.Model):
         managed = False
         db_table = 'django_content_type'
         unique_together = ['app_label', 'model']
+
 
 '''
 class DjangoEvolution(models.Model):
@@ -1116,6 +1151,8 @@ class DjangoSite(models.Model):
     class Meta:
         managed = False
         db_table = 'django_site'
+
+
 '''
 
 class FacebookconnectFacebookprofile(models.Model):
@@ -1207,6 +1244,7 @@ class GeneralTema(models.Model):
     class Meta:
         managed = False
         db_table = 'general_tema'
+
 
 '''
 class GrappelliBookmark(models.Model):
@@ -1372,6 +1410,7 @@ class HomeSeccionhome(models.Model):
         managed = False
         db_table = 'home_seccionhome'
 
+
 '''
 class LibCounter(models.Model):
     entity_content_type = models.ForeignKey(DjangoContentType, models.DO_NOTHING)
@@ -1406,6 +1445,7 @@ class OpenidConsumerNonce(models.Model):
         managed = False
         db_table = 'openid_consumer_nonce'
 '''
+
 
 class OrdenDelDiaCargocitado(models.Model):
     created_at = models.DateTimeField()
@@ -1888,6 +1928,7 @@ class SocialAuthNonce(models.Model):
         managed = False
         db_table = 'social_auth_nonce'
         unique_together = ['timestamp', 'salt', 'server_url']
+
 
 '''
 class SocialAuthUsersocialauth(models.Model):

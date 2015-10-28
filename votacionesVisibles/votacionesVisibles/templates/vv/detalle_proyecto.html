@@ -17,33 +17,39 @@
     <h2 id="proyecto_seleccionado"> {{proyecto.titulo}}</h2>
 
     <div id="columna_izquierda">
-        <p>
-            <mark>TEMA PRINCIPAL:</mark> {{proyecto.tema_principal.nombre}}<br><br>
-            <mark>RESUMEN:</mark> {{proyecto.sinapsis}}<br><br>
-            <mark>ESTADO ACTUAL:</mark> {{proyecto.estado_proyecto_ley_actual.estado.nombre}}<br><br>
-            <mark>PALABRAS CLAVE:</mark> {{proyecto.tags}}<br><br>
-            <mark>INICIATIVA:</mark> {{proyecto.iniciativa.nombre}}<br><br>
-            <mark>TIPO PROYECTO:</mark> {{proyecto.tipo_proyecto.nombre}}<br><br>
-            <mark>FECHA RADICACION:</mark> {{proyecto.fecha_radicacion}}<br><br>
-        </p>
-
-        <div id="chart_panel"></div>
+        <p>    <mark>TEMA PRINCIPAL:</mark> {{proyecto.tema_principal.nombre}}</p>
+        <p>    <mark>RESUMEN:</mark> {{proyecto.sinapsis}}</p>
+        <p>    <mark>ESTADO ACTUAL:</mark> {{proyecto.estado_proyecto_ley_actual.estado.nombre}}</p>
+        <p>    <mark>PALABRAS CLAVE:</mark> {{proyecto.tags}}</p>
+        <p>    <mark>INICIATIVA:</mark> {{proyecto.iniciativa.nombre}}</p>
+        <p>    <mark>TIPO PROYECTO:</mark> {{proyecto.tipo_proyecto.nombre}}</p>
+        <p>    <mark>FECHA RADICACION:</mark> {{proyecto.fecha_radicacion}}</p>
+        <p>    <mark>VOTACIONES:</mark> </p>
+        <div id="tabs" class="tabrow">
+            <ul>
+                {% for estado in estados %}
+                <li><a href="#{{estado.id}}"> {{estado.estado.nombre}}</a></li>
+                {% endfor %}
+            </ul>
+            <div id="info"></div>
+            <div id="chart_panel"></div>
+        </div>
     </div>
+
     <div id="columna_derecha">
         <p>Digite el nombre del congresista o partido de su inter&#233;s para ver sus votos en este proyecto</p>
         <div class="ui-widget">
-            <input id="busqueda">
-            <input type="submit" class="btn-buscar" value="">
+            <form id="votos" method="GET">
+                <input id="busqueda" name="busqueda">
+                <input type="hidden" name="ids_estados" value={{ids_estados}}>
+                <input type="hidden" name="ids_votaciones" value={{ids_votaciones}}>
+                <input type="submit" class="btn-buscar" value="">
+            </form>
         </div>
-
+        <div id="tabla" class="tabla"></div>
         <ul>
-            {% for votacion in votaciones %}
-            <li> {{votacion}}</li>
-                <ul>
-                    {% for v in votacion %}
-                    <li> {{v.motivo}}</li>
-                    {% endfor %}
-                </ul>
+            {% for estado in estados %}
+            <li> {{estado.estado.nombre}} {{estado.fecha}} {{estado.id}}</li>
             {% endfor %}
         </ul>
     </div>
@@ -57,18 +63,38 @@
 	fijox = 7;
 	fijoy = 1.5;
 	votos = [];
+	tooltip_votos = {};
     for(partido of partidos){
     	votos = partido.data;
+    	tooltip_votos[partido.name] = partido.total_votos;
     	temps = [];
-    	for (v = 0; v < 4; v++) {
-    		if(votos[v] > 0){
-    			temp = [fijox, fijoy+3*v, votos[v]];
-    			temps.push(temp);
-    		}
+    	if (votos.inasistencias > 0){
+            ina = {name: "Inasistencias", x: fijox, y: fijoy+3*0, z: 100*votos.inasistencias/partido.total_votos};
+            temps.push(ina);
     	}
+    	if (votos.abstenciones > 0){
+            abs = {name: "Abstenciones", x: fijox, y: fijoy+3*1, z: 100*votos.abstenciones/partido.total_votos};
+            temps.push(abs);
+    	}
+    	if (votos.no > 0){
+            no = {name: "No", x: fijox, y: fijoy+3*2, z: 100*votos.no/partido.total_votos};
+            temps.push(no);
+    	}
+    	if (votos.si > 0){
+            si = {name: "Si", x: fijox, y: fijoy+3*3, z: 100*votos.si/partido.total_votos};
+            temps.push(si);
+    	}
+    	//for (v = 0; v < 4; v++) {
+    	//	if(votos[v] > 0){
+    	//		temp = [fijox, fijoy+3*v, votos[v]/votos.total_votos];
+    	//		temps.push(temp);
+    	//	}
+    	//}
     	partido.data = temps;
     	fijox += 2;
     }
+    console.log(partidos);
+    console.log(tooltip_votos);
     partidos.push(
     	{
         	enableMouseTracking: false,
@@ -88,7 +114,7 @@
             type: 'bubble',
             zoomType: 'none',
             style: {
-                    fontFamily: 'sans-serif',
+                    //fontFamily: 'sans-serif',
             },
         },
 
@@ -97,7 +123,11 @@
         },
         tooltip: {
     		formatter: function() {
-        		return this.series.name + ': '+this.point.shapeArgs.r+'%';
+    		    temp = +this.point.z.toFixed(2)
+        		return '<b>'+this.series.name + ': </b><br>'+
+        		this.point.name+": "+temp+"% <br>"+
+        		Math.round(0.01*tooltip_votos[this.series.name]*this.point.z)+
+        		" de "+tooltip_votos[this.series.name]+" congresistas";
     		}
 		},
         plotOptions: {
@@ -105,6 +135,11 @@
                 marker: {
                     lineWidth: 0,
                 },
+                //tooltip: {
+                //    headerFormat: '<b>{series.name}</b><br>',
+                //    pointFormat: '{point.name}: {point.z}%<br> {series.name}'
+
+                //},
             },
         },
         xAxis: {
@@ -202,5 +237,29 @@
             });
         });
     </script>
-    <div id="tabla" class="tabla"></div>
+    <script type="text/javascript" charset="UTF-8">
+        $(document).ready(function() {
+
+            $("#votos").submit(function() { // catch the form's submit event
+                $.ajax({ // create an AJAX call...
+                    data: $(this).serialize(), // get the form data
+                    //data: $("#busqueda").prop('value'),
+                    type: $(this).attr('GET'),
+                    url: '/busqueda/ver_votos/',
+                    success: function(response) { // on success..
+                        $("#tabla").html(response); // update the DIV
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+    <script type="text/javascript" charset="UTF-8">
+        $("#tabs").tabs({
+            activate: function (event, ui) {
+                var active = $('#tabs').tabs('option', 'active');
+                $("#info").html('the tab id is ' + $("#tabs ul>li a").eq(active).attr("href"));
+                }
+        });
+    </script>
 {% endblock %}
