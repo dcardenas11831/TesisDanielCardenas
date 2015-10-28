@@ -130,7 +130,6 @@ def detalle_proyecto(request, proyecto_id):
         print len(votaciones)
 
     # Todas las votaciones tienen que estar en un dict que contenga como clave el id del estado
-    # TODO es necesario mandar toda la informacion al template de una vez, asi no busca mucha sveces lo mismo
 
     json_votaciones_proyecto = {}
     e = 0  # indice para los estados
