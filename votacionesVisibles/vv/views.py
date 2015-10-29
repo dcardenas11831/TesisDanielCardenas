@@ -54,7 +54,7 @@ def main_proyectos(request):
         if estado.id == 40 or estado.id == 41:
             data[temp]['Sancionados'] += 1
             data_proyectos[temp]['Sancionados'].append(json_proyecto)
-        elif estado.id in range(32, 35):
+        elif estado.id in range(32, 35) or estado.id == 70:
             data[temp]['Archivados'] += 1
             data_proyectos[temp]['Archivados'].append(json_proyecto)
         else:
@@ -111,9 +111,17 @@ def detalle_proyecto(request, proyecto_id):
 
         elif estado.estado.id == 32:
             estados_cambio_debate.append(estado)
-            votaciones_estado = ProyectoDeLeyVotacion.objects.filter(proyecto_id=proyecto_id, tipo_votacion_id__lte=3,
-                                                                     fecha__lte=estado.fecha, fecha__gt=fecha_anterior,
-                                                                     ).order_by('fecha')
+            if fecha_anterior != "":
+                votaciones_estado = ProyectoDeLeyVotacion.objects.filter(proyecto_id=proyecto_id,
+                                                                         tipo_votacion_id__lte=3,
+                                                                         fecha__lte=estado.fecha,
+                                                                         fecha__gt=fecha_anterior,
+                                                                         ).order_by('fecha')
+            else:
+                votaciones_estado = ProyectoDeLeyVotacion.objects.filter(proyecto_id=proyecto_id,
+                                                                         tipo_votacion_id__lte=3,
+                                                                         fecha__lte=estado.fecha,
+                                                                         ).order_by('fecha')
             votaciones.append(votaciones_estado)
             if len(votaciones_estado) > 0:
                 ultima = votaciones_estado[len(votaciones_estado) - 1]
@@ -158,15 +166,16 @@ def detalle_proyecto(request, proyecto_id):
                 elif voto.voto == 3:  # no asistio en la bd
                     json_votacion[json_index[partido.id]]['data']['inasistencias'] += 1
                 json_votacion[json_index[partido.id]]['total_votos'] += 1
-        e += 1
         # Si la votacion es None significa que fue aprobada por pupitrazo y se pone un dict vacio
         json_votaciones_proyecto[estados_cambio_debate[e].id] = json_votacion
+        e += 1
+    ids_estados = [str(e.id) for e in estados_cambio_debate]
+    str_estados = '-'.join(ids_estados)
 
-    str_estados = '-'.join([str(e.id) for e in estados_cambio_debate])
     return render(request, 'vv/detalle_proyecto.html', {'proyecto': proyecto,
-                                                        'partidos': json.dumps(json_votaciones_proyecto),
-                                                        'ids_votaciones': str_votaciones, 'ids_estados': str_estados,
-                                                        'estados': estados_cambio_debate})
+                                                        'votaciones_proyecto': json.dumps(json_votaciones_proyecto),
+                                                        'str_votaciones': str_votaciones, 'str_estados': str_estados,
+                                                        'estados': estados_cambio_debate, 'ids_estados': ids_estados})
 
 
 # ajax para manejar el autocompletar y el buscar los votos de una persona o partido
@@ -270,5 +279,6 @@ def ver_votos(request):
         data = 'fail'
 
     mimetype = 'application/json'
+    print "///////////////////////////////////////////////"
     print data
     return HttpResponse(data, mimetype)

@@ -2,7 +2,7 @@
 
 {% block imports%}
 {% load staticfiles %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <script src="http://code.highcharts.com/modules/heatmap.js"></script>
 <script src="http://code.highcharts.com/modules/treemap.js"></script>
@@ -11,7 +11,7 @@
 
 {% block content %}
     <h1 id="tema_seleccionado">PROYECTOS DE LEY</h1>
-    <div id="chart_panel"></div>
+    <div id="chart_panel" class="chart_panel_proyectos"></div>
 	<script type="text/javascript">
     $(function () {
         var data = {{ data|safe }},

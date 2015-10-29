@@ -19,7 +19,8 @@
     <div id="columna_izquierda">
         <p>    <mark>TEMA PRINCIPAL:</mark> {{proyecto.tema_principal.nombre}}</p>
         <p>    <mark>RESUMEN:</mark> {{proyecto.sinapsis}}</p>
-        <p>    <mark>ESTADO ACTUAL:</mark> {{proyecto.estado_proyecto_ley_actual.estado.nombre}}</p>
+        <p>    <mark>ESTADO ACTUAL:</mark> {{proyecto.estado_proyecto_ley_actual.estado.nombre}}
+            ({{proyecto.estado_proyecto_ley_actual.fecha}})</p>
         <p>    <mark>PALABRAS CLAVE:</mark> {{proyecto.tags}}</p>
         <p>    <mark>INICIATIVA:</mark> {{proyecto.iniciativa.nombre}}</p>
         <p>    <mark>TIPO PROYECTO:</mark> {{proyecto.tipo_proyecto.nombre}}</p>
@@ -31,8 +32,15 @@
                 <li><a href="#{{estado.id}}"> {{estado.estado.nombre}}</a></li>
                 {% endfor %}
             </ul>
-            <div id="info"></div>
-            <div id="chart_panel"></div>
+            <div class="chart_container">
+                {% for estado in estados %}
+                <div id="{{estado.id}}">
+                    <p> Prueba {{estado.id}}</p>
+                    <div id="{{estado.id}}-votaciones" class="chart_panel_votaciones"></div>
+                    <p> Esta votaci&#243;n se aprob&#243; de manera un&#225;nime por pupitrazo</p>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 
@@ -41,193 +49,192 @@
         <div class="ui-widget">
             <form id="votos" method="GET">
                 <input id="busqueda" name="busqueda">
-                <input type="hidden" name="ids_estados" value={{ids_estados}}>
-                <input type="hidden" name="ids_votaciones" value={{ids_votaciones}}>
-                <input type="submit" class="btn-buscar" value="">
+                <input type="hidden" name="ids_estados" value={{str_estados}}>
+                <input type="hidden" name="ids_votaciones" value={{str_votaciones}}>
+                <input id="submit" type="submit" class="btn-buscar" value="">
             </form>
         </div>
         <div id="tabla" class="tabla"></div>
-        <ul>
-            {% for estado in estados %}
-            <li> {{estado.estado.nombre}} {{estado.fecha}} {{estado.id}}</li>
-            {% endfor %}
-        </ul>
     </div>
 
 
     <script type="text/javascript" charset="UTF-8">
 			$(function () {
 
-	var partidos = {{ partidos|safe }};
+	var votaciones = {{ votaciones_proyecto|safe }};
+	var estados = {{ids_estados|safe}};
 
-	fijox = 7;
-	fijoy = 1.5;
-	votos = [];
-	tooltip_votos = {};
-    for(partido of partidos){
-    	votos = partido.data;
-    	tooltip_votos[partido.name] = partido.total_votos;
-    	temps = [];
-    	if (votos.inasistencias > 0){
-            ina = {name: "Inasistencias", x: fijox, y: fijoy+3*0, z: 100*votos.inasistencias/partido.total_votos};
-            temps.push(ina);
-    	}
-    	if (votos.abstenciones > 0){
-            abs = {name: "Abstenciones", x: fijox, y: fijoy+3*1, z: 100*votos.abstenciones/partido.total_votos};
-            temps.push(abs);
-    	}
-    	if (votos.no > 0){
-            no = {name: "No", x: fijox, y: fijoy+3*2, z: 100*votos.no/partido.total_votos};
-            temps.push(no);
-    	}
-    	if (votos.si > 0){
-            si = {name: "Si", x: fijox, y: fijoy+3*3, z: 100*votos.si/partido.total_votos};
-            temps.push(si);
-    	}
-    	//for (v = 0; v < 4; v++) {
-    	//	if(votos[v] > 0){
-    	//		temp = [fijox, fijoy+3*v, votos[v]/votos.total_votos];
-    	//		temps.push(temp);
-    	//	}
-    	//}
-    	partido.data = temps;
-    	fijox += 2;
-    }
-    console.log(partidos);
-    console.log(tooltip_votos);
-    partidos.push(
-    	{
-        	enableMouseTracking: false,
-        	color: 'transparent',
-        	showInLegend: false,
-            data: [[3, 1.5, 0]]
-        },{
-        	enableMouseTracking: false,
-        	color: 'transparent',
-        	showInLegend: false,
-            data: [[5, 1.5, 0]]
-        });
+    for (estado of estados) {
+        partidos = votaciones[estado];
 
-    $('#chart_panel').highcharts({
+        fijox = 7;
+        fijoy = 1.5;
+        votos = [];
+        var tooltip_votos = {};
+        for(partido of partidos){
+            votos = partido.data;
+            tooltip_votos[partido.name] = partido.total_votos;
+            temps = [];
+            if (votos.inasistencias > 0){
+                ina = {name: "Inasistencias", x: fijox, y: fijoy+3*0, z: 100*votos.inasistencias/partido.total_votos,
+                        total_votos: partido.total_votos};
+                temps.push(ina);
+            }
+            if (votos.abstenciones > 0){
+                abs = {name: "Abstenciones", x: fijox, y: fijoy+3*1, z: 100*votos.abstenciones/partido.total_votos,
+                        total_votos: partido.total_votos};
+                temps.push(abs);
+            }
+            if (votos.no > 0){
+                no = {name: "No", x: fijox, y: fijoy+3*2, z: 100*votos.no/partido.total_votos,
+                        total_votos: partido.total_votos};
+                temps.push(no);
+            }
+            if (votos.si > 0){
+                si = {name: "Si", x: fijox, y: fijoy+3*3, z: 100*votos.si/partido.total_votos,
+                        total_votos: partido.total_votos};
+                temps.push(si);
+            }
+            partido.data = temps;
+            fijox += 2;
+        }
+        partidos.push(
+            {
+                enableMouseTracking: false,
+                color: 'transparent',
+                showInLegend: false,
+                data: [[3, 1.5, 0]]
+            },{
+                enableMouseTracking: false,
+                color: 'transparent',
+                showInLegend: false,
+                data: [[5, 1.5, 0]]
+            });
+        element_id = "#"+estado+"-votaciones"
+        $(element_id).highcharts({
 
-        chart: {
-            type: 'bubble',
-            zoomType: 'none',
-            style: {
-                    //fontFamily: 'sans-serif',
-            },
-        },
-
-        title: {
-            text: ''
-        },
-        tooltip: {
-    		formatter: function() {
-    		    temp = +this.point.z.toFixed(2)
-        		return '<b>'+this.series.name + ': </b><br>'+
-        		this.point.name+": "+temp+"% <br>"+
-        		Math.round(0.01*tooltip_votos[this.series.name]*this.point.z)+
-        		" de "+tooltip_votos[this.series.name]+" congresistas";
-    		}
-		},
-        plotOptions: {
-            bubble: {
-                marker: {
-                    lineWidth: 0,
+            chart: {
+                type: 'bubble',
+                zoomType: 'none',
+                style: {
+                        //fontFamily: 'sans-serif',
                 },
-                //tooltip: {
-                //    headerFormat: '<b>{series.name}</b><br>',
-                //    pointFormat: '{point.name}: {point.z}%<br> {series.name}'
+            },
 
-                //},
-            },
-        },
-        xAxis: {
-            lineWidth: 0,
-            minorGridLineWidth: 0,
-            lineColor: 'transparent',
-            labels: {
-                enabled: false
-            },
-            minorTickLength: 0,
-            tickLength: 0,
-        },
-
-        yAxis: {
-            gridLineWidth: 0,
-            lineWidth: 0,
-            minorGridLineWidth: 0,
-            lineColor: 'transparent',
-            labels: {
-                enabled: false
-            },
             title: {
                 text: ''
             },
-            minorTickLength: 0,
-            tickLength: 1,
-            plotLines: [
-            {
-                color: 'grey', // Color value
-                value: 0,
-                width: 2, // Width of the line
-                label: {
-                    text: 'Inasistencias',
-                    align: 'left',
-                    y: -20,
-                    style: {
-                        color: 'grey',
-                        fontWeight: 'bold',
+            tooltip: {
+                formatter: function() {
+                    temp = +this.point.z.toFixed(2)
+                    return '<b>'+this.series.name + ': </b><br>'+
+                        this.point.name+": "+temp+"% <br>"+
+                        Math.round(0.01*this.point.total_votos*this.point.z)+
+                        " de "+this.point.total_votos+" congresistas";
+                }
+            },
+            plotOptions: {
+                series: {
+                    events: {
+                        click: function (event) {
+                            document.getElementById('busqueda').value = this.name;
+                            document.getElementById('submit').click();
+                        },
+                    },
+                },
+                bubble: {
+                    marker: {
+                        lineWidth: 0,
                     },
                 },
             },
-            {
-                color: 'grey', // Color value
-                value: 3,
-                width: 2, // Width of the line
-                label: {
-                    text: 'Abstenciones',
-                    align: 'left',
-                    y: -20,
-                    style: {
-                        color: 'grey',
-                        fontWeight: 'bold',
-                    },
+            xAxis: {
+                lineWidth: 0,
+                minorGridLineWidth: 0,
+                lineColor: 'transparent',
+                labels: {
+                    enabled: false
                 },
+                minorTickLength: 0,
+                tickLength: 0,
             },
-            {
-                color: 'grey', // Color value
-                value: 6,
-                width: 2, // Width of the line
-                label: {
-                    text: 'No',
-                    align: 'left',
-                    y: -20,
-                    style: {
-                        color: 'grey',
-                        fontWeight: 'bold',
-                    },
-                },
-            },
-            {
-                color: 'grey', // Color value
-                value: 9,
-                width: 2, // Width of the line
-                label: {
-                    text: 'Si',
-                    align: 'left',
-                    y: -20,
-                    style: {
-                        color: 'grey',
-                        fontWeight: 'bold',
-                    },
-                },
-            }],
-        },
 
-        series: partidos,
+            yAxis: {
+                gridLineWidth: 0,
+                lineWidth: 0,
+                minorGridLineWidth: 0,
+                lineColor: 'transparent',
+                labels: {
+                    enabled: false
+                },
+                title: {
+                    text: ''
+                },
+                minorTickLength: 0,
+                tickLength: 1,
+                plotLines: [
+                {
+                    color: 'grey', // Color value
+                    value: 0,
+                    width: 2, // Width of the line
+                    label: {
+                        text: 'Inasistencias',
+                        align: 'left',
+                        y: -20,
+                        style: {
+                            color: 'grey',
+                            fontWeight: 'bold',
+                        },
+                    },
+                },
+                {
+                    color: 'grey', // Color value
+                    value: 3,
+                    width: 2, // Width of the line
+                    label: {
+                        text: 'Abstenciones',
+                        align: 'left',
+                        y: -20,
+                        style: {
+                            color: 'grey',
+                            fontWeight: 'bold',
+                        },
+                    },
+                },
+                {
+                    color: 'grey', // Color value
+                    value: 6,
+                    width: 2, // Width of the line
+                    label: {
+                        text: 'No',
+                        align: 'left',
+                        y: -20,
+                        style: {
+                            color: 'grey',
+                            fontWeight: 'bold',
+                        },
+                    },
+                },
+                {
+                    color: 'grey', // Color value
+                    value: 9,
+                    width: 2, // Width of the line
+                    label: {
+                        text: 'Si',
+                        align: 'left',
+                        y: -20,
+                        style: {
+                            color: 'grey',
+                            fontWeight: 'bold',
+                        },
+                    },
+                }],
+            },
+
+            series: partidos,
+        });
+        }
     });
-});
 	</script>
     <script type="text/javascript" charset="UTF-8">
         $(function() {
@@ -247,7 +254,30 @@
                     type: $(this).attr('GET'),
                     url: '/busqueda/ver_votos/',
                     success: function(response) { // on success..
-                        $("#tabla").html(response); // update the DIV
+                        console.log("response");
+                        console.log(response);
+                        if (response.tipo==0){
+                            str_html = "<table> <tr> <th> Nombre Congresista </th>";
+                            for (e of response.estados){
+                                str_html +="<th>"+e+"</th>";
+                            }
+                            str_html +="</tr>";
+                            for (c of response.datos){
+                                str_html +="<tr> <td>"+c.nombre+"</td>";
+                                for (v of c.votos){
+                                    str_html +="<td>"+v+"</td>";
+                                }
+                                str_html +="</tr>";
+                            }
+                        }
+                        else{
+                            str_html = "<table> <tr> <th> Nombre Congresista </th>";
+                            for (e of response.estados){
+                                str_html +="<th>"+e+"</th>";
+                            }
+                            str_html +="</tr> <tr>";
+                        }
+                        $("#tabla").html(str_html); // update the DIV
                     }
                 });
                 return false;
@@ -255,11 +285,6 @@
         });
     </script>
     <script type="text/javascript" charset="UTF-8">
-        $("#tabs").tabs({
-            activate: function (event, ui) {
-                var active = $('#tabs').tabs('option', 'active');
-                $("#info").html('the tab id is ' + $("#tabs ul>li a").eq(active).attr("href"));
-                }
-        });
+        $("#tabs").tabs();
     </script>
 {% endblock %}
