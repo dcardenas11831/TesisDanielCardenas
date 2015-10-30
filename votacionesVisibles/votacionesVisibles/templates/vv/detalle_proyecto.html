@@ -33,11 +33,10 @@
                 {% endfor %}
             </ul>
             <div class="chart_container">
-                {% for estado in estados %}
-                <div id="{{estado.id}}">
-                    <p> Prueba {{estado.id}}</p>
-                    <div id="{{estado.id}}-votaciones" class="chart_panel_votaciones"></div>
-                    <p> Esta votaci&#243;n se aprob&#243; de manera un&#225;nime por pupitrazo</p>
+                {% for ec in estados_comisiones %}
+                <div id="{{ec.estado_id}}">
+                    <h3> {{ec.camara}} <br> {{ec.comision}} <br> {{ec.fecha}}</h3>
+                    <div id="{{ec.estado_id}}-votaciones" class="chart_panel_votaciones"></div>
                 </div>
                 {% endfor %}
             </div>
@@ -54,7 +53,7 @@
                 <input id="submit" type="submit" class="btn-buscar" value="">
             </form>
         </div>
-        <div id="tabla" class="tabla"></div>
+        <div id="tabla" class="tabla-detalle"></div>
     </div>
 
 
@@ -66,174 +65,181 @@
 
     for (estado of estados) {
         partidos = votaciones[estado];
-
-        fijox = 7;
-        fijoy = 1.5;
-        votos = [];
-        var tooltip_votos = {};
-        for(partido of partidos){
-            votos = partido.data;
-            tooltip_votos[partido.name] = partido.total_votos;
-            temps = [];
-            if (votos.inasistencias > 0){
-                ina = {name: "Inasistencias", x: fijox, y: fijoy+3*0, z: 100*votos.inasistencias/partido.total_votos,
-                        total_votos: partido.total_votos};
-                temps.push(ina);
-            }
-            if (votos.abstenciones > 0){
-                abs = {name: "Abstenciones", x: fijox, y: fijoy+3*1, z: 100*votos.abstenciones/partido.total_votos,
-                        total_votos: partido.total_votos};
-                temps.push(abs);
-            }
-            if (votos.no > 0){
-                no = {name: "No", x: fijox, y: fijoy+3*2, z: 100*votos.no/partido.total_votos,
-                        total_votos: partido.total_votos};
-                temps.push(no);
-            }
-            if (votos.si > 0){
-                si = {name: "Si", x: fijox, y: fijoy+3*3, z: 100*votos.si/partido.total_votos,
-                        total_votos: partido.total_votos};
-                temps.push(si);
-            }
-            partido.data = temps;
-            fijox += 2;
-        }
-        partidos.push(
-            {
-                enableMouseTracking: false,
-                color: 'transparent',
-                showInLegend: false,
-                data: [[3, 1.5, 0]]
-            },{
-                enableMouseTracking: false,
-                color: 'transparent',
-                showInLegend: false,
-                data: [[5, 1.5, 0]]
-            });
         element_id = "#"+estado+"-votaciones"
-        $(element_id).highcharts({
-
-            chart: {
-                type: 'bubble',
-                zoomType: 'none',
-                style: {
-                        //fontFamily: 'sans-serif',
-                },
-            },
-
-            title: {
-                text: ''
-            },
-            tooltip: {
-                formatter: function() {
-                    temp = +this.point.z.toFixed(2)
-                    return '<b>'+this.series.name + ': </b><br>'+
-                        this.point.name+": "+temp+"% <br>"+
-                        Math.round(0.01*this.point.total_votos*this.point.z)+
-                        " de "+this.point.total_votos+" congresistas";
+        if (partidos.length == 0){
+            str = "<p> Esta votaci\xF3n se aprob\xF3 de manera ordinal. Es decir, se aume que todos los congresistas"
+            +"votaron de la misma manera ya que no se llev\xF3 registro de los votos.</p>";
+            $(element_id).html(str);
+        }
+        else{
+            fijox = 7;
+            fijoy = 1.5;
+            votos = [];
+            var tooltip_votos = {};
+            for(partido of partidos){
+                votos = partido.data;
+                tooltip_votos[partido.name] = partido.total_votos;
+                temps = [];
+                if (votos.inasistencias > 0){
+                    ina = {name: "Inasistencias", x: fijox, y: fijoy+3*0, z: 100*votos.inasistencias/partido.total_votos,
+                            total_votos: partido.total_votos};
+                    temps.push(ina);
                 }
-            },
-            plotOptions: {
-                series: {
-                    events: {
-                        click: function (event) {
-                            document.getElementById('busqueda').value = this.name;
-                            document.getElementById('submit').click();
-                        },
-                    },
-                },
-                bubble: {
-                    marker: {
-                        lineWidth: 0,
-                    },
-                },
-            },
-            xAxis: {
-                lineWidth: 0,
-                minorGridLineWidth: 0,
-                lineColor: 'transparent',
-                labels: {
-                    enabled: false
-                },
-                minorTickLength: 0,
-                tickLength: 0,
-            },
+                if (votos.abstenciones > 0){
+                    abs = {name: "Abstenciones", x: fijox, y: fijoy+3*1, z: 100*votos.abstenciones/partido.total_votos,
+                            total_votos: partido.total_votos};
+                    temps.push(abs);
+                }
+                if (votos.no > 0){
+                    no = {name: "No", x: fijox, y: fijoy+3*2, z: 100*votos.no/partido.total_votos,
+                            total_votos: partido.total_votos};
+                    temps.push(no);
+                }
+                if (votos.si > 0){
+                    si = {name: "Si", x: fijox, y: fijoy+3*3, z: 100*votos.si/partido.total_votos,
+                            total_votos: partido.total_votos};
+                    temps.push(si);
+                }
+                partido.data = temps;
+                fijox += 2;
+            }
+            partidos.push(
+                {
+                    enableMouseTracking: false,
+                    color: 'transparent',
+                    showInLegend: false,
+                    data: [[3, 1.5, 0]]
+                },{
+                    enableMouseTracking: false,
+                    color: 'transparent',
+                    showInLegend: false,
+                    data: [[5, 1.5, 0]]
+                });
 
-            yAxis: {
-                gridLineWidth: 0,
-                lineWidth: 0,
-                minorGridLineWidth: 0,
-                lineColor: 'transparent',
-                labels: {
-                    enabled: false
+            $(element_id).highcharts({
+
+                chart: {
+                    type: 'bubble',
+                    zoomType: 'none',
+                    style: {
+                            //fontFamily: 'sans-serif',
+                    },
                 },
+
                 title: {
                     text: ''
                 },
-                minorTickLength: 0,
-                tickLength: 1,
-                plotLines: [
-                {
-                    color: 'grey', // Color value
-                    value: 0,
-                    width: 2, // Width of the line
-                    label: {
-                        text: 'Inasistencias',
-                        align: 'left',
-                        y: -20,
-                        style: {
-                            color: 'grey',
-                            fontWeight: 'bold',
+                tooltip: {
+                    formatter: function() {
+                        temp = +this.point.z.toFixed(2)
+                        return '<b>'+this.series.name + ': </b><br>'+
+                            this.point.name+": "+temp+"% <br>"+
+                            Math.round(0.01*this.point.total_votos*this.point.z)+
+                            " de "+this.point.total_votos+" congresistas";
+                    }
+                },
+                plotOptions: {
+                    series: {
+                        events: {
+                            click: function (event) {
+                                document.getElementById('busqueda').value = this.name;
+                                document.getElementById('submit').click();
+                            },
+                        },
+                    },
+                    bubble: {
+                        marker: {
+                            lineWidth: 0,
                         },
                     },
                 },
-                {
-                    color: 'grey', // Color value
-                    value: 3,
-                    width: 2, // Width of the line
-                    label: {
-                        text: 'Abstenciones',
-                        align: 'left',
-                        y: -20,
-                        style: {
-                            color: 'grey',
-                            fontWeight: 'bold',
-                        },
+                xAxis: {
+                    lineWidth: 0,
+                    minorGridLineWidth: 0,
+                    lineColor: 'transparent',
+                    labels: {
+                        enabled: false
                     },
+                    minorTickLength: 0,
+                    tickLength: 0,
                 },
-                {
-                    color: 'grey', // Color value
-                    value: 6,
-                    width: 2, // Width of the line
-                    label: {
-                        text: 'No',
-                        align: 'left',
-                        y: -20,
-                        style: {
-                            color: 'grey',
-                            fontWeight: 'bold',
-                        },
-                    },
-                },
-                {
-                    color: 'grey', // Color value
-                    value: 9,
-                    width: 2, // Width of the line
-                    label: {
-                        text: 'Si',
-                        align: 'left',
-                        y: -20,
-                        style: {
-                            color: 'grey',
-                            fontWeight: 'bold',
-                        },
-                    },
-                }],
-            },
 
-            series: partidos,
-        });
+                yAxis: {
+                    gridLineWidth: 0,
+                    lineWidth: 0,
+                    minorGridLineWidth: 0,
+                    lineColor: 'transparent',
+                    labels: {
+                        enabled: false
+                    },
+                    title: {
+                        text: ''
+                    },
+                    minorTickLength: 0,
+                    tickLength: 1,
+                    plotLines: [
+                    {
+                        color: 'grey', // Color value
+                        value: 0,
+                        width: 2, // Width of the line
+                        label: {
+                            text: 'Inasistencias',
+                            align: 'left',
+                            y: -20,
+                            style: {
+                                color: 'grey',
+                                fontWeight: 'bold',
+                            },
+                        },
+                    },
+                    {
+                        color: 'grey', // Color value
+                        value: 3,
+                        width: 2, // Width of the line
+                        label: {
+                            text: 'Abstenciones',
+                            align: 'left',
+                            y: -20,
+                            style: {
+                                color: 'grey',
+                                fontWeight: 'bold',
+                            },
+                        },
+                    },
+                    {
+                        color: 'grey', // Color value
+                        value: 6,
+                        width: 2, // Width of the line
+                        label: {
+                            text: 'No',
+                            align: 'left',
+                            y: -20,
+                            style: {
+                                color: 'grey',
+                                fontWeight: 'bold',
+                            },
+                        },
+                    },
+                    {
+                        color: 'grey', // Color value
+                        value: 9,
+                        width: 2, // Width of the line
+                        label: {
+                            text: 'S\xED',
+                            align: 'left',
+                            y: -20,
+                            style: {
+                                color: 'grey',
+                                fontWeight: 'bold',
+                            },
+                        },
+                    }],
+                },
+
+                series: partidos,
+            });
         }
+    }
     });
 	</script>
     <script type="text/javascript" charset="UTF-8">
@@ -250,32 +256,102 @@
             $("#votos").submit(function() { // catch the form's submit event
                 $.ajax({ // create an AJAX call...
                     data: $(this).serialize(), // get the form data
-                    //data: $("#busqueda").prop('value'),
+                    //data: $("#busqueda").attr('value'),
                     type: $(this).attr('GET'),
                     url: '/busqueda/ver_votos/',
                     success: function(response) { // on success..
                         console.log("response");
                         console.log(response);
+                        str_html = "";
+                        q = $("#busqueda").attr('value');
                         if (response.tipo==0){
-                            str_html = "<table> <tr> <th> Nombre Congresista </th>";
+                            str_html = " <h2> Votos de "+q+"</h2>";
+                            str_header = "<table> <tr> <th> Nombre Congresista </th>";
                             for (e of response.estados){
-                                str_html +="<th>"+e+"</th>";
+                                str_header +="<th>"+e+"</th>";
                             }
-                            str_html +="</tr>";
+                            str_header +="</tr>";
+                            str_sen = " <h3> Senadores </h3>"+str_header;
+                            str_rep = " <h3> Representantes </h3>"+str_header;
+                            boo_sen = false;
+                            boo_rep = false;
                             for (c of response.datos){
-                                str_html +="<tr> <td>"+c.nombre+"</td>";
+                                str_temp ="<tr> <td>"+c.nombre+"</td>";
                                 for (v of c.votos){
-                                    str_html +="<td>"+v+"</td>";
+                                    if (v == 0){
+                                        str_temp +="<td><img src= '{% static "vv/images/abstencion.png" %}'/></td>";
+                                    }
+                                    else if (v == 1){
+                                        str_temp +="<td><img src= '{% static "vv/images/no.png" %}'/></td>";
+                                    }
+                                    else if (v == 2){
+                                        str_temp +="<td><img src= '{% static "vv/images/si.png" %}'/></td>";
+                                    }
+                                    else if (v == 3){
+                                        str_temp +="<td><img src= '{% static "vv/images/inasistencia.png" %}'/></td>";
+                                    }
+                                    else {
+                                        str_temp +="<td> </td>";
+                                    }
                                 }
-                                str_html +="</tr>";
+                                if (c.camara == 1){
+                                    str_sen += str_temp+"</tr>";
+                                    boo_sen = true;
+                                }
+                                else {
+                                    str_rep += str_temp+"</tr>";
+                                    boo_rep = true;
+                                }
                             }
+                        if (boo_sen){
+                            str_html += str_sen+"</table>";
+                        }
+                        if (boo_rep){
+                            str_html += str_rep+"</table>";
+                        }
+                        str_html += "<p>Leyenda:<br>"
+                        +"<img src= '{% static "vv/images/si.png" %}'/> S\xED  "
+                        +"<img src= '{% static "vv/images/no.png" %}'/> No  "
+                        +"<img src= '{% static "vv/images/abstencion.png" %}'/> Se abstuvo  "
+                        +"<img src= '{% static "vv/images/inasistencia.png" %}'/> No asistio  <br>"
+                        +"Nota: si un campo est\xE1 vac\xEDo es porque el congresista no particip\xF3 de esa votaci\xF3n o porque fue"
+                        +" aprobada de manera ordinal, es decir, no se registr\xF3 el voto de cada congresista.</p>";
                         }
                         else{
-                            str_html = "<table> <tr> <th> Nombre Congresista </th>";
+                            congresista = response.datos;
+                            str_html = "<h3>"+congresista.camara+" "+congresista.nombre+"<br>"
+                            +"("+congresista.partido+")</h3>";
+                            str_html += "<table>";
+                            c = 0;
                             for (e of response.estados){
+                                str_html +="<tr>";
+                                v = congresista.votos[c];
+                                if (v == 0){
+                                    str_html +="<td><img src= '{% static "vv/images/abstencion.png" %}'/></td>";
+                                }
+                                else if (v == 1){
+                                    str_html +="<td><img src= '{% static "vv/images/no.png" %}'/></td>";
+                                }
+                                else if (v == 2){
+                                    str_html +="<td><img src= '{% static "vv/images/si.png" %}'/></td>";
+                                }
+                                else if (v == 3){
+                                    str_html +="<td><img src= '{% static "vv/images/inasistencia.png" %}'/></td>";
+                                }
+                                else {
+                                    str_html +="<td> </td>";
+                                }
                                 str_html +="<th>"+e+"</th>";
+                                str_html +="</tr>";
+                                c++;
                             }
-                            str_html +="</tr> <tr>";
+                            str_html += "</table><br><p>Leyenda:<br>"
+                            +"<img src= '{% static "vv/images/si.png" %}'/> S\xED  "
+                            +"<img src= '{% static "vv/images/no.png" %}'/> No  "
+                            +"<img src= '{% static "vv/images/abstencion.png" %}'/> Se abstuvo  "
+                            +"<img src= '{% static "vv/images/inasistencia.png" %}'/> No asistio  <br>"
+                            +"Nota: si un campo est\xE1 vac\xEDo es porque el congresista no particip\xF3 de esa votaci\xF3n o porque fue"
+                            +" aprobada de manera ordinal, es decir, no se registr\xF3 el voto de cada congresista.</p>";
                         }
                         $("#tabla").html(str_html); // update the DIV
                     }
@@ -286,5 +362,6 @@
     </script>
     <script type="text/javascript" charset="UTF-8">
         $("#tabs").tabs();
+        $('#tabs').attr('display', 'block');
     </script>
 {% endblock %}

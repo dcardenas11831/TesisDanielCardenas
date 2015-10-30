@@ -214,8 +214,8 @@ ul.sidebar-detalle li a {
     margin: 0em 0em;
     padding: 0em 0em;
     float: left;
-    width: 34em;
-    height: 26em;
+    width: 38em;
+    height: 33em;
 }
 .chart_container > div {
     display:none;
@@ -266,7 +266,7 @@ ul.sidebar-detalle li a {
     color: #575354;
 }
 .tabla table {
-    border-collapse: collapse;
+    border-spacing: 0px;
 }
 .tabla td {
     padding: 0.3125em 0.625em;
@@ -282,7 +282,7 @@ ul.sidebar-detalle li a {
 /*Para las paginas divididas por 2 columnas*/
 #columna_derecha {
   float: right;
-  width: 38%;
+  width: 40%;
 }
 #columna_izquierda {
   float: left;
@@ -351,4 +351,32 @@ ul.sidebar-detalle li a {
     margin-bottom: 0.0625em;
 	padding-bottom: 0.0625em;
 	border: 0em solid transparent;
+}
+
+.tabla-detalle{
+    position: relative;
+    top: 0em;
+    left: 0.625em;
+    width: 80%;
+    float: left;
+    color: #575354;
+    font-size: small;
+}
+.tabla-detalle table {
+    border-spacing: 0px;
+}
+.tabla-detalle td {
+    padding: 0.01em 0.625em;
+    border: 0.01em solid #9D999A;
+    text-align: center;
+}
+.tabla-detalle th {
+    text-align: left;
+}
+.tabla-detalle a{
+    color: #575354;
+    text-decoration: none;
+}
+.tabla-detalle a:hover{
+    color: #37AB9C;
 }

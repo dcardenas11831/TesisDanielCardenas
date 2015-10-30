@@ -6,7 +6,7 @@ from django.db.models import Q
 import json
 from .models import ProyectoDeLeyProyectoley, ProyectoDeLeyEstadodeproyectodeley, ProyectoDeLeyVotacion, \
     CongresoPartido, \
-    CongresoCongresista, ProyectoDeLeyVoto
+    CongresoCongresista, ProyectoDeLeyVoto, ProyectoDeLeyEstadodeproyectodeleyComisiones
 from .models import GeneralTema
 
 
@@ -171,11 +171,22 @@ def detalle_proyecto(request, proyecto_id):
         e += 1
     ids_estados = [str(e.id) for e in estados_cambio_debate]
     str_estados = '-'.join(ids_estados)
-
+    estados_comisiones = []
+    for e in estados_cambio_debate:
+        ec = ProyectoDeLeyEstadodeproyectodeleyComisiones.objects.get(estadodeproyectodeley=e)
+        json_ec = {
+            'estado_id': e.id,
+            'comision': ec.comision.nombre,
+            'camara': ec.comision.camara.nombre,
+            'fecha': e.fecha,
+        }
+        estados_comisiones.append(json_ec)
     return render(request, 'vv/detalle_proyecto.html', {'proyecto': proyecto,
                                                         'votaciones_proyecto': json.dumps(json_votaciones_proyecto),
                                                         'str_votaciones': str_votaciones, 'str_estados': str_estados,
-                                                        'estados': estados_cambio_debate, 'ids_estados': ids_estados})
+                                                        'estados': estados_cambio_debate,
+                                                        'estados_comisiones': estados_comisiones,
+                                                        'ids_estados': ids_estados})
 
 
 # ajax para manejar el autocompletar y el buscar los votos de una persona o partido
@@ -230,7 +241,7 @@ def ver_votos(request):
                         if congresista.persona_ptr.id not in json_index:
                             c = {
                                 'nombre': congresista.persona_ptr.nombre_completo(),
-                                'camara': 'senador' if congresista.es_senador else 'representante',
+                                'camara': 1 if congresista.es_senador else 0,
                                 'votos': [-1] * len(estados)
                             }
                             json_index[congresista.persona_ptr.id] = len(json_congresistas)
@@ -251,7 +262,8 @@ def ver_votos(request):
                 # Se sacan los votos del congresista por los proyectos seleccionados
                 json_congresista = {
                     'nombre': congresista.persona_ptr.nombre_completo(),
-                    'camara': 'senador(a)' if congresista.es_senador else 'representante',
+                    'camara': 'Senador(a)' if congresista.es_senador else 'Representante',
+                    'partido': congresista.partido_politico.nombre,
                     'votos': [-1] * len(estados)
                 }
                 e = 0  # contador de estados
@@ -279,6 +291,4 @@ def ver_votos(request):
         data = 'fail'
 
     mimetype = 'application/json'
-    print "///////////////////////////////////////////////"
-    print data
     return HttpResponse(data, mimetype)

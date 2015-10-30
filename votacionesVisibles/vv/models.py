@@ -1658,8 +1658,8 @@ class ProyectoDeLeyEstadodeproyectodeley(models.Model):
 
 
 class ProyectoDeLeyEstadodeproyectodeleyComisiones(models.Model):
-    estadodeproyectodeley = models.ForeignKey(ProyectoDeLeyEstadodeproyectodeley, models.DO_NOTHING)
-    comision = models.ForeignKey(CongresoComision, models.DO_NOTHING)
+    estadodeproyectodeley = models.ForeignKey('ProyectoDeLeyEstadodeproyectodeley', models.DO_NOTHING)
+    comision = models.ForeignKey('CongresoComision', models.DO_NOTHING)
 
     class Meta:
         managed = False
