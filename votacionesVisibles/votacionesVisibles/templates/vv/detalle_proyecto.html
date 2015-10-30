@@ -25,7 +25,8 @@
         <p>    <mark>INICIATIVA:</mark> {{proyecto.iniciativa.nombre}}</p>
         <p>    <mark>TIPO PROYECTO:</mark> {{proyecto.tipo_proyecto.nombre}}</p>
         <p>    <mark>FECHA RADICACION:</mark> {{proyecto.fecha_radicacion}}</p>
-        <p>    <mark>VOTACIONES:</mark> </p>
+        <p>    <mark>VOTACIONES:</mark>  <br>
+            (Haga clic en una de las burbujas para ver los votos de los miembros de ese partido) </p>
         <div id="tabs" class="tabrow">
             <ul>
                 {% for estado in estados %}
@@ -33,10 +34,10 @@
                 {% endfor %}
             </ul>
             <div class="chart_container">
-                {% for ec in estados_comisiones %}
-                <div id="{{ec.estado_id}}">
-                    <h3> {{ec.camara}} <br> {{ec.comision}} <br> {{ec.fecha}}</h3>
-                    <div id="{{ec.estado_id}}-votaciones" class="chart_panel_votaciones"></div>
+                {% for estado in estados %}
+                <div id="{{estado.id}}">
+                    <br> <h3> Realizada el {{estado.fecha}}</h3>
+                    <div id="{{estado.id}}-votaciones" class="chart_panel_votaciones"></div>
                 </div>
                 {% endfor %}
             </div>
@@ -67,8 +68,8 @@
         partidos = votaciones[estado];
         element_id = "#"+estado+"-votaciones"
         if (partidos.length == 0){
-            str = "<p> Esta votaci\xF3n se aprob\xF3 de manera ordinal. Es decir, se aume que todos los congresistas"
-            +"votaron de la misma manera ya que no se llev\xF3 registro de los votos.</p>";
+            str = "<br><br><h3> Esta votaci\xF3n se aprob\xF3 de manera ordinal. Es decir, se aume que todos los congresistas"
+            +" votaron de la misma manera ya que no se llev\xF3 registro de los votos.</h3>";
             $(element_id).html(str);
         }
         else{

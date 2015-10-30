@@ -210,6 +210,7 @@ ul.sidebar-detalle li a {
     height: 30em;
 }
 .chart_panel_votaciones {
+    font-size: small;
     background: none;
     margin: 0em 0em;
     padding: 0em 0em;
@@ -219,12 +220,12 @@ ul.sidebar-detalle li a {
 }
 .chart_container > div {
     display:none;
-    height: 40em;
+    height: 43em;
     width: 100%;
 }
 .chart_container > div:first-child {
     display:block;
-    width: 40em;
+    width: 35em;
     height: 35em;
 }
 #tema_seleccionado h1 {
