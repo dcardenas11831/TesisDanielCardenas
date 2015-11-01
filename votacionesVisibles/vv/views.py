@@ -279,3 +279,72 @@ def ver_votos(request):
 
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
+
+
+# SECCION CONGRESO
+# /congreso/senado Pagina principal de senado --------------------------------------------------------------------
+def senado(request):
+    # mandar info para llenar la grafica num_curules, name, color y un data vacio
+    # nombre y foto de cada congresista y su partido
+    index_partidos = {}
+    json_partidos = []
+    json_congresistas = {}
+    senadores = CongresoCongresista.objects.filter(es_senador=True).select_related('partido_politico', 'persona_ptr')
+    print ".-.-.-.-..-.-.-.-numero de partidos: "+str(len(senadores))
+    for senador in senadores:
+        partido = senador.partido_politico
+        if partido.nombre not in index_partidos:  # se pone un nuevo partido si no se tenia ya en el index
+            p = {
+                'name': partido.nombre,
+                'color': partido.get_color(),
+                'num_curules': 0,
+                'data': [],  # vacio, lo llena el js
+            }
+            index_partidos[partido.nombre] = len(json_partidos)
+            json_partidos.append(p)
+            json_congresistas[partido.nombre] = []
+
+        c = {
+            'nombre': senador.persona_ptr.nombre_completo(),
+            'foto': "http://congresovisible.org/media/" + str(senador.persona_ptr.imagen),
+            'id': senador.persona_ptr.id,
+        }
+        json_congresistas[partido.nombre].append(c)
+        json_partidos[index_partidos[partido.nombre]]['num_curules'] += 1  # se le suma al partido un congresista
+
+    return render(request, 'vv/senado.html', {'partidos': json.dumps(json_partidos),
+                                              'senado': json.dumps(json_congresistas)})
+
+
+# /congreso/camara Pagina principal de la camara --------------------------------------------------------------------
+def camara(request):
+    # mandar info para llenar la grafica num_curules, name, color y un data vacio
+    # nombre y foto de cada congresista y su partido
+    index_partidos = {}
+    json_partidos = []
+    json_congresistas = {}
+    senadores = CongresoCongresista.objects.filter(es_senador=True).select_related('partido_politico', 'persona_ptr')
+    print ".-.-.-.-..-.-.-.-numero de partidos: "+str(len(senadores))
+    for senador in senadores:
+        partido = senador.partido_politico
+        if partido.nombre not in index_partidos:  # se pone un nuevo partido si no se tenia ya en el index
+            p = {
+                'name': partido.nombre,
+                'color': partido.get_color(),
+                'num_curules': 0,
+                'data': [],  # vacio, lo llena el js
+            }
+            index_partidos[partido.nombre] = len(json_partidos)
+            json_partidos.append(p)
+            json_congresistas[partido.nombre] = []
+
+        c = {
+            'nombre': senador.persona_ptr.nombre_completo(),
+            'foto': "http://congresovisible.org/media/" + str(senador.persona_ptr.imagen),
+            'id': senador.persona_ptr.id,
+        }
+        json_congresistas[partido.nombre].append(c)
+        json_partidos[index_partidos[partido.nombre]]['num_curules'] += 1  # se le suma al partido un congresista
+
+    return render(request, 'vv/camara.html', {'partidos': json.dumps(json_partidos),
+                                              'senado': json.dumps(json_congresistas)})

@@ -1,0 +1,195 @@
+{% extends "vv/base.html" %}
+
+{% block imports%}
+{% load staticfiles %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/highcharts-more.js"></script>
+{% endblock %}
+{% block title %}Senado - Votaciones Visibles{% endblock %}
+
+{% block content %}
+    <h1 id="tema_seleccionado">CONGRESO / SENADO</h1>
+    <div id="columna_izquierda">
+        <div id="info-selected"> <p></p> </div>
+        <div id="chart_panel" class="chart_panel_senado"></div>
+    </div>
+    <div id="columna_derecha">
+        <div id="tabla-senado" class="tabla-senado"></div>
+    </div>
+
+
+<script type="text/javascript">
+        $(function () {
+
+		partidos = {{ partidos|safe }};
+        console.log(partidos);
+		//Para obtener las coordenadas de las bolas
+    	xs = [];
+    	ys = [];
+    	coor = [];
+    	para_adelante = true;
+    	colores = {};
+    	for (ang=0; ang<=Math.PI+0.02 && xs.length<102; ang+=Math.PI/16){
+    		if (para_adelante){
+    			for (bola = 0; bola < 6; bola++) {
+    				x = (35+7*bola)*Math.cos(ang);
+	                y = (35+7*bola)*Math.sin(ang);
+	                xs.push(x);
+    				ys.push(y);
+    				coor.push([x, y, 1]);
+    			}
+    			para_adelante = false;
+    		}
+    		else{
+    			for (bola = 5; bola >= 0; bola--) {
+    				x = (35+7*bola)*Math.cos(ang);
+	                y = (35+7*bola)*Math.sin(ang);
+	                xs.push(x);
+    				ys.push(y);
+    				coor.push([x, y, 1]);
+    			}
+    			para_adelante = true;
+    		}
+    	}
+
+    	//asignar coordenadas a los partidos
+    	i = 0;
+    	for(partido of partidos){
+    		for (c = 0; c < partido.num_curules; c++) {
+    			congresista = {
+    				x: xs[i+c],
+    				y: ys[i+c],
+    				size: 1,
+    				nombre: "Congresista ",
+    				curules: partido.num_curules,
+    			};
+    			partido.data.push(congresista);
+    			colores[partido.name] = partido.color;
+    		}
+    		i += c;
+    	}
+
+        var seleccionado = false;
+        var selected = null;
+    	//grafica
+    	$('#chart_panel').highcharts({
+
+		        chart: {
+		            type: 'bubble',
+		            style: {
+                        fontFamily: 'sans-serif',
+                    },
+		        },
+		        xAxis: {
+		            lineWidth: 0,
+		            minorGridLineWidth: 0,
+		            lineColor: 'transparent',
+		            labels: {
+		                enabled: false
+		            },
+		            minorTickLength: 0,
+		            tickLength: 0,
+		        },
+
+		        yAxis: {
+		            gridLineWidth: 0,
+		            lineWidth: 0,
+		            minorGridLineWidth: 0,
+		            lineColor: 'transparent',
+		            labels: {
+		                enabled: false
+		            },
+		            title: '',
+		        },
+		        title: {
+		            text: ''
+		        },
+
+		        plotOptions: {
+		            series:{
+		                cursor: 'pointer',
+                        events: {
+                            click: function (event) {
+                                if (!seleccionado){
+                                    var series_all = $('#chart_panel').highcharts().series;
+                                    for (s of series_all){
+                                        if (s != this){
+                                            s.update({ color: '#9D999A' }, true,false);
+                                            $('#chart_panel').highcharts().legend.colorizeItem(s, s.visible);
+                                        }
+                                    }
+                                    this.redraw();
+                                    selected = this;
+                                    seleccionado = true;
+                                    document.getElementById('info-selected').innerHTML = "<p>Haga clic para volver a ver todos los partidos</p>";
+                                    legend = this.chart.legend;
+                                    legend.group.hide();
+                                    legend.display = false;
+                                    dibujar_tabla(this.name, this.color);
+                                }
+                                else {
+                                    var series_all = $('#chart_panel').highcharts().series;
+                                    for (s of series_all){
+                                        s.update({ color: colores[s.name] }, true,false);
+                                    }
+                                    seleccionado = false;
+                                    selected = null;
+                                    document.getElementById('info-selected').innerHTML = "<p></p>";
+                                    legend = this.chart.legend;
+                                    legend.group.show();
+                                    legend.display = true;
+                                    borrar_tabla();
+                                }
+                            },
+                            mouseOver: function() {
+                                if(this != selected && seleccionado){
+                                    this.update({ color: '#9D999A' }, true,false);
+                                }
+                            }
+                        }
+		            },
+		            bubble:{
+		                minSIze:'1%',
+		                maxSize:'6%',
+		                 marker: {
+                            lineWidth: 0,
+                        },
+		            },
+		            dataLabels: {
+		                    enabled: false,
+		            },
+		        },
+
+		        tooltip: {
+			        formatter: function () {
+			            s = "senadores";
+			            if (this.series.data.length == 1)
+			                s = "senador";
+			            str = '<b>' + this.series.name + '</b> <br> <p>' + this.series.data.length + ' ' + s + '</p>';
+			            return str;
+			        }
+			    },
+
+		        series: partidos,
+
+		    });
+		function dibujar_tabla(nombre_partido, color){
+		    senado = {{ senado|safe }};
+		    console.log(senado);
+			var html = '<h2><mark style="color:'+color+'; background: none;">'+nombre_partido+"</mark><br><br>";
+			html += '<table>';
+			congresistas = senado[nombre_partido];
+			html+= '<tr><td style="margin: 5em 5em: padding: 5em 5em"> <div class="circle" style="background: '+ color +'"></div> </td><td>Ver Partido</td></tr>';
+			for (congresista of congresistas){
+				html += '<tr><td><img class="img-circle" style="border-color:'+ color +'" src='+ congresista.foto +'></td>';
+				html += '<td>'+ congresista.nombre +'</td></tr>';
+			}
+			document.getElementById("tabla-senado").innerHTML = html;
+		}
+		function borrar_tabla(){
+            document.getElementById("tabla-senado").innerHTML = "";
+        }
+		});
+	</script>
+{% endblock %}

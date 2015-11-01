@@ -206,8 +206,8 @@ ul.sidebar-detalle li a {
     margin: 0em 0em;
     padding: 0em 0em;
     float: left;
-    width: 100%;
-    height: 30em;
+    width: 105%;
+    height: 28em;
 }
 .chart_panel_votaciones {
     font-size: small;
@@ -380,4 +380,52 @@ ul.sidebar-detalle li a {
 }
 .tabla-detalle a:hover{
     color: #37AB9C;
+}
+
+.chart_panel_senado {
+    background: none;
+    margin: 0em 0em;
+    padding: 0em 0em;
+    float: left;
+    width: 90%;
+    height: 29em;
+}
+
+#info-selected {
+    text-align: center;
+    width: 90%;
+}
+
+.img-circle {
+    border-radius: 50%;
+    border: 0.1em solid;
+    height: 3em;
+    width: 3em;
+    border-color: #9D999A;
+}
+.circle {
+	border-radius: 50%;
+	display: inline-block;
+	width: 2em;
+	height: 2em;
+	margin-right: 2em;
+}
+.tabla-senado {
+    position: relative;
+    top: 0em;
+    left: 0.625em;
+    width: 80%;
+    float: left;
+    color: #575354;
+    font-size: small;
+    overflow: auto;
+}
+.tabla-senado table{
+    border-spacing: 0px;
+    border: 0.01em solid #9D999A;
+    height: 20em;
+    font-size: medium;
+    display: block;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
