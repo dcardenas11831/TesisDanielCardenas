@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.db.models import Q
 import json
 from .models import ProyectoDeLeyProyectoley, ProyectoDeLeyEstadodeproyectodeley, ProyectoDeLeyVotacion, \
-    CongresoPartido, CongresoCongresista, ProyectoDeLeyVoto
+    CongresoPartido, CongresoCongresista, ProyectoDeLeyVoto, CongresoPeriodocongresista
 from .models import GeneralTema
 
 
@@ -290,7 +290,7 @@ def senado(request):
     json_partidos = []
     json_congresistas = {}
     senadores = CongresoCongresista.objects.filter(es_senador=True).select_related('partido_politico', 'persona_ptr')
-    print ".-.-.-.-..-.-.-.-numero de partidos: "+str(len(senadores))
+    print ".-.-.-.-..-.-.-.-numero de partidos: " + str(len(senadores))
     for senador in senadores:
         partido = senador.partido_politico
         if partido.nombre not in index_partidos:  # se pone un nuevo partido si no se tenia ya en el index
@@ -318,33 +318,43 @@ def senado(request):
 
 # /congreso/camara Pagina principal de la camara --------------------------------------------------------------------
 def camara(request):
-    # mandar info para llenar la grafica num_curules, name, color y un data vacio
-    # nombre y foto de cada congresista y su partido
-    index_partidos = {}
-    json_partidos = []
-    json_congresistas = {}
-    senadores = CongresoCongresista.objects.filter(es_senador=True).select_related('partido_politico', 'persona_ptr')
-    print ".-.-.-.-..-.-.-.-numero de partidos: "+str(len(senadores))
-    for senador in senadores:
-        partido = senador.partido_politico
-        if partido.nombre not in index_partidos:  # se pone un nuevo partido si no se tenia ya en el index
-            p = {
-                'name': partido.nombre,
-                'color': partido.get_color(),
+    # mandar info para llenar la grafica num_curules, nombre_circun,
+    # En cada region incluir un arreglo con dict de cada partido donde se contenga un arreglo con los congresistas
+    json_circunscripciones = {}
+    periodos = CongresoPeriodocongresista.objects.filter(periodo__id=7, camara_id=2, tipo_periodo__id__lte=2,
+                                                         congresista__es_representante_camara=True
+                                                         )\
+        .select_related('partido', 'congresista__persona_ptr')
+    print ".-.-.numero de represenatntes: " + str(len(periodos))
+    for periodo in periodos:
+        partido = periodo.partido
+        representante = periodo.congresista.persona_ptr
+        if periodo.circunscripcion_id not in json_circunscripciones:  # agrega la circunscripcion si no estaba
+            cir = {
                 'num_curules': 0,
-                'data': [],  # vacio, lo llena el js
+                'data': {},
             }
-            index_partidos[partido.nombre] = len(json_partidos)
-            json_partidos.append(p)
-            json_congresistas[partido.nombre] = []
+            json_circunscripciones[periodo.circunscripcion_id] = cir
+
+        if partido.nombre not in json_circunscripciones[periodo.circunscripcion_id]['data']:
+            es_reemplazo = ''
+            if periodo.tipo_periodo.id == 2:
+                es_reemplazo = periodo.tipo_periodo.nombre
+                print "reemplazo " + str(periodo.circunscripcion_id)
+            p = {
+                'nombre': partido.nombre + "\n" + es_reemplazo,
+                'color': partido.get_color(),
+                'id': partido.id,
+                'congresistas': [],
+            }
+            json_circunscripciones[periodo.circunscripcion_id]['data'][partido.nombre] = p
 
         c = {
-            'nombre': senador.persona_ptr.nombre_completo(),
-            'foto': "http://congresovisible.org/media/" + str(senador.persona_ptr.imagen),
-            'id': senador.persona_ptr.id,
+            'nombre': representante.nombre_completo(),
+            'foto': "http://congresovisible.org/media/" + str(representante.imagen),
+            'id': representante.id,
         }
-        json_congresistas[partido.nombre].append(c)
-        json_partidos[index_partidos[partido.nombre]]['num_curules'] += 1  # se le suma al partido un congresista
+        json_circunscripciones[periodo.circunscripcion_id]['data'][partido.nombre]['congresistas'].append(c)
+        json_circunscripciones[periodo.circunscripcion_id]['num_curules'] += 1
 
-    return render(request, 'vv/camara.html', {'partidos': json.dumps(json_partidos),
-                                              'senado': json.dumps(json_congresistas)})
+    return render(request, 'vv/camara.html', {'camara': json.dumps(json_circunscripciones)})

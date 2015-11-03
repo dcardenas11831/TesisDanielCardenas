@@ -391,6 +391,15 @@ ul.sidebar-detalle li a {
     height: 29em;
 }
 
+.chart_panel_camara {
+    background: none;
+    margin: 0em 0em;
+    padding: 0em 0em;
+    float: left;
+    width: 100%;
+    height: 30em;
+}
+
 #info-selected {
     text-align: center;
     width: 90%;
