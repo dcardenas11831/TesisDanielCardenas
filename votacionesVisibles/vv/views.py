@@ -282,6 +282,12 @@ def ver_votos(request):
 
 
 # SECCION CONGRESO
+# /congreso/  Pagina principal de la seccion------------------------------------------------------------------
+def congreso(request):
+
+    return render(request, 'vv/main_congreso.html', {})
+
+
 # /congreso/senado Pagina principal de senado --------------------------------------------------------------------
 def senado(request):
     # mandar info para llenar la grafica num_curules, name, color y un data vacio
@@ -335,9 +341,8 @@ def camara(request):
                 'data': {},
             }
             json_circunscripciones[periodo.circunscripcion_id] = cir
-
+        es_reemplazo = ''
         if partido.nombre not in json_circunscripciones[periodo.circunscripcion_id]['data']:
-            es_reemplazo = ''
             if periodo.tipo_periodo.id == 2:
                 es_reemplazo = periodo.tipo_periodo.nombre
                 print "reemplazo " + str(periodo.circunscripcion_id)

@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^busqueda/ver_votos/', views.ver_votos, name='ver_votos'),
 
     # SECCION CONGRESO
+    url(r'^congreso/$', views.congreso, name='congreso'),
     url(r'^congreso/senado/$', views.senado, name='senado'),
     url(r'^congreso/camara/$', views.camara, name='camara'),
 ]

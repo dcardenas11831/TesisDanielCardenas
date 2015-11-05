@@ -1,0 +1,26 @@
+{% extends "vv/base.html" %}
+
+{% block imports%}
+{% load staticfiles %}
+{% endblock %}
+{% block title %}Congreso - Votaciones Visibles{% endblock %}
+
+{% block content %}
+    <h1 id="tema_seleccionado">CONGRESO</h1>
+    <div id="columna_izquierda_congreso">
+        <a href="/congreso/senado">
+            <div id="circle-senado"></div>
+        </a>
+        <!--<img src="{% static 'vv/images/main_linea.png' %}">-->
+        <h1 style="text-align:center">Senado</h1>
+    </div>
+    <div id="columna_centro">
+        <hr>
+    </div>
+    <div id="columna_derecha_congreso">
+        <a href="/congreso/camara">
+            <div id="circle-camara"></div>
+        </a>
+        <h1 style="text-align:center">Cámara</h1>
+    </div>
+{% endblock %}

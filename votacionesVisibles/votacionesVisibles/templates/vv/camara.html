@@ -5,13 +5,13 @@
 
 {% block imports%}
 {% load staticfiles %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="http://code.highcharts.com/maps/highmaps.js"></script>
 {% endblock %}
-{% block title %}Camara de Representantes - Votaciones Visibles{% endblock %}
+{% block title %}Cámara de Representantes - Votaciones Visibles{% endblock %}
 
 {% block content %}
-    <h1 id="tema_seleccionado">CONGRESO <mark style="color:#37AB9C; background:none">/ C�MARA</mark></h1>
+    <h1 id="tema_seleccionado">CONGRESO <mark style="color:#37AB9C; background:none">/ CÁMARA</mark></h1>
     <div id="columna_izquierda">
         <div id="info-selected"> <p></p> </div>
         <div id="chart_panel" class="chart_panel_camara"></div>
@@ -79,7 +79,7 @@
 			},
 			{
 				"id": 36,
-				"name": "Representante ind\xEDgena",
+				"name": "Ind\xEDgenas",
 				"value": camara[36].num_curules,
 				"path": "M563,-875,623,-875,623,-815,563,-815zM586,-860,586,-857,591,-857,591,-833,586,-833,585,-829,601,-829,601,-832,596,-832,596,-857,601,-857,601,-860z"
 			},

@@ -285,6 +285,34 @@ ul.sidebar-detalle li a {
   float: right;
   width: 40%;
 }
+#columna_centro {
+  position: relative;
+  margin: 0em 0em;
+  padding: 0em 0em;
+  color: #37AB9C;
+  float: left;
+  width: 2%;
+}
+#columna_centro hr{
+  display: block;
+  width: 2px;
+  height: 24em;
+  background: #37AB9C;
+  border: 0em solid transparent;
+}
+#columna_derecha_congreso {
+  float: right;
+  width: 49%;
+  color: #37AB9C;
+}
+#columna_izquierda_congreso {
+  float: left;
+  width: 49%;
+  margin-left: 0em;
+  margin-right: 0em;
+  text-align: left;
+  color: #37AB9C;
+}
 #columna_izquierda {
   float: left;
   width: 57%;
@@ -421,6 +449,32 @@ ul.sidebar-detalle li a {
 	margin-right: 2em;
 	margin: auto;
 }
+#circle-senado {
+	width: 20em;
+	height: 20em;
+	border-radius: 15em;
+	-webkit-border-radius: 15em;
+	-moz-border-radius: 15em;
+	border: 0.1em solid #37AB9C;
+	background: url(../images/main_senado.png) center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	margin: auto;
+	cursor: pointer;
+}
+#circle-camara {
+	width: 20em;
+	height: 20em;
+	border-radius: 15em;
+	-webkit-border-radius: 15em;
+	-moz-border-radius: 15em;
+	border: 0.1em solid #37AB9C;
+	background: url(../images/main_mapa.png) center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	margin: auto;
+	cursor: pointer;
+}
 .tabla-senado {
     position: relative;
     top: 0em;
@@ -439,6 +493,7 @@ ul.sidebar-detalle li a {
     display: block;
     overflow-x: hidden;
     overflow-y: auto;
+    text-decoration: none;
 }
 .tabla-senado td {
     text-align: center;
