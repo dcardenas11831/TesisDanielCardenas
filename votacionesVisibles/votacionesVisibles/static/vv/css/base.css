@@ -397,7 +397,7 @@ ul.sidebar-detalle li a {
     padding: 0em 0em;
     float: left;
     width: 100%;
-    height: 30em;
+    height: 40em;
 }
 
 #info-selected {
@@ -411,6 +411,7 @@ ul.sidebar-detalle li a {
     height: 3em;
     width: 3em;
     border-color: #9D999A;
+    background-size: cover;
 }
 .circle {
 	border-radius: 50%;
@@ -418,6 +419,7 @@ ul.sidebar-detalle li a {
 	width: 2em;
 	height: 2em;
 	margin-right: 2em;
+	margin: auto;
 }
 .tabla-senado {
     position: relative;
@@ -437,4 +439,55 @@ ul.sidebar-detalle li a {
     display: block;
     overflow-x: hidden;
     overflow-y: auto;
+}
+.tabla-senado td {
+    text-align: center;
+    padding: 0.3em;
+}
+.tabla-camara {
+    position: relative;
+    top: 0em;
+    left: 0.625em;
+    width: 100%;
+    float: left;
+    color: #575354;
+    font-size: small;
+    height: 40em;
+    overflow: auto;
+}
+.tabla-camara table{
+    border-spacing: 0px;
+    margin-bottom: 1px;
+    margin-top: 3px;
+    border: 0.01em solid #9D999A;
+    font-size: medium;
+    display: block;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 100%;
+}
+.tabla-camara td {
+    text-align: center;
+    padding: 0.1em;
+}
+.tabla-camara th {
+    color: white;
+    text-align: left;
+    padding: 0.5em;
+    width: 30em;
+}
+.tabla-camara tr {
+    padding: 0.5em;
+}
+.tabla-camara tr.accordion {
+    background-color: #9D999A;
+    padding: 0.5em;
+    cursor: pointer;
+}
+.tabla-camara th.mas-menos {
+    text-align: right;
+    padding: 0.5em;
+    color: white;
+    font-size: large;
+    width: 0em;
 }

@@ -342,7 +342,7 @@ def camara(request):
                 es_reemplazo = periodo.tipo_periodo.nombre
                 print "reemplazo " + str(periodo.circunscripcion_id)
             p = {
-                'nombre': partido.nombre + "\n" + es_reemplazo,
+                'nombre': partido.nombre,
                 'color': partido.get_color(),
                 'id': partido.id,
                 'congresistas': [],
@@ -350,7 +350,7 @@ def camara(request):
             json_circunscripciones[periodo.circunscripcion_id]['data'][partido.nombre] = p
 
         c = {
-            'nombre': representante.nombre_completo(),
+            'nombre': representante.nombre_completo() + "\n" + es_reemplazo,
             'foto': "http://congresovisible.org/media/" + str(representante.imagen),
             'id': representante.id,
         }

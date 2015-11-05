@@ -652,7 +652,7 @@ class CongresoPartido(models.Model):
         'Conservador Colombiano': "#000099",
         'Fundación Ébano de Colombia Funeco': "#FF00FF",
         'Liberal Colombiano': "#CC0000",
-        'MIRA': "#000019",
+        'MIRA': "#000057",
         'Movimiento Alternativo Indígena y Social - MAIS': "#FF0000",
         'Movimiento de Integración Regional - MIR': "#373737",
         'Movimiento Político Cien por Ciento por Colombia': "#6A2952",

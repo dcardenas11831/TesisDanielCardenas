@@ -9,7 +9,7 @@
 {% block title %}Senado - Votaciones Visibles{% endblock %}
 
 {% block content %}
-    <h1 id="tema_seleccionado">CONGRESO / SENADO</h1>
+    <h1 id="tema_seleccionado">CONGRESO <mark style="color:#37AB9C; background:none">/ SENADO</mark></h1>
     <div id="columna_izquierda">
         <div id="info-selected"> <p></p> </div>
         <div id="chart_panel" class="chart_panel_senado"></div>
@@ -180,10 +180,11 @@
 			var html = '<h2><mark style="color:'+color+'; background: none;">'+nombre_partido+"</mark><br><br>";
 			html += '<table>';
 			congresistas = senado[nombre_partido];
-			html+= '<tr><td style="margin: 5em 5em: padding: 5em 5em"> <div class="circle" style="background: '+ color +'"></div> </td><td>Ver Partido</td></tr>';
+			html+= '<tr><td> <div class="circle" style="background: '+ color +'"></div> </td>'
+				+'<td style="text-align:left">Ver Partido</td></tr>';
 			for (congresista of congresistas){
 				html += '<tr><td><img class="img-circle" style="border-color:'+ color +'" src='+ congresista.foto +'></td>';
-				html += '<td>'+ congresista.nombre +'</td></tr>';
+				html += '<td style="text-align:left">'+ congresista.nombre +'</td></tr>';
 			}
 			document.getElementById("tabla-senado").innerHTML = html;
 		}

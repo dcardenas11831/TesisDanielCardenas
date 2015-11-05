@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="es">
+<meta charset="utf-8">
 {% extends "vv/base.html" %}
 
 {% block imports%}
@@ -8,13 +11,13 @@
 {% block title %}Camara de Representantes - Votaciones Visibles{% endblock %}
 
 {% block content %}
-    <h1 id="tema_seleccionado">CONGRESO / CAMARA</h1>
+    <h1 id="tema_seleccionado">CONGRESO <mark style="color:#37AB9C; background:none">/ CÁMARA</mark></h1>
     <div id="columna_izquierda">
         <div id="info-selected"> <p></p> </div>
         <div id="chart_panel" class="chart_panel_camara"></div>
     </div>
     <div id="columna_derecha">
-        <div id="tabla-camara" class="tabla-senado"></div>
+        <div id="tabla-camara" class="tabla-camara"></div>
     </div>
 
 
@@ -48,7 +51,7 @@
                             	}
                             		this.update({ color: "#37AB9C" }, true, false);
                                     selected = this;
-                                    dibujar_tabla( this.id );
+                                    dibujar_tabla( this.id, this.name );
                             },
                         }
                     }
@@ -281,7 +284,7 @@
 			},
 			{
 				"id": 17,
-				"name": "Guajira",
+				"name": "La Guajira",
 				"value": camara[17].num_curules,
 				"path": "M332,-835C340,-834,347,-834,348,-835,349,-835,350,-838,351,-841,353,-844,356,-851,358,-856,362,-864,364,-866,367,-869,371,-873,372,-873,374,-873L377,-873,385,-887,392,-901,408,-907C416,-910,424,-912,424,-912,425,-911,427,-914,427,-916,427,-918,427,-918,428,-918,429,-918,431,-919,431,-919,432,-920,434,-921,435,-922,437,-923,439,-925,439,-926,439,-926,437,-929,436,-931,435,-933,433,-936,433,-937,433,-939,432,-940,426,-942,423,-943,421,-944,420,-945,419,-946,417,-947,414,-947,410,-947,410,-947,410,-946,410,-944,407,-942,406,-943,405,-943,405,-943,405,-943,405,-942,402,-939,401,-939,400,-939,400,-940,400,-940,400,-941,400,-941,398,-940,397,-940,397,-939,398,-937,399,-935,399,-934,399,-934,399,-934,398,-933,396,-932,394,-930,393,-930,392,-931,389,-932,389,-933,390,-934,391,-936,390,-936,386,-935,383,-934,383,-934,384,-931,384,-928,384,-927,382,-922,377,-913,372,-910,351,-904,347,-903,345,-902,343,-900,342,-899,339,-896,336,-894,333,-891,329,-888,327,-886,324,-883,323,-882,319,-881,316,-881,311,-880,309,-880L304,-879,302,-874C300,-868,300,-863,302,-860,303,-858,304,-858,306,-858,307,-858,310,-858,311,-859,313,-860,314,-860,319,-858,324,-857,324,-857,323,-855,323,-853,323,-853,324,-853,325,-853,326,-853,327,-851,327,-850,328,-849,330,-848,335,-847,335,-839,330,-837,328,-837,328,-836,328,-835,328,-834,329,-834,330,-834,330,-835,331,-835,332,-835z"
 			}
@@ -289,30 +292,58 @@
 	}
 ]
     });
-    function dibujar_tabla(id_circunscripcion){
-			var html = '<h2><mark style="color:'+color+'; background: none;">'+nombre_partido+"</mark><br><br>";
-			html += '<table>';
-			congresistas = senado[nombre_partido];
-			html+= '<tr><td> <div class="circle" style="background: '+ color +'"></div> </td><td>Ver Partido</td></tr>';
-			for (congresista of congresistas){
-				html += '<tr><td><img class="img-circle" style="border-color:'+ color +'" src='+ congresista.foto +'></td>';
-				html += '<td>'+ congresista.nombre +'</td></tr>';
+
+
+    function dibujar_tabla(id_circunscripcion, nombre_circunscripcion){
+    		var partidos = camara[id_circunscripcion].data;
+			var html = '<h2> Circunscripci\xF3n: <mark style="color:#37AB9C; background:none">'+nombre_circunscripcion+'</mark></h2>';
+			for (partido in partidos){
+				if (partidos.hasOwnProperty(partido)){
+					partido = partidos[partido];
+					html += '<table class="camara"><tbody>';
+					congresistas = partido.congresistas;
+					html += '<tr class="accordion"><th colspan="2">' + partido.nombre + ' (' + congresistas.length + ')</th>'
+						+ '<th class="mas-menos">+</th></tr>';
+					html += '<tr><td> <div class="circle" style="background: '+ partido.color +'"></div> </td>'
+						+ '<td style="text-align: left">Ver Partido</td></tr>';
+					for (congresista of congresistas){
+						html += '<tr><td><img class="img-circle" style="border-color:'+ partido.color +'" src='+ congresista.foto +'></td>';
+						html += '<td style="text-align: left">'+ congresista.nombre +'</td></tr>';
+					}
+					html += "</tbody></table>";
+				}
 			}
 			document.getElementById("tabla-camara").innerHTML = html;
+			$(function() {  //codigo oara controlar el comportamiento de los acordiones
+				var selected = null;
+				var $camara = $('.camara');
+				$camara.find("tr").not('.accordion').hide();
+				$camara.find("tr").eq(0).show();
+				$camara.find(".accordion").click(function(){
+					$camara.find('.accordion').not(this).siblings().fadeOut(500);
+					$(this).siblings().fadeToggle(500);
+					var arr = $camara.find('.mas-menos');
+					for (var i = 0; i < arr.length; ++i) {
+						var item = arr[i];
+						item.innerHTML = "+";
+					}
+					if (selected != this){
+						if (selected != null)
+							$(selected).find('.mas-menos')[0].innerHTML = "+";
+						$(this).find('.mas-menos')[0].innerHTML = "-";
+						selected = this;
+					}
+					else{
+						$(this).find('.mas-menos')[0].innerHTML = "+";
+						selected = null;
+					}
+				}).eq(0).trigger('click');
+			});
 		}
 	function borrar_tabla(){
             document.getElementById("tabla-camara").innerHTML = "";
         }
-});
-</script>
-<script type="text/javascript">
-	$(function() {
-	  $(".research tr:not(.accordion)").hide();
-	  $(".research tr:first-child").show();
 
-	  $(".research tr.accordion").click(function(){
-		  $(this).nextAll("tr").fadeToggle(500);
-	  }).eq(0).trigger('click');
-	});
+});
 </script>
 {% endblock %}
