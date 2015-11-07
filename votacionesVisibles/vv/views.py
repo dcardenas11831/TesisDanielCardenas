@@ -8,11 +8,12 @@ from .models import ProyectoDeLeyProyectoley, ProyectoDeLeyEstadodeproyectodeley
     CongresoPartido, CongresoCongresista, ProyectoDeLeyVoto, CongresoPeriodocongresista
 from .models import GeneralTema
 
+# Constantes
+ID_PERIODO = 7
+MEDIA_URL = "http://congresovisible.org/media/"
 
-# para las fotos tomar la ruta http://congresovisible.org/media/ y sumarle lo que dice la bd
+
 # Metodo para controlar la pagina home
-
-
 def index(request):
     return render(request, 'vv/base.html')
 
@@ -22,7 +23,7 @@ def index(request):
 
 
 def main_proyectos(request):
-    proyectos_periodo = ProyectoDeLeyProyectoley.objects.filter(periodo__id=7).order_by('-fecha_radicacion')
+    proyectos_periodo = ProyectoDeLeyProyectoley.objects.filter(periodo__id=ID_PERIODO).order_by('-fecha_radicacion')
     temas = GeneralTema.objects.all()
     data = {}
     data_proyectos = {}
@@ -177,7 +178,6 @@ def detalle_proyecto(request, proyecto_id):
 
 
 # ajax para manejar el autocompletar y el buscar los votos de una persona o partido
-
 def autocompletar(request):
     if request.is_ajax():
         q = request.GET.get('term', '')
@@ -204,6 +204,7 @@ def autocompletar(request):
     return HttpResponse(data, mimetype)
 
 
+# ajax para retornar los votos que se van a ver en la tabla. El resultado al hacer enter en el autocompletar
 def ver_votos(request):
     if request.is_ajax():
         # se toman los parametros del ajax
@@ -284,7 +285,6 @@ def ver_votos(request):
 # SECCION CONGRESO
 # /congreso/  Pagina principal de la seccion------------------------------------------------------------------
 def congreso(request):
-
     return render(request, 'vv/main_congreso.html', {})
 
 
@@ -305,6 +305,7 @@ def senado(request):
                 'color': partido.get_color(),
                 'num_curules': 0,
                 'data': [],  # vacio, lo llena el js
+                'id': partido.id,
             }
             index_partidos[partido.nombre] = len(json_partidos)
             json_partidos.append(p)
@@ -312,7 +313,7 @@ def senado(request):
 
         c = {
             'nombre': senador.persona_ptr.nombre_completo(),
-            'foto': "http://congresovisible.org/media/" + str(senador.persona_ptr.imagen),
+            'foto': MEDIA_URL + str(senador.persona_ptr.imagen),
             'id': senador.persona_ptr.id,
         }
         json_congresistas[partido.nombre].append(c)
@@ -327,9 +328,9 @@ def camara(request):
     # mandar info para llenar la grafica num_curules, nombre_circun,
     # En cada region incluir un arreglo con dict de cada partido donde se contenga un arreglo con los congresistas
     json_circunscripciones = {}
-    periodos = CongresoPeriodocongresista.objects.filter(periodo__id=7, camara_id=2, tipo_periodo__id__lte=2,
+    periodos = CongresoPeriodocongresista.objects.filter(periodo__id=ID_PERIODO, camara_id=2, tipo_periodo__id__lte=2,
                                                          congresista__es_representante_camara=True
-                                                         )\
+                                                         ) \
         .select_related('partido', 'congresista__persona_ptr')
     print ".-.-.numero de represenatntes: " + str(len(periodos))
     for periodo in periodos:
@@ -356,10 +357,26 @@ def camara(request):
 
         c = {
             'nombre': representante.nombre_completo() + "\n" + es_reemplazo,
-            'foto': "http://congresovisible.org/media/" + str(representante.imagen),
+            'foto': MEDIA_URL + str(representante.imagen),
             'id': representante.id,
         }
         json_circunscripciones[periodo.circunscripcion_id]['data'][partido.nombre]['congresistas'].append(c)
         json_circunscripciones[periodo.circunscripcion_id]['num_curules'] += 1
 
     return render(request, 'vv/camara.html', {'camara': json.dumps(json_circunscripciones)})
+
+
+# /partidos/#### Pagina prinicpal de un partido---------------------------------------------------------
+def detalle_partido(request, partido_id):
+    partido = CongresoPartido.objects.get(id=partido_id)
+    num_senadores = CongresoPeriodocongresista.objects.filter(periodo__id=ID_PERIODO, camara_id=1, tipo_periodo__id=1,
+                                                              congresista__partido_politico=partido).count()
+    num_representantes = CongresoPeriodocongresista.objects.filter(periodo__id=ID_PERIODO, camara_id=2,
+                                                                   tipo_periodo__id=1,
+                                                                   congresista__partido_politico=partido).count()
+    print "-------------------"
+    print partido.logo
+    partido.logo = MEDIA_URL + partido.logo  # se pone la url completa de la imagen
+    temas = GeneralTema.objects.all().order_by('nombre')
+    return render(request, 'vv/detalle_partido.html', {'partido': partido, 'num_senadores': num_senadores,
+                                                       'num_representantes': num_representantes, 'temas': temas})

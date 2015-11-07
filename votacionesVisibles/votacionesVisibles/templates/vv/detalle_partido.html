@@ -1,0 +1,167 @@
+{% extends "vv/base.html" %}
+
+{% block imports%}
+{% load staticfiles %}
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.2/themes/base/jquery-ui.css" type="text/css" media="all" />
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+{% endblock %}
+{% block title %}{{ partido.nombre }} - Votaciones Visibles{% endblock %}
+
+{% block content %}
+    <h1 id="partido_seleccionado">
+        <img id="logo" class="img-circle" style="border-color:{{partido.get_color}}" src="{{ partido.logo }}">
+        <label for="logo">{{ partido.nombre|upper }}</label>
+    </h1>
+    <div class="styled-select">
+            <label>TEMA: </label>
+            <select id="combobox" size="10">
+                <option value="" selected="selected">Seleccione uno</option>
+                {% for tema in temas %}
+                <option value="{{ tema.id }}">{{ tema.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="numberCircle" style="border-color:{{partido.get_color}}">{{ num_senadores }}</div> senadores  <p></p>
+        <div class="numberCircle" style="border-color:{{partido.get_color}}">{{ num_representantes }}</div> representantes
+
+    <div id="columna_izquierda">
+
+    </div>
+    <div id="columna_derecha">
+
+    </div>
+<script>
+	(function( $ ) {
+		$.widget( "custom.combobox", {
+			_create: function() {
+				this.wrapper = $( "<span>" )
+					.addClass( "custom-combobox" )
+					.insertAfter( this.element );
+
+				this.element.hide();
+				this._createAutocomplete();
+				this._createShowAllButton();
+			},
+
+			_createAutocomplete: function() {
+				var selected = this.element.children( ":selected" ),
+					value = selected.val() ? selected.text() : "";
+
+				this.input = $( "<input>" )
+					.appendTo( this.wrapper )
+					//.val( value )
+					.val( "Seleccione" )
+					.attr( "title", "" )
+					.autocomplete({
+						delay: 0,
+						minLength: 0,
+						source: $.proxy( this, "_source" )
+					})
+					//.tooltip({tooltipClass: "ui-state-highlight"});
+
+				this._on( this.input, {
+					autocompleteselect: function( event, ui ) {
+						ui.item.option.selected = true;
+						this._trigger( "select", event, {
+							item: ui.item.option
+						});
+					},
+
+					autocompletechange: "_removeIfInvalid"
+				});
+			},
+
+			_createShowAllButton: function() {
+				var input = this.input,
+					wasOpen = false;
+
+				$( "<a>" )
+					.attr( "tabIndex", -1 )
+					.tooltip()
+					.appendTo( this.wrapper )
+					.button({
+						icons: {
+							primary: "ui-icon-triangle-1-s"
+						},
+						text: false
+					})
+					.removeClass( "ui-corner-all" )
+					//.addClass( "custom-combobox-toggle ui-corner-right" )
+					.mousedown(function() {
+						wasOpen = input.autocomplete( "widget" ).is( ":visible" );
+					})
+					.click(function() {
+						input.focus();
+
+						// Close if already visible
+						if ( wasOpen ) {
+							return;
+						}
+
+						// Pass empty string as value to search for, displaying all results
+						input.autocomplete( "search", "" );
+					});
+			},
+
+			_source: function( request, response ) {
+				var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+				response( this.element.children( "option" ).map(function() {
+					var text = $( this ).text();
+					if ( this.value && ( !request.term || matcher.test(text) ) )
+						return {
+							label: text,
+							value: text,
+							option: this
+						};
+				}) );
+			},
+
+			_removeIfInvalid: function( event, ui ) {
+
+				// Selected an item, nothing to do
+				if ( ui.item ) {
+					return;
+				}
+
+				// Search for a match (case-insensitive)
+				var value = this.input.val(),
+					valueLowerCase = value.toLowerCase(),
+					valid = false;
+				this.element.children( "option" ).each(function() {
+					if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+						this.selected = valid = true;
+						return false;
+					}
+				});
+
+				// Found a match, nothing to do
+				if ( valid ) {
+				    return;
+				}
+
+			},
+
+			_destroy: function() {
+				this.wrapper.remove();
+				this.element.show();
+			},
+			//Aca llega cuando se elige una opcion
+			_trigger: function(request, event, ui) {
+			    if (ui != null){
+                    console.log(request);
+                    console.log(ui.item.value);
+				}
+			},
+
+		});
+	})( jQuery );
+
+	$(function() {
+		$( "#combobox" ).combobox();
+		$( "#toggle" ).click(function() {
+			$( "#combobox" ).toggle();
+		});
+	});
+</script>
+{% endblock %}

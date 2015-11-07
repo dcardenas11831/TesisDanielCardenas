@@ -30,6 +30,7 @@
     	coor = [];
     	para_adelante = true;
     	colores = {};
+    	ids = {};
     	for (ang=0; ang<=Math.PI+0.02 && xs.length<102; ang+=Math.PI/16){
     		if (para_adelante){
     			for (bola = 0; bola < 6; bola++) {
@@ -66,6 +67,7 @@
     			};
     			partido.data.push(congresista);
     			colores[partido.name] = partido.color;
+    			ids[partido.name] = partido.id;
     		}
     		i += c;
     	}
@@ -126,7 +128,9 @@
                                     legend = this.chart.legend;
                                     legend.group.hide();
                                     legend.display = false;
-                                    dibujar_tabla(this.name, this.color);
+                                    console.log("////");
+                                    console.log(this);
+                                    dibujar_tabla(this.name, this.color, ids[this.name]);
                                 }
                                 else {
                                     var series_all = $('#chart_panel').highcharts().series;
@@ -174,14 +178,15 @@
 		        series: partidos,
 
 		    });
-		function dibujar_tabla(nombre_partido, color){
+		function dibujar_tabla(nombre_partido, color, id_partido){
 		    senado = {{ senado|safe }};
 		    console.log(senado);
 			var html = '<h2><mark style="color:'+color+'; background: none;">'+nombre_partido+"</mark><br><br>";
 			html += '<table>';
 			congresistas = senado[nombre_partido];
+			var url = "{% url 'partido' 990 %}".replace("990", id_partido);
 			html+= '<tr><td> <div class="circle" style="background: '+ color +'"></div> </td>'
-				+'<td style="text-align:left">Ver Partido</td></tr>';
+				+'<td style="text-align:left"><a href=" '+url+' ">Ver Partido</a></td></tr>';
 			for (congresista of congresistas){
 				html += '<tr><td><img class="img-circle" style="border-color:'+ color +'" src='+ congresista.foto +'></td>';
 				html += '<td style="text-align:left">'+ congresista.nombre +'</td></tr>';

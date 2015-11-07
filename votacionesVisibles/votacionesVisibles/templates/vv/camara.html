@@ -304,8 +304,9 @@
 					congresistas = partido.congresistas;
 					html += '<tr class="accordion"><th colspan="2">' + partido.nombre + ' (' + congresistas.length + ')</th>'
 						+ '<th class="mas-menos">+</th></tr>';
+					var url = "{% url 'partido' 990 %}".replace("990", partido.id);
 					html += '<tr><td> <div class="circle" style="background: '+ partido.color +'"></div> </td>'
-						+ '<td style="text-align: left">Ver Partido</td></tr>';
+						+ '<td style="text-align: left"><a href=" '+url+' ">Ver Partido</a></td></tr>';
 					for (congresista of congresistas){
 						html += '<tr><td><img class="img-circle" style="border-color:'+ partido.color +'" src='+ congresista.foto +'></td>';
 						html += '<td style="text-align: left">'+ congresista.nombre +'</td></tr>';

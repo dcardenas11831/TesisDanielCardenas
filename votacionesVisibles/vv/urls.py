@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'^congreso/$', views.congreso, name='congreso'),
     url(r'^congreso/senado/$', views.senado, name='senado'),
     url(r'^congreso/camara/$', views.camara, name='camara'),
+    url(r'^partidos/(?P<partido_id>[0-9]+)/$', views.detalle_partido, name='partido'),
 ]
