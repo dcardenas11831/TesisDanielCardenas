@@ -16,4 +16,5 @@ urlpatterns = [
     url(r'^congreso/senado/$', views.senado, name='senado'),
     url(r'^congreso/camara/$', views.camara, name='camara'),
     url(r'^partidos/(?P<partido_id>[0-9]+)/$', views.detalle_partido, name='partido'),
+    url(r'^busqueda/resumen_votos_partido/', views.resumen_votos_partido, name='resumen_votos_partido'),
 ]

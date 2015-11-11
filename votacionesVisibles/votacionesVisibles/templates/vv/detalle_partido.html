@@ -148,10 +148,21 @@
 			},
 			//Aca llega cuando se elige una opcion
 			_trigger: function(request, event, ui) {
+			    var tema_id = -1;
 			    if (ui != null){
-                    console.log(request);
-                    console.log(ui.item.value);
-				}
+			        tema_id = ui.item.value;
+			    }
+                var partido = {{ partido.id|safe }};
+                $.ajax({ // create an AJAX call...
+                    data: {'tema_id': tema_id, 'partido_id': partido},
+                    type: $(this).attr('GET'),
+                    url: '/busqueda/resumen_votos_partido/',
+                    success:
+                        function(response) { // on success..
+                            console.log("response");
+                            console.log(response);
+                        }
+                });
 			},
 
 		});
