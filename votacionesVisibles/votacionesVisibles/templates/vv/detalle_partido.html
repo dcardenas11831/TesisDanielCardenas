@@ -5,6 +5,8 @@
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.2/themes/base/jquery-ui.css" type="text/css" media="all" />
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/highcharts-more.js"></script>
 {% endblock %}
 {% block title %}{{ partido.nombre }} - Votaciones Visibles{% endblock %}
 
@@ -24,15 +26,45 @@
         </div>
         <div class="numberCircle" style="border-color:{{partido.get_color}}">{{ num_senadores }}</div> senadores  <p></p>
         <div class="numberCircle" style="border-color:{{partido.get_color}}">{{ num_representantes }}</div> representantes
-
+    <br>
     <div id="columna_izquierda">
-
+        <div id="charts_titulo"></div>
+        <table>
+            <tr>
+                <td>
+                    <h6 id="titulo_gubernamental"></h6>
+                </td>
+                <td>
+                    <h6 id="titulo_partido"></h6>
+                </td>
+                <td>
+                    <h6 id="titulo_otros_partidos"></h6>
+                </td>
+                <td>
+                    <h6 id="titulo_otras"></h6>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="chart_gubernamental" class="chart_resumen_votos"></div>
+                </td>
+                <td>
+                    <div id="chart_partido" class="chart_resumen_votos"></div>
+                </td>
+                <td>
+                    <div id="chart_otros_partidos" class="chart_resumen_votos"></div>
+                </td>
+                <td>
+                    <div id="chart_otras" class="chart_resumen_votos"></div>
+                </td>
+            </tr>
+        </table>
     </div>
     <div id="columna_derecha">
-
+        <div id="tabla" class="tabla-detalle-partido"></div>
     </div>
-<script>
-	(function( $ ) {
+<script type="text/javascript" charset="UTF-8">
+(function( $ ) {
 		$.widget( "custom.combobox", {
 			_create: function() {
 				this.wrapper = $( "<span>" )
@@ -161,6 +193,8 @@
                         function(response) { // on success..
                             console.log("response");
                             console.log(response);
+                            dibujarResumenVotos(response.resumen_votos);
+                            dibujarTabla(response.ultimas_votaciones);
                         }
                 });
 			},
@@ -174,5 +208,88 @@
 			$( "#combobox" ).toggle();
 		});
 	});
+</script>
+<script type="text/javascript" charset="UTF-8">
+    function dibujarResumenVotos(resumen) {
+        var html = "<h4>" + "RESUMEN DE VOTOS <br>" + resumen.tema + " (" + resumen.total_proyectos + " proyectos)</h4>";
+        document.getElementById("charts_titulo").innerHTML = html;
+        iniciativas = ["gubernamental", "partido", "otros_partidos", "otras"];
+        document.getElementById("titulo_gubernamental").innerHTML = "INICIATIVA<br>GUBERNAMENTAL<br>("+resumen['gubernamental'].num_votos+" votos)";
+        document.getElementById("titulo_partido").innerHTML = "INICIATIVA<br>DEL PARTIDO<br>("+resumen['partido'].num_votos+" votos)";
+        document.getElementById("titulo_otros_partidos").innerHTML = "INICIATIVA<br>OTROS PARTIDOS<br>("+resumen['otros_partidos'].num_votos+" votos)";
+        document.getElementById("titulo_otras").innerHTML = "OTRAS<br>INICIATIVAS<br>("+resumen['otras'].num_votos+" votos)";
+        for (iniciativa of iniciativas) {
+            element_id = "#chart_"+iniciativa;
+            $(function () {
+	        $(element_id).highcharts({
+	            chart: {
+	                plotBackgroundColor: null,
+	                plotBorderWidth: null,
+	                plotShadow: true,
+	                type: 'pie',
+	                style: {
+                    fontFamily: 'sans-serif',
+                },
+	            },
+	            title: {
+	                text: ''
+	            },
+	            tooltip: {
+	                pointFormat: '<b>{point.percentage:.1f}% <br> ({point.y} votos)</b>'
+	            },
+	            plotOptions: {
+	                pie: {
+	                    allowPointSelect: true,
+	                    cursor: 'pointer',
+	                    dataLabels: {
+	                        enabled: false
+	                    },
+	                    showInLegend: true
+	                }
+	            },
+	            series: [{
+	                name: "Votos",
+	                colorByPoint: true,
+	                innerSize: '50%',
+	                data: [{"name": "Sí", "y": resumen[iniciativa].si, "color":'#149E00'},
+	                       {"name": "No", "y": resumen[iniciativa].no, "color":'#CD0000'},
+	                       {"name": "Abstenciones", "y": resumen[iniciativa].abstenciones, "color":'#D3D3D3'},
+	                       {"name": "Inasistencias", "y": resumen[iniciativa].inasistencias, "color":'#E1E100'}],
+	            }],
+	            });
+	        });
+        }
+    }
+    function dibujarTabla(proyectos) {
+         var html = '<h4>ÚLTIMAS VOTACIONES DEL PARTIDO</h4><table class="tabla-partido">';
+            for (proyecto of proyectos) {
+                var url = "{% url 'proyecto' 990 %}".replace("990",  proyecto.id);
+                var votos_partido = proyecto.votos_partido;
+                var votos_totales = proyecto.votos_totales;
+                html += "<tr>"+
+                     '        <td colspan=8 class="tabla-partido-tr-lleno"><a href=" '+url+' ">'+ proyecto.nombre +"</a></td>"+
+                     "    </tr>"+
+                     "    <tr>"+
+                     "        <td class='tabla-partido-td-imagen'><img src= '{% static "vv/images/si.png" %}'/></td>"+
+                     "        <td>"+ votos_partido[2] +" / "+ votos_totales[2] +"</td>"+
+                     "        <td class='tabla-partido-td-imagen'><img src= '{% static "vv/images/no.png" %}'/></td>"+
+                     "        <td>"+ votos_partido[1] +" / "+ votos_totales[1] +"</td>"+
+                     "        <td class='tabla-partido-td-imagen'><img src= '{% static "vv/images/abstencion.png" %}'/></td>"+
+                     "        <td>"+ votos_partido[0] +" / "+ votos_totales[0] +"</td>"+
+                     "        <td class='tabla-partido-td-imagen'><img src= '{% static "vv/images/inasistencia.png" %}'/></td>"+
+                     "        <td>"+ votos_partido[3] +" / "+ votos_totales[3] +"</td>"+
+                     "    </tr>";
+            }
+
+            html += "</table>";
+            html += "</table><p>"
+                            +"<img src= '{% static "vv/images/si.png" %}'/> Sí  "
+                            +"<img src= '{% static "vv/images/no.png" %}'/> No  "
+                            +"<img src= '{% static "vv/images/abstencion.png" %}'/> Se abstuvo  "
+                            +"<img src= '{% static "vv/images/inasistencia.png" %}'/> No asistió  <br>"
+                            +"Los datos se muestran así:<br> votacion del partido/votacion total</p>";
+
+            document.getElementById("tabla").innerHTML = html;
+    }
 </script>
 {% endblock %}

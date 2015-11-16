@@ -13,11 +13,10 @@
     <div id="header">
         <img class="header-img" src= "{% static 'vv/images/logo.png' %}" />
         <ul id="header-pclave">
-            <li>PROYECTOS CLAVE: </li>
-            <li><a href=#>Proyecto 1 /</a></li>
-            <li><a href=#>Proyecto 2 /</a></li>
-            <li><a href=#>Proyecto 3 /</a></li>
-            <li><a href=#>Proyecto 4 /</a></li>
+            <li>PROYECTOS CLAVE:</li>
+            {% for p in proyectos_clave %}
+            <li><a href='/proyectos/{{ p.id }}'>{{ p.nombre }}/</a></li>
+            {% endfor %}
         </ul>
         <form method="post" action="#" class="header-buscar">
         <table class="header-tabla">
@@ -46,22 +45,22 @@
             <li><a href='/proyectos'>Proyectos de Ley</a></li>
             <li><p class="sidebar-secciones">    Partidos    </p></li>
             <ul class="sidebar-detalle">
-                <li><a href=#>ASI</a></li>
-                <li><a href=#>Alianza Verde</a></li>
-                <li><a href=#>AICO</a></li>
-                <li><a href=#>Cambio Radical</a></li>
-                <li><a href=#>Centro Democrático</a></li>
-                <li><a href=#>Cien por ciento</a></li>
-                <li><a href=#>Conservador</a></li>
-                <li><a href=#>Funeco</a></li>
-                <li><a href=#>La U</a></li>
-                <li><a href=#>Liberal</a></li>
-                <li><a href=#>MAIS</a></li>
-                <li><a href=#>MIR</a></li>
-                <li><a href=#>MIRA</a></li>
-                <li><a href=#>Opción Ciudadana</a></li>
-                <li><a href=#>Polo Democrático</a></li>
-                <li><a href=#>Por un Huila Mejor</a></li>
+                <li><a href='/partidos/11'>ASI</a></li>
+                <li><a href='/partidos/146'>Alianza Verde</a></li>
+                <li><a href='/partidos/9'>AICO</a></li>
+                <li><a href='/partidos/3'>Cambio Radical</a></li>
+                <li><a href='/partidos/144'>Centro Democrático</a></li>
+                <li><a href='/partidos/149'>Cien por ciento</a></li>
+                <li><a href='/partidos/4'>Conservador</a></li>
+                <li><a href='/partidos/176'>Funeco</a></li>
+                <li><a href='/partidos/5'>La U</a></li>
+                <li><a href='/partidos/2'>Liberal</a></li>
+                <li><a href='/partidos/185'>MAIS</a></li>
+                <li><a href='/partidos/68'>MIR</a></li>
+                <li><a href='/partidos/10'>MIRA</a></li>
+                <li><a href='/partidos/145'>Opción Ciudadana</a></li>
+                <li><a href='/partidos/6'>Polo Democrático</a></li>
+                <li><a href='/partidos/150'>Por un Huila Mejor</a></li>
             </ul>
         </ul>
         {% endblock %}
