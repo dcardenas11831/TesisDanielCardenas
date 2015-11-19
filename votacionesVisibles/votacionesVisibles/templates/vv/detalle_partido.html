@@ -18,7 +18,7 @@
     <div class="styled-select">
             <label>TEMA: </label>
             <select id="combobox" size="10">
-                <option value="" selected="selected">Seleccione uno</option>
+                <option value="-1">Todos los temas</option>
                 {% for tema in temas %}
                 <option value="{{ tema.id }}">{{ tema.nombre }}</option>
                 {% endfor %}

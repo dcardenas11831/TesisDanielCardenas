@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from __future__ import division
 from __future__ import unicode_literals
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.db.models import Q
 import json
-
 from .models import ProyectoDeLeyProyectoley, ProyectoDeLeyEstadodeproyectodeley, ProyectoDeLeyVotacion, \
     CongresoPartido, CongresoCongresista, ProyectoDeLeyVoto, CongresoPeriodocongresista, ProyectoDeLeyAutorproyectoley
 from .models import GeneralTema
@@ -15,8 +15,8 @@ MEDIA_URL = "http://congresovisible.org/media/"
 
 
 def proyectos_clave():
-    claves = ProyectoDeLeyProyectoley.objects.filter(periodo__id=ID_PERIODO, destacado=True)\
-        .order_by('-fecha_radicacion')[:4]
+    claves = ProyectoDeLeyProyectoley.objects.filter(periodo__id=ID_PERIODO, destacado=True) \
+                 .order_by('-fecha_radicacion')[:4]
     resultado = []
     for pc in claves:
         sp = pc.titulo.split("[")
@@ -454,28 +454,36 @@ def resumen_votos_partido(request):
         # tipos de votos para hacer el for, estan ubicados en el orden en que aparecen en la bd
         tipos_voto = ['abstenciones', 'no', 'si', 'inasistencias']
         for i, tipo_voto in enumerate(tipos_voto):
-            gub = ProyectoDeLeyVoto.objects.filter(votacion__proyecto__id__in=ids_proyectos,
+            gub = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
+                                                    Q(votacion__motivo__icontains="título ")),
+                                                   votacion__proyecto__id__in=ids_proyectos,
                                                    votacion__tipo_votacion_id__lte=3,
                                                    voto=i,
                                                    votacion__proyecto__iniciativa__id=2,
                                                    congresista__partido_politico=partido).count()
             resumen_votos['gubernamental'][tipo_voto] = gub
             resumen_votos['gubernamental']['num_votos'] += gub
-            otr = ProyectoDeLeyVoto.objects.filter(votacion__proyecto__id__in=ids_proyectos,
+            otr = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
+                                                    Q(votacion__motivo__icontains="título ")),
+                                                   votacion__proyecto__id__in=ids_proyectos,
                                                    votacion__tipo_votacion_id__lte=3,
                                                    voto=i,
                                                    votacion__proyecto__iniciativa__id__gte=3,
                                                    congresista__partido_politico=partido).count()
             resumen_votos['otras'][tipo_voto] = otr
             resumen_votos['otras']['num_votos'] += otr
-            leg_par = ProyectoDeLeyVoto.objects.filter(votacion__proyecto__id__in=ids_proyectos_autores_partido,
+            leg_par = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
+                                                        Q(votacion__motivo__icontains="título ")),
+                                                       votacion__proyecto__id__in=ids_proyectos_autores_partido,
                                                        votacion__tipo_votacion_id__lte=3,
                                                        voto=i,
                                                        votacion__proyecto__iniciativa__id=1,
                                                        congresista__partido_politico=partido).count()
             resumen_votos['partido'][tipo_voto] = leg_par
             resumen_votos['partido']['num_votos'] += leg_par
-            leg_otr = ProyectoDeLeyVoto.objects.filter(votacion__proyecto__id__in=ids_proyectos_autores_otros,
+            leg_otr = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
+                                                        Q(votacion__motivo__icontains="título ")),
+                                                       votacion__proyecto__id__in=ids_proyectos_autores_otros,
                                                        votacion__tipo_votacion_id__lte=3,
                                                        voto=i,
                                                        votacion__proyecto__iniciativa__id=1,
@@ -485,12 +493,17 @@ def resumen_votos_partido(request):
             resumen_votos['total_votos'] += gub + otr + leg_par + leg_otr
 
         # para sacar los proyectos que van en la tabla (solo se toman 20 para no llenar de info al usuario )
-        votaciones = ProyectoDeLeyVoto.objects.filter(votacion__proyecto__id__in=ids_proyectos,
+        votaciones = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
+                                                       Q(votacion__motivo__icontains="título ")),
+                                                      votacion__proyecto__id__in=ids_proyectos,
                                                       votacion__tipo_votacion_id__lte=3,
                                                       congresista__partido_politico=partido) \
-            .values_list('votacion__id', flat=True).distinct().order_by('-votacion__fecha')[:20]
+                         .values_list('votacion__id', flat=True).distinct().order_by('-votacion__fecha')[:20]
+        print votaciones
         for votacion_id in votaciones:
             votacion = ProyectoDeLeyVotacion.objects.get(id=votacion_id)
+            print votacion_id
+            print votacion.motivo
             proyecto = votacion.proyecto
             sp = proyecto.titulo.split("[")
             nombre_corto = sp[len(sp) - 1][:-1]  # se toma el nombre corto cuando es posible
@@ -514,6 +527,34 @@ def resumen_votos_partido(request):
                     'votos_partido': [abs_partido, no_partido, si_partido, ina_partido],
                 }
                 proyectos_partido.append(p)
+
+        # disciplina rice
+        disciplina_rice = []
+        # primero tomar la lista de todos los partidos
+        partidos_ids = CongresoPartido.objects.filter(estado_id=1).values_list('id', 'nombre')
+        for p_id in partidos_ids:
+            no = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
+                                                   Q(votacion__motivo__icontains="título ")),
+                                                  congresista__partido_politico__id=p_id[0],
+                                                  votacion__proyecto__id__in=ids_proyectos,
+                                                  votacion__tipo_votacion_id__lte=3,
+                                                  voto=1).count()
+            si = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
+                                                   Q(votacion__motivo__icontains="título ")),
+                                                  congresista__partido_politico__id=p_id[0],
+                                                  votacion__proyecto__id__in=ids_proyectos,
+                                                  votacion__tipo_votacion_id__lte=3,
+                                                  voto=2).count()
+            todos = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
+                                                      Q(votacion__motivo__icontains="título ")),
+                                                     congresista__partido_politico__id=p_id[0],
+                                                     votacion__proyecto__id__in=ids_proyectos,
+                                                     votacion__tipo_votacion_id__lte=3).count()
+            if todos != 0:
+                t = abs(si/todos - no/todos)*100
+                print "disc "+p_id[1]+" "+str(t)+"% "+str(si)+"/"+str(todos)+" "+str(no)+"/"+str(todos)
+            else:
+                print "no disc "+p_id[1]
 
         results = {
             'resumen_votos': resumen_votos,
