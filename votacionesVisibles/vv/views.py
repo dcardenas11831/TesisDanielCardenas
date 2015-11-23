@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
 from __future__ import unicode_literals
+from operator import itemgetter
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.db.models import Q
+from django.db.models import Q, Count, IntegerField, When, Case
 import json
 from .models import ProyectoDeLeyProyectoley, ProyectoDeLeyEstadodeproyectodeley, ProyectoDeLeyVotacion, \
-    CongresoPartido, CongresoCongresista, ProyectoDeLeyVoto, CongresoPeriodocongresista, ProyectoDeLeyAutorproyectoley
+    CongresoPartido, CongresoCongresista, ProyectoDeLeyVoto, CongresoPeriodocongresista, \
+    ProyectoDeLeyAutorproyectoley, ProyectoDeLeyLegislatura
 from .models import GeneralTema
 
 # Constantes
@@ -341,6 +343,7 @@ def senado(request):
         }
         json_congresistas[partido.nombre].append(c)
         json_partidos[index_partidos[partido.nombre]]['num_curules'] += 1  # se le suma al partido un congresista
+    json_partidos = sorted(json_partidos, key=itemgetter('num_curules'))
 
     return render(request, 'vv/senado.html', {'proyectos_clave': p_claves, 'partidos': json.dumps(json_partidos),
                                               'senado': json.dumps(json_congresistas)})
@@ -423,8 +426,6 @@ def resumen_votos_partido(request):
             'otros_partidos': {'num_votos': 0, 'si': 0, 'no': 0, 'abstenciones': 0, 'inasistencias': 0},
             'otras': {'num_votos': 0, 'si': 0, 'no': 0, 'abstenciones': 0, 'inasistencias': 0},
         }
-
-        proyectos_partido = []
         partido = CongresoPartido.objects.get(id=partido_id)
         ids_congresistas = CongresoPeriodocongresista.objects.filter(periodo__id=ID_PERIODO, partido=partido,
                                                                      congresista__es_congresista=True) \
@@ -451,114 +452,184 @@ def resumen_votos_partido(request):
         ids_proyectos_autores_otros = list(set(ids_proyectos) - set(ids_proyectos_autores_partido))
         print len(ids_proyectos_autores_partido)
         print len(ids_proyectos_autores_otros)
+        gub = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
+                                                Q(votacion__motivo__icontains="título ")),
+                                               votacion__proyecto__id__in=ids_proyectos,
+                                               votacion__tipo_votacion_id__lte=3,
+                                               voto__in=(0, 1, 2, 3),
+                                               votacion__proyecto__iniciativa__id=2,
+                                               congresista__partido_politico=partido) \
+            .values_list('voto').annotate(Count('voto'))
+        gub = dict(gub)
+        otr = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
+                                                Q(votacion__motivo__icontains="título ")),
+                                               votacion__proyecto__id__in=ids_proyectos,
+                                               votacion__tipo_votacion_id__lte=3,
+                                               voto__in=(0, 1, 2, 3),
+                                               votacion__proyecto__iniciativa__id__gte=3,
+                                               congresista__partido_politico=partido) \
+            .values_list('voto').annotate(Count('voto'))
+        otr = dict(otr)
+        leg_par = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
+                                                    Q(votacion__motivo__icontains="título ")),
+                                                   votacion__proyecto__id__in=ids_proyectos_autores_partido,
+                                                   votacion__tipo_votacion_id__lte=3,
+                                                   voto__in=(0, 1, 2, 3),
+                                                   votacion__proyecto__iniciativa__id=1,
+                                                   congresista__partido_politico=partido) \
+            .values_list('voto').annotate(Count('voto'))
+        leg_par = dict(leg_par)
+        leg_otr = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
+                                                    Q(votacion__motivo__icontains="título ")),
+                                                   votacion__proyecto__id__in=ids_proyectos_autores_otros,
+                                                   votacion__tipo_votacion_id__lte=3,
+                                                   voto__in=(0, 1, 2, 3),
+                                                   votacion__proyecto__iniciativa__id=1,
+                                                   congresista__partido_politico=partido) \
+            .values_list('voto').annotate(Count('voto'))
+        leg_otr = dict(leg_otr)
         # tipos de votos para hacer el for, estan ubicados en el orden en que aparecen en la bd
         tipos_voto = ['abstenciones', 'no', 'si', 'inasistencias']
         for i, tipo_voto in enumerate(tipos_voto):
-            gub = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
-                                                    Q(votacion__motivo__icontains="título ")),
-                                                   votacion__proyecto__id__in=ids_proyectos,
-                                                   votacion__tipo_votacion_id__lte=3,
-                                                   voto=i,
-                                                   votacion__proyecto__iniciativa__id=2,
-                                                   congresista__partido_politico=partido).count()
-            resumen_votos['gubernamental'][tipo_voto] = gub
-            resumen_votos['gubernamental']['num_votos'] += gub
-            otr = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
-                                                    Q(votacion__motivo__icontains="título ")),
-                                                   votacion__proyecto__id__in=ids_proyectos,
-                                                   votacion__tipo_votacion_id__lte=3,
-                                                   voto=i,
-                                                   votacion__proyecto__iniciativa__id__gte=3,
-                                                   congresista__partido_politico=partido).count()
-            resumen_votos['otras'][tipo_voto] = otr
-            resumen_votos['otras']['num_votos'] += otr
-            leg_par = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
-                                                        Q(votacion__motivo__icontains="título ")),
-                                                       votacion__proyecto__id__in=ids_proyectos_autores_partido,
-                                                       votacion__tipo_votacion_id__lte=3,
-                                                       voto=i,
-                                                       votacion__proyecto__iniciativa__id=1,
-                                                       congresista__partido_politico=partido).count()
-            resumen_votos['partido'][tipo_voto] = leg_par
-            resumen_votos['partido']['num_votos'] += leg_par
-            leg_otr = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
-                                                        Q(votacion__motivo__icontains="título ")),
-                                                       votacion__proyecto__id__in=ids_proyectos_autores_otros,
-                                                       votacion__tipo_votacion_id__lte=3,
-                                                       voto=i,
-                                                       votacion__proyecto__iniciativa__id=1,
-                                                       congresista__partido_politico=partido).count()
-            resumen_votos['otros_partidos'][tipo_voto] = leg_otr
-            resumen_votos['otros_partidos']['num_votos'] += leg_otr
-            resumen_votos['total_votos'] += gub + otr + leg_par + leg_otr
+            resumen_votos['gubernamental'][tipo_voto] = gub.get(i, 0)
+            resumen_votos['gubernamental']['num_votos'] += gub.get(i, 0)
+            resumen_votos['otras'][tipo_voto] = otr.get(i, 0)
+            resumen_votos['otras']['num_votos'] += otr.get(i, 0)
+            resumen_votos['partido'][tipo_voto] = leg_par.get(i, 0)
+            resumen_votos['partido']['num_votos'] += leg_par.get(i, 0)
+            resumen_votos['otros_partidos'][tipo_voto] = leg_otr.get(i, 0)
+            resumen_votos['otros_partidos']['num_votos'] += leg_otr.get(i, 0)
+            resumen_votos['total_votos'] += gub.get(i, 0) + otr.get(i, 0) + leg_par.get(i, 0) + leg_otr.get(i, 0)
 
+        results = {
+            'resumen_votos': resumen_votos,
+        }
+        data = json.dumps(results)
+        print "////////////////////////////////////"
+
+    else:
+        data = 'fail'
+
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+
+# ajax para retornar las ultimas votaciones del partido
+def ultimas_votaciones_partido(request):
+    if request.is_ajax():
+        # se toman los parametros del ajax
+        tema_id = int(request.GET.get('tema_id'))
+        partido_id = request.GET.get('partido_id')
+        partido = CongresoPartido.objects.get(id=partido_id)
+        proyectos_partido = []
+        # se toma la lista de proyectos buscada por el tema seleccionado
+        if tema_id == -1:  # si se eligieron todos los temas
+            ids_proyectos = ProyectoDeLeyProyectoley.objects.filter(periodo__id=ID_PERIODO).order_by('id') \
+                .values_list('id', flat=True)
+
+        else:  # busca por el tema especificado
+            tema = GeneralTema.objects.get(id=tema_id)
+            ids_proyectos = ProyectoDeLeyProyectoley.objects.filter(periodo__id=ID_PERIODO,
+                                                                    tema_principal=tema).order_by('id') \
+                .values_list('id', flat=True)
         # para sacar los proyectos que van en la tabla (solo se toman 20 para no llenar de info al usuario )
         votaciones = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
                                                        Q(votacion__motivo__icontains="título ")),
                                                       votacion__proyecto__id__in=ids_proyectos,
                                                       votacion__tipo_votacion_id__lte=3,
                                                       congresista__partido_politico=partido) \
-                         .values_list('votacion__id', flat=True).distinct().order_by('-votacion__fecha')[:20]
-        print votaciones
+            .values_list('votacion__id', flat=True).distinct().order_by('-votacion__fecha')[:20]
         for votacion_id in votaciones:
             votacion = ProyectoDeLeyVotacion.objects.get(id=votacion_id)
-            print votacion_id
-            print votacion.motivo
             proyecto = votacion.proyecto
             sp = proyecto.titulo.split("[")
             nombre_corto = sp[len(sp) - 1][:-1]  # se toma el nombre corto cuando es posible
             if nombre_corto == "":
                 nombre_corto = proyecto.titulo
-            abs_partido = ProyectoDeLeyVoto.objects.filter(votacion=votacion, congresista__partido_politico=partido,
-                                                           voto=0).count()
-            no_partido = ProyectoDeLeyVoto.objects.filter(votacion=votacion, congresista__partido_politico=partido,
-                                                          voto=1).count()
-            si_partido = ProyectoDeLeyVoto.objects.filter(votacion=votacion, congresista__partido_politico=partido,
-                                                          voto=2).count()
-            ina_partido = ProyectoDeLeyVoto.objects.filter(votacion=votacion, congresista__partido_politico=partido,
-                                                           voto=3).count()
-            if abs_partido + no_partido + si_partido + ina_partido > 0:  # solo lo guarda si hay al menos un voto
+            votos = ProyectoDeLeyVoto.objects.filter(votacion=votacion, congresista__partido_politico=partido,
+                                                     voto__in=(0, 1, 2, 3)).values_list('voto').annotate(Count('voto'))
+            votos = dict(votos)
+            # solo lo guarda si hay al menos un voto
+            if votos.get(0, 0) + votos.get(1, 0) + votos.get(2, 0) + votos.get(3, 0) > 0:
                 p = {
                     'nombre': nombre_corto,
                     'id': proyecto.id,
                     'id_votacion': votacion.id,
                     'votos_totales': [votacion.votosabstencion, votacion.votoscontra,
                                       votacion.votosfavor, votacion.numero_no_asistencias],
-                    'votos_partido': [abs_partido, no_partido, si_partido, ina_partido],
+                    'votos_partido': [votos.get(0, 0), votos.get(1, 0), votos.get(2, 0), votos.get(3, 0)],
                 }
                 proyectos_partido.append(p)
 
-        # disciplina rice
-        disciplina_rice = []
-        # primero tomar la lista de todos los partidos
-        partidos_ids = CongresoPartido.objects.filter(estado_id=1).values_list('id', 'nombre')
-        for p_id in partidos_ids:
-            no = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
-                                                   Q(votacion__motivo__icontains="título ")),
-                                                  congresista__partido_politico__id=p_id[0],
-                                                  votacion__proyecto__id__in=ids_proyectos,
-                                                  votacion__tipo_votacion_id__lte=3,
-                                                  voto=1).count()
-            si = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
-                                                   Q(votacion__motivo__icontains="título ")),
-                                                  congresista__partido_politico__id=p_id[0],
-                                                  votacion__proyecto__id__in=ids_proyectos,
-                                                  votacion__tipo_votacion_id__lte=3,
-                                                  voto=2).count()
-            todos = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
-                                                      Q(votacion__motivo__icontains="título ")),
-                                                     congresista__partido_politico__id=p_id[0],
-                                                     votacion__proyecto__id__in=ids_proyectos,
-                                                     votacion__tipo_votacion_id__lte=3).count()
-            if todos != 0:
-                t = abs(si/todos - no/todos)*100
-                print "disc "+p_id[1]+" "+str(t)+"% "+str(si)+"/"+str(todos)+" "+str(no)+"/"+str(todos)
-            else:
-                print "no disc "+p_id[1]
-
         results = {
-            'resumen_votos': resumen_votos,
             'ultimas_votaciones': proyectos_partido,
+        }
+        data = json.dumps(results)
+        print "////////////////////////////////////"
+
+    else:
+        data = 'fail'
+
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+
+# ajax para retornar la disciplina del partido y de los demas
+def disciplina_partido(request):
+    if request.is_ajax():
+        # se toman los parametros del ajax
+        tema_id = int(request.GET.get('tema_id'))
+        partido_id = request.GET.get('partido_id')
+        # se toma la lista de proyectos buscada por el tema seleccionado
+        if tema_id == -1:  # si se eligieron todos los temas
+            ids_proyectos = ProyectoDeLeyProyectoley.objects.filter(periodo__id=ID_PERIODO).order_by('id') \
+                .values_list('id', flat=True)
+
+        else:  # busca por el tema especificado
+            tema = GeneralTema.objects.get(id=tema_id)
+            ids_proyectos = ProyectoDeLeyProyectoley.objects.filter(periodo__id=ID_PERIODO,
+                                                                    tema_principal=tema).order_by('id') \
+                .values_list('id', flat=True)
+
+        legislaturas = ProyectoDeLeyLegislatura.objects.filter(cuatrienio__id=ID_PERIODO).order_by(
+            'fecha_inicio').values()
+        anio_inicio = legislaturas[0]['fecha_inicio'].year
+        disciplina_rice = {}
+        for leg in legislaturas:
+            disc = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
+                                                     Q(votacion__motivo__icontains="título ")),
+                                                    votacion__proyecto__id__in=ids_proyectos,
+                                                    votacion__tipo_votacion_id__lte=3,
+                                                    votacion__fecha__range=(leg['fecha_inicio'], leg['fecha_fin']),
+                                                    voto__in=(0, 1, 2, 3)) \
+                .values('congresista__partido_politico__id', 'congresista__partido_politico__nombre',
+                        'congresista__partido_politico__get_color') \
+                .annotate(total=Count('voto'),
+                          si=Count(Case(When(voto=2, then=1), output_field=IntegerField())),
+                          no=Count(Case(When(voto=1, then=1), output_field=IntegerField())))
+            for p in disc:  # para poenrle un nombre elegante a los campos del dict
+                nombre_partido = p['congresista__partido_politico__nombre']
+                if nombre_partido not in disciplina_rice:
+                    disciplina_rice[nombre_partido] = {
+                        'id': p['congresista__partido_politico__id'],
+                        'color': p['congresista__partido_politico__get_color'],
+                        'seleccionado': False,
+                    }
+                    if disciplina_rice[nombre_partido]['id'] == int(partido_id):
+                        disciplina_rice[nombre_partido]['seleccionado'] = True
+                disciplina_rice[nombre_partido][str(anio_inicio) + ' - ' + str(anio_inicio + 1)] = {
+                    'si': p['si'],
+                    'no': p['no'],
+                    'total': p['total'],
+                    'disciplina': abs(p['si'] / p['total'] - p['no'] / p['total']),
+                }
+            anio_inicio += 1
+        print "-=-=-=-==-=-=-=-=-=-=-=-=-=-="
+        print disciplina_rice
+        anios = [str(l['fecha_inicio'].year)+" - "+str(l['fecha_fin'].year) for l in legislaturas]
+        results = {
+            'disciplina_rice': disciplina_rice,
+            'anios': anios
         }
         data = json.dumps(results)
         print "////////////////////////////////////"
