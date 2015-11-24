@@ -59,15 +59,16 @@
                 </td>
             </tr>
         </table>
-        <div id="disciplina">
-            <h6 id="titulo_disciplina"></h6>
-            <div id="chart_disciplina"></div>
-        </div>
+
     </div>
     <div id="columna_derecha">
         <div id="tabla" class="tabla-detalle-partido"></div>
     </div>
 
+    <div id="disciplina">
+        <div id="titulo_disciplina"></div>
+        <div id="chart_disciplina"></div>
+    </div>
 <script type="text/javascript" charset="UTF-8">
 (function( $ ) {
 		$.widget( "custom.combobox", {
@@ -220,7 +221,7 @@
                         function(response) { // on success..
                             console.log("response");
                             console.log(response);
-                            // dibujarDisciplina(response.disciplina_rice, response.anios);
+                            dibujarDisciplina(response.disciplina_rice, response.anios);
                         }
                 });
 			},
@@ -318,8 +319,24 @@
             document.getElementById("tabla").innerHTML = html;
     }
     function dibujarDisciplina(partidos, anios) {
-        var html = "<h4>" + "DISCIPLINA DEL PARTIDO <br>" + resumen.tema +"</h4>";
+        var html = "<br> <br> <h4>" + "DISCIPLINA DEL PARTIDO <br> Índice RICE</h4>";
         document.getElementById("titulo_disciplina").innerHTML = html;
+        partidos_chart = [];
+        for (nombre_partido in partidos){
+            if (partidos.hasOwnProperty(nombre_partido)) {
+                partido = partidos[nombre_partido];
+                p = {name: partido.nombre, color: partido.color, visible: partido.seleccionado, data: []};
+                d = [];
+                for (anio of anios){
+                    if (partido.hasOwnProperty(anio)) {
+                        d.push(partido[anio].disciplina);
+                    }
+                }
+                p.data = d;
+                partidos_chart.push(p);
+            }
+        }
+        console.log(partidos_chart);
         $(function () {
 	        $("#chart_disciplina").highcharts({
 	            chart: {
@@ -342,7 +359,7 @@
 		        },
 		        yAxis: {
 		            title: {
-		                text: '% de disciplina'
+		                text: 'nivel de disciplina'
 		            },
 		            plotLines: [{
 		                value: 0,
@@ -350,18 +367,22 @@
 		                color: '#808080'
 		            }]
 		        },
+		        legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle',
+                },
 	            tooltip: {
-	                pointFormat: '<b>{point.percentage:.1f}% <br> ({point.y} votos)</b>'
+	                pointFormat: '{point.series.name}<br><b>{point.y}</b>'
 	            },
-	            series: [{
-	                name: "Votos",
-	                colorByPoint: true,
-	                innerSize: '50%',
-	                data: [{"name": "Sí", "y": resumen[iniciativa].si, "color":'#149E00'},
-	                       {"name": "No", "y": resumen[iniciativa].no, "color":'#CD0000'},
-	                       {"name": "Abstenciones", "y": resumen[iniciativa].abstenciones, "color":'#D3D3D3'},
-	                       {"name": "Inasistencias", "y": resumen[iniciativa].inasistencias, "color":'#E1E100'}],
-	            }],
+	            plotOptions: {
+	                line: {
+	                    marker: {
+	                        symbol: 'circle',
+	                    },
+	                },
+	            },
+	            series: partidos_chart,
 	        });
 	    });
     }

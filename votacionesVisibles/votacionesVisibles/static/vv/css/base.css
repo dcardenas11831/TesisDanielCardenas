@@ -478,7 +478,7 @@ ul.sidebar-detalle li a {
     padding: 0em 0em;
     float: left;
     width: 90%;
-    height: 29em;
+    height: 32em;
 }
 #charts_titulo {
     text-align: center;
@@ -693,4 +693,20 @@ ul.sidebar-detalle li a {
 }
 .tabla-partido-tr-lleno a:hover{
     color: #37AB9C;
+}
+#disciplina {
+    margin: 10em 0em;
+    padding: 12em 0em;
+    text-size: medium;
+    text-align: center;
+}
+#disciplina h3{
+    margin: 2em 0em;
+    padding: 0em 0em;
+    text-align: center;
+    width: 100%;
+}
+#chart_disciplina {
+    width: 100%;
+    height: 22em;
 }

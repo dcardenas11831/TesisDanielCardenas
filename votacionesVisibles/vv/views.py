@@ -10,6 +10,7 @@ from .models import ProyectoDeLeyProyectoley, ProyectoDeLeyEstadodeproyectodeley
     CongresoPartido, CongresoCongresista, ProyectoDeLeyVoto, CongresoPeriodocongresista, \
     ProyectoDeLeyAutorproyectoley, ProyectoDeLeyLegislatura
 from .models import GeneralTema
+from datetime import datetime
 
 # Constantes
 ID_PERIODO = 7
@@ -591,7 +592,8 @@ def disciplina_partido(request):
                                                                     tema_principal=tema).order_by('id') \
                 .values_list('id', flat=True)
 
-        legislaturas = ProyectoDeLeyLegislatura.objects.filter(cuatrienio__id=ID_PERIODO).order_by(
+        legislaturas = ProyectoDeLeyLegislatura.objects.filter(cuatrienio__id=ID_PERIODO,
+                                                               fecha_inicio__lte=datetime.now().date()).order_by(
             'fecha_inicio').values()
         anio_inicio = legislaturas[0]['fecha_inicio'].year
         disciplina_rice = {}
@@ -602,8 +604,7 @@ def disciplina_partido(request):
                                                     votacion__tipo_votacion_id__lte=3,
                                                     votacion__fecha__range=(leg['fecha_inicio'], leg['fecha_fin']),
                                                     voto__in=(0, 1, 2, 3)) \
-                .values('congresista__partido_politico__id', 'congresista__partido_politico__nombre',
-                        'congresista__partido_politico__get_color') \
+                .values('congresista__partido_politico__id', 'congresista__partido_politico__nombre') \
                 .annotate(total=Count('voto'),
                           si=Count(Case(When(voto=2, then=1), output_field=IntegerField())),
                           no=Count(Case(When(voto=1, then=1), output_field=IntegerField())))
@@ -612,7 +613,8 @@ def disciplina_partido(request):
                 if nombre_partido not in disciplina_rice:
                     disciplina_rice[nombre_partido] = {
                         'id': p['congresista__partido_politico__id'],
-                        'color': p['congresista__partido_politico__get_color'],
+                        'nombre': nombre_partido,
+                        'color': CongresoPartido.COLORES[nombre_partido],
                         'seleccionado': False,
                     }
                     if disciplina_rice[nombre_partido]['id'] == int(partido_id):
@@ -621,7 +623,7 @@ def disciplina_partido(request):
                     'si': p['si'],
                     'no': p['no'],
                     'total': p['total'],
-                    'disciplina': abs(p['si'] / p['total'] - p['no'] / p['total']),
+                    'disciplina': float("%.2f" % abs(p['si'] / p['total'] - p['no'] / p['total'])),
                 }
             anio_inicio += 1
         print "-=-=-=-==-=-=-=-=-=-=-=-=-=-="
