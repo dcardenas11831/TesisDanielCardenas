@@ -194,7 +194,8 @@
 				+'<td style="text-align:left"><a href=" '+url+' ">Ver Partido</a></td></tr>';
 			for (congresista of congresistas){
 				html += '<tr><td><img class="img-circle" style="border-color:'+ color +'" src='+ congresista.foto +'></td>';
-				html += '<td style="text-align:left">'+ congresista.nombre +'</td></tr>';
+				var url = "{% url 'congresista' 990 %}".replace("990", congresista.id);
+				html += '<td style="text-align:left"><a href=" '+url+' ">'+ congresista.nombre +'</a></td></tr>';
 			}
 			document.getElementById("tabla-senado").innerHTML = html;
 		}

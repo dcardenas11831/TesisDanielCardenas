@@ -19,4 +19,9 @@ urlpatterns = [
     url(r'^busqueda/resumen_votos_partido/', views.resumen_votos_partido, name='resumen_votos_partido'),
     url(r'^busqueda/ultimas_votaciones_partido/', views.ultimas_votaciones_partido, name='ultimas_votaciones_partido'),
     url(r'^busqueda/disciplina_partido/', views.disciplina_partido, name='disciplina_partido'),
+    url(r'^congresista/(?P<congresista_id>[0-9]+)/$', views.detalle_congresista, name='congresista'),
+    url(r'^busqueda/resumen_votos_congresista/', views.resumen_votos_congresista, name='resumen_votos_congresista'),
+    url(r'^busqueda/ultimas_votaciones_congresista/', views.ultimas_votaciones_congresista,
+        name='ultimas_votaciones_congresista'),
+    url(r'^busqueda/disciplina_congresista/', views.disciplina_congresista, name='disciplina_congresista'),
 ]
