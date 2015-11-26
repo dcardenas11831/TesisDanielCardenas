@@ -7,6 +7,7 @@
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <script src="http://code.highcharts.com/highcharts-more.js"></script>
+<script src="http://code.highcharts.com/modules/solid-gauge.js"></script>
 {% endblock %}
 {% block title %}{{ persona.nombre_completo }} - Votaciones Visibles{% endblock %}
 
@@ -67,7 +68,16 @@
 
     <div id="disciplina">
         <div id="titulo_disciplina"></div>
-        <div id="chart_disciplina"></div>
+        <div id="chart_disciplina">
+            <table>
+                <tr>
+                {% for leg in anios %}
+                <td><h5 id="titulo_{{ leg }}"></h5>
+                <div id="chart_{{ forloop.counter0 }}" class="chart_disciplina_cong"></div></td>
+                {% endfor %}
+                </tr>
+            </table>
+        </div>
     </div>
 <script type="text/javascript" charset="UTF-8">
 (function( $ ) {
@@ -221,7 +231,7 @@
                         function(response) { // on success..
                             console.log("response");
                             console.log(response);
-                            dibujarDisciplina(response.disciplina_iap, response.anios);
+                            dibujarDisciplina(response.disciplina_iap, response.anios, response.color);
                         }
                 });
 			},
@@ -326,112 +336,104 @@
                             +"<img src= '{% static "vv/images/no.png" %}'/> No  "
                             +"<img src= '{% static "vv/images/abstencion.png" %}'/> Se abstuvo  "
                             +"<img src= '{% static "vv/images/inasistencia.png" %}'/> No asistió  "
-                            +"<img src= '{% static "vv/images/persona.png" %}'/> Donde se ubicó  <br>"
+                            +"<br><img src= '{% static "vv/images/persona.png" %}'/> Donde se ubicó  <br>"
                             +"</p>";
 
             document.getElementById("tabla").innerHTML = html;
     }
-    function dibujarDisciplina(disciplina, anios) {
+    function dibujarDisciplina(disciplina, anios, color) {
         var html = "<br> <br> <h4>" + "DISCIPLINA DEL CONGRESISTA <br> Índice IAP</h4>";
         document.getElementById("titulo_disciplina").innerHTML = html;
-        partidos_chart = [];
-        for (nombre_partido in partidos){
-            if (partidos.hasOwnProperty(nombre_partido)) {
-                partido = partidos[nombre_partido];
-                p = {name: partido.nombre, color: partido.color, visible: partido.seleccionado, data: []};
-                d = [];
-                for (anio of anios){
-                    if (partido.hasOwnProperty(anio)) {
-                        d.push(partido[anio].disciplina);
-                    }
-                }
-                p.data = d;
-                partidos_chart.push(p);
+        congresista_chart = [];
+        for (i=0; i<anios.length; i++){
+            document.getElementById("titulo_"+anios[i]).innerHTML = anios[i];
+            if (disciplina[i] == -1) {
+                document.getElementById("chart_"+i).innerHTML = "<br><br><p>Todavía no hay votaciones de este "
+                + "congresista para este periodo</p>";
+            }
+            else {
+                $(function () {
+                    var gaugeOptions = {
+                        chart: {
+                            type: 'solidgauge'
+                        },
+                        title: null,
+                        pane: {
+                            center: ['50%', '85%'],
+                            size: '140%',
+                            startAngle: -90,
+                            endAngle: 90,
+                            background: {
+                                backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',
+                                innerRadius: '60%',
+                                outerRadius: '100%',
+                                shape: 'arc'
+                            }
+                        },
+                        tooltip: {
+                            enabled: false
+                        },
+
+                        // the value axis
+                        yAxis: {
+                            stops: [
+                                [1, color]
+                            ],
+                            lineWidth: 0,
+                            minorTickInterval: null,
+                            tickPixelInterval: 400,
+                            tickWidth: 0,
+                            title: {
+                                y: -70
+                            },
+                            labels: {
+                                y: 16
+                            }
+                        },
+
+                        plotOptions: {
+                            solidgauge: {
+                                dataLabels: {
+                                    y: 5,
+                                    borderWidth: 0,
+                                    useHTML: true
+                                }
+                            }
+                        }
+                    };
+                    // The speed gauge
+                    element_id = "#chart_"+i;
+                    console.log(element_id);
+                    $(element_id).highcharts(Highcharts.merge(gaugeOptions, {
+                        yAxis: {
+                            min: 0,
+                            max: 1,
+                            title: {
+                                text: ''
+                            }
+                        },
+
+                        credits: {
+                            enabled: false
+                        },
+
+                        series: [{
+                            name: '',
+                            data: [disciplina[i]],
+                            dataLabels: {
+                                format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+                                    ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span><br/>' +
+                                       '<span style="font-size:12px;color:silver">Nivel de disciplina</span></div>'
+                            },
+                            tooltip: {
+                                valueSuffix: 'Nivel de disciplina',
+                            }
+                        }]
+
+                    }));
+                });
             }
         }
-        $(function () {
-            var gaugeOptions = {
-
-                chart: {
-                    type: 'solidgauge'
-                },
-
-                title: null,
-
-                pane: {
-                    center: ['50%', '85%'],
-                    size: '140%',
-                    startAngle: -90,
-                    endAngle: 90,
-                    background: {
-                        backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',
-                        innerRadius: '60%',
-                        outerRadius: '100%',
-                        shape: 'arc'
-                    }
-                },
-
-                tooltip: {
-                    enabled: false
-                },
-
-                // the value axis
-                yAxis: {
-                    stops: [
-                        [1, '#37AB9C'] // green
-                    ],
-                    lineWidth: 0,
-                    minorTickInterval: null,
-                    tickPixelInterval: 400,
-                    tickWidth: 0,
-                    title: {
-                        y: -70
-                    },
-                    labels: {
-                        y: 16
-                    }
-                },
-
-                plotOptions: {
-                    solidgauge: {
-                        dataLabels: {
-                            y: 5,
-                            borderWidth: 0,
-                            useHTML: true
-                        }
-                    }
-                }
-            };
-
-    // The speed gauge
-    $('#container-speed').highcharts(Highcharts.merge(gaugeOptions, {
-        yAxis: {
-            min: 0,
-            max: 1,
-            title: {
-                text: ''
-            }
-        },
-
-        credits: {
-            enabled: false
-        },
-
-        series: [{
-            name: 'Speed',
-            data: [0.8],
-            dataLabels: {
-                format: '<div style="text-align:center"><span style="font-size:25px;color:' +
-                    ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span><br/>' +
-                       '<span style="font-size:12px;color:silver">Nivel de disciplina</span></div>'
-            },
-            tooltip: {
-                valueSuffix: ' puntos de disciplina'
-            }
-        }]
-
-    }));
-
     }
 </script>
 {% endblock %}

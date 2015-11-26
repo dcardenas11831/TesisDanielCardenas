@@ -32,23 +32,29 @@ a:hover {
     padding: 0.3em 12.5em;
 }
 img.header-img {
-    width: 35%;
-    height: 35%;
+    width: 260px;
+    height: 70px;
     padding: 0.625em 0em;
     position: relative;
     left: 0em;
     top: 0.2em;
 }
+img.resize{
+    width: auto;
+    height: auto;
+    max-width: 480px;
+    max-height: 129px;
+}
 ul#header-pclave {
-    position: absolute;
-    left: 32.2em;
-    top: 0.7em;
+    position: realtive;
     text-align: left;
     border: 0.125em solid #9D999A;
     box-shadow: 0.0625em 0.125em 0.0625em #575354;
-    padding: 0.2em 0.625em;
+    padding: 0.3em 0.3em;
+    margin: 10px 0px;
     float: right;
-    width: 26em;
+    width: 27em;
+    height: auto;
 }
 ul#header-pclave li {
     display: inline;
@@ -656,19 +662,21 @@ ul.sidebar-detalle li a {
     text-align: left;
     font-size: small;
     padding: 0em 0em;
-    margin: 0em 1em;
+    margin: 0em 0em;
+    margin-left: 5em;
 }
 .tabla-detalle-partido h4{
     text-align: left;
     padding: 0em 0em;
-    margin: 1em 1em;
+    margin: 1em 0em;
+    margin-left: 5em;
 }
 .tabla-detalle-partido table{
     border: 1px solid #9D999A;
     border-spacing: 0px;
     table-layout: fixed;
     padding: 0em;
-    margin: 0em;
+    margin: 0em 5em;
     font-size: small;
     width: 80%;
 }
@@ -723,4 +731,15 @@ ul.sidebar-detalle li a {
     text-align: left;
     position: relative;
     top: -20px;
+}
+.chart_disciplina_cong {
+    font-size: small;
+    background: none;
+    margin: 0em 0em;
+    padding: 0em 0em;
+    float: left;
+    width: 22em;
+    height: 13em;
+    position: relative;
+    top: -25px;
 }

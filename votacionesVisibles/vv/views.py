@@ -539,7 +539,7 @@ def ultimas_votaciones_partido(request):
                                                       votacion__proyecto__id__in=ids_proyectos,
                                                       votacion__tipo_votacion_id__lte=3,
                                                       congresista__partido_politico=partido) \
-                         .values_list('votacion__id', flat=True).distinct().order_by('-votacion__fecha')[:20]
+            .values_list('votacion__id', flat=True).distinct().order_by('-votacion__fecha')[:20]
         for votacion_id in votaciones:
             votacion = ProyectoDeLeyVotacion.objects.get(id=votacion_id)
             proyecto = votacion.proyecto
@@ -651,9 +651,14 @@ def detalle_congresista(request, congresista_id):
     print "-------------------"
     foto = MEDIA_URL + congresista.persona_ptr.imagen  # se pone la url completa de la imagen
     temas = GeneralTema.objects.all().order_by('nombre')
+    legislaturas = ProyectoDeLeyLegislatura.objects.filter(cuatrienio__id=ID_PERIODO,
+                                                           fecha_inicio__lte=datetime.now().date()).order_by(
+            'fecha_inicio').values()
+    anios = [str(l['fecha_inicio'].year) + " - " + str(l['fecha_fin'].year) for l in legislaturas]
     return render(request, 'vv/detalle_congresista.html', {'proyectos_clave': p_claves, 'congresista': congresista,
                                                            'partido': congresista.partido_politico, 'temas': temas,
-                                                           'persona': congresista.persona_ptr, 'foto': foto})
+                                                           'persona': congresista.persona_ptr, 'foto': foto,
+                                                           'anios': anios})
 
 
 # ajax para retornar los votos del resumen de votos
@@ -882,11 +887,14 @@ def disciplina_congresista(request):
                 if votacion[voto_congresista] == votos_mayoria:
                     coincidencias += 1
             if len(disc) > 0:
-                disciplina_iap.append(coincidencias / len(disc))  # calculo de la disciplina
+                disciplina_iap.append(float("%.2f" % (coincidencias / len(disc))))  # calculo de la disciplina
+            else:
+                disciplina_iap.append(-1)  # para indicar que aun no hay votaciones
         anios = [str(l['fecha_inicio'].year) + " - " + str(l['fecha_fin'].year) for l in legislaturas]
         results = {
             'disciplina_iap': disciplina_iap,
-            'anios': anios
+            'anios': anios,
+            'color': partido.get_color(),
         }
         data = json.dumps(results)
         print "////////////////////////////////////"
