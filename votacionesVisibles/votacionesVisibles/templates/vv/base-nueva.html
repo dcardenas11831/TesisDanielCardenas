@@ -14,7 +14,7 @@
     <div id="header" class="w3-content" style="width:100%; height:100px">
         <img class="header-img w3-display-topleft" src= "{% static 'vv/images/logo.png' %}" />
 
-        <ul id="header-pclave" class="w3-display-topmiddle">
+        <ul id="header-pclave" class="w3-display-topmiddle w3-hide-small">
                 <li>PROYECTOS CLAVE:</li>
                 {% for p in proyectos_clave %}
                 <li><a href='/proyectos/{{ p.id }}'>{{ p.nombre }}/</a></li>
@@ -38,7 +38,7 @@
     {% endblock %}
 
     {% block sidebar %}
-    <nav id="sidebar" class="w3-sidenav w3-animate-left">
+    <div id="sidebar" class="w3-container w3-animate-left">
             <ul class="sidebar-secciones">
                 <li><a href='/congreso/'>Congreso</a></li>
                 <ul class="sidebar-detalle">
@@ -67,7 +67,7 @@
                 </ul>
             </ul>
         {% endblock %}
-    </nav>
+    </div>
 
 
     <div id="content" class="w3-container">

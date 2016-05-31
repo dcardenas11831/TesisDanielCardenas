@@ -1,4 +1,4 @@
-{% extends "vv/base.html" %}
+{% extends "vv/base-nueva.html" %}
 
 {% block imports%}
 {% load staticfiles %}
@@ -7,20 +7,18 @@
 
 {% block content %}
     <h1 id="tema_seleccionado">CONGRESO</h1>
-    <div id="columna_izquierda_congreso">
+    <div id="columna_izquierda">
         <a href="/congreso/senado">
+            <h1 style="text-align:center">Senado</h1>
             <div id="circle-senado"></div>
         </a>
         <!--<img src="{% static 'vv/images/main_linea.png' %}">-->
-        <h1 style="text-align:center">Senado</h1>
+
     </div>
-    <div id="columna_centro">
-        <hr>
-    </div>
-    <div id="columna_derecha_congreso">
+    <div id="columna_derecha">
         <a href="/congreso/camara">
+            <h1 style="text-align:center">Cámara</h1>
             <div id="circle-camara"></div>
         </a>
-        <h1 style="text-align:center">Cámara</h1>
     </div>
 {% endblock %}
