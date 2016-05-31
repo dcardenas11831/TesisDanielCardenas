@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load staticfiles %}
+    <link type="text/css" rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'vv/css/simple.css' %}" />
+    <meta charset="utf-8" content="width=device-width, initial-scale=1">
+    {% block imports %}{% endblock %}
+    <title>{% block title %}Votaciones Visibles{% endblock %}</title>
+</head>
+
+<body>
+    {% block header %}
+    <div id="header" class="w3-content" style="width:100%; height:100px">
+        <img class="header-img w3-display-topleft" src= "{% static 'vv/images/logo.png' %}" />
+
+        <ul id="header-pclave" class="w3-display-topmiddle">
+                <li>PROYECTOS CLAVE:</li>
+                {% for p in proyectos_clave %}
+                <li><a href='/proyectos/{{ p.id }}'>{{ p.nombre }}/</a></li>
+                {% endfor %}
+        </ul>
+
+        <form method="post" action="#" class="header-buscar">
+            <table class="header-tabla w3-display-topright">
+                <tr class="header-tabla">
+                    <td><input type="submit" class="btn-buscar" value="">
+                    <input type="text" class="txt-buscar" name="q" placeholder="Buscar"></td>
+                </tr>
+                <tr class="header-tabla2">
+                    <td>
+                        <p class="header-tabla"><b>{% now "F j" %}</b><br>{% now "l" %}</p>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    {% endblock %}
+
+    {% block sidebar %}
+    <nav id="sidebar" class="w3-sidenav w3-animate-left">
+            <ul class="sidebar-secciones">
+                <li><a href='/congreso/'>Congreso</a></li>
+                <ul class="sidebar-detalle">
+                    <li><a href='/congreso/senado'>Senado</a></li>
+                    <li><a href='/congreso/camara'>Cámara</a></li>
+                </ul>
+                <li><a href='/proyectos'>Proyectos de Ley</a></li>
+                <li><p class="sidebar-secciones">    Partidos    </p></li>
+                <ul class="sidebar-detalle">
+                    <li><a href='/partidos/11'>ASI</a></li>
+                    <li><a href='/partidos/146'>Alianza Verde</a></li>
+                    <li><a href='/partidos/9'>AICO</a></li>
+                    <li><a href='/partidos/3'>Cambio Radical</a></li>
+                    <li><a href='/partidos/144'>Centro Democrático</a></li>
+                    <li><a href='/partidos/149'>Cien por ciento</a></li>
+                    <li><a href='/partidos/4'>Conservador</a></li>
+                    <li><a href='/partidos/176'>Funeco</a></li>
+                    <li><a href='/partidos/5'>La U</a></li>
+                    <li><a href='/partidos/2'>Liberal</a></li>
+                    <li><a href='/partidos/185'>MAIS</a></li>
+                    <li><a href='/partidos/68'>MIR</a></li>
+                    <li><a href='/partidos/10'>MIRA</a></li>
+                    <li><a href='/partidos/145'>Opción Ciudadana</a></li>
+                    <li><a href='/partidos/6'>Polo Democrático</a></li>
+                    <li><a href='/partidos/150'>Por un Huila Mejor</a></li>
+                </ul>
+            </ul>
+        {% endblock %}
+    </nav>
+
+
+    <div id="content" class="w3-container">
+        {% block content %}
+
+        {% endblock %}
+    </div>
+
+</body>
+<footer id="footer" class="w3-container w3-display-bottom">
+        {% block footer %}
+        <p> Votaciones Visibles es un producto desarrollado por Daniel Cárdenas<br>
+        Toda la información mostrada proviene de Congreso Visible<br>
+        2015</p>
+        {% endblock %}
+</footer>
+</html>

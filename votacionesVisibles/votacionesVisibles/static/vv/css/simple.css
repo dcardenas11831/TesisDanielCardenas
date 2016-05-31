@@ -1,0 +1,211 @@
+@font-face {
+  font-family: flama light;
+  src: url(../fonts/Flama-Light.otf);
+  src: local(../fonts/Flama-Light.otf);
+}
+
+html {
+  font-family: flama light;
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: normal;
+}
+
+h1, h2, h3, h4, h5, h6, span {
+  font-family: flama light, "Segoe UI", Verdana;
+  font-weight: 400;
+  line-height: 1;
+  margin: 20px 0;
+}
+
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {font-weight: inherit;}
+h1 {font-size: 36px}
+h2 {font-size: 30px}
+h3 {font-size: 24px}
+h4 {font-size: 20px}
+h5 {font-size: 18px}
+h6 {font-size: 16px}
+
+hr {
+  height: 0;
+  border: 0;
+  border-top: 1px solid #eee;
+  margin: 20px 0;
+}
+
+img.header-img {
+    width: 27%;
+    position: relative;
+    left: 0em;
+    top: 1em;
+}
+
+ul#header-pclave {
+    position: absolute;
+    text-align: left;
+    border: 0.125em solid #9D999A;
+    box-shadow: 0.0625em 0.125em 0.0625em #575354;
+    padding: 0.3em 0.3em;
+    width: 50%;
+    height: auto;
+    left: 33%;
+}
+ul#header-pclave li {
+    display: inline;
+    text-align: center;
+    color: #575354;
+    font-family: flama light;
+    font-weight: bold;
+    font-size: small;
+    padding: 0em 0.3em;
+    text-decoration: none;
+    overflow: hidden;
+}
+ul#header-pclave li a {
+    font-weight: normal;
+    color: #9D999A;
+    padding: 0em 0.03125em;
+    text-decoration: none;
+}
+ul#header-pclave li a:hover {
+    color: #37AB9C;
+}
+
+table.header-tabla {
+    position: absolute;
+    top: 1em;
+    border: 0.0625em solid #9D999A;
+    padding: 0em 0em;
+    left 80%;
+    right: 2em;
+    width: 12%;
+}
+input.btn-buscar {
+    background: url(../images/buscar.png) no-repeat center;
+    cursor: pointer;
+    padding: 0.25em 0.4375em;
+    border: 0;
+    width: 14%;
+}
+input.txt-buscar {
+    font-size: small;
+    border: 0em solid white;
+    border-left: 1px solid #9D999A;
+    padding: 0em 0.25em;
+    width: 80%;
+    background: transparent;
+}
+p.header-tabla {
+    font-family: flama light;
+    font-size: small;
+    text-align: right;
+    color: #575354;
+    padding: 0em 0.25em;
+    text-transform: uppercase;
+    margin: 0em 0em;
+}
+p.header-tabla b{
+    font-family: flama light;
+    font-size: small;
+    text-align: right;
+    color: #575354;
+    padding: 0em 0.0625em;
+    text-transform: none;
+    margin: 0;
+}
+tr.header-tabla td{
+    border-bottom:1pt solid #9D999A;
+    color: #575354;
+    padding: 0em 0em;
+}
+tr.header-tabla2 td{
+    color: #575354;
+    padding: 0;
+}
+
+/* Bara de navegacion lateral -------------------------*/
+
+#sidebar {
+    float: left;
+    line-height: 1.5625em;
+    width: 15%;
+    padding: 0em 0.3em;
+    overflow: auto;
+}
+ul.sidebar-secciones {
+      padding: 0;
+      list-style-type: none;
+      overflow: hidden;
+    }
+ul.sidebar-secciones li {
+      display: block;
+      width: 100%;
+      padding: 0.4375em 0em;
+    }
+ul.sidebar-secciones li a {
+       display: block;
+       width: 100%;
+       text-align: center;
+       font-family: flama light;
+       background-color: #37AB9C;
+       color: white;
+       padding: 0.03125em 0.3125em;
+       text-decoration: none;
+       text-transform: uppercase;
+    }
+ul.sidebar-secciones li p {
+       display: block;
+       width: 100%;
+       text-align: center;
+       font-family: flama light;
+       background-color: #37AB9C;
+       color: white;
+       padding: 0em 0.3125em;
+       margin: 0;
+       text-decoration: none;
+       text-transform: uppercase;
+    }
+ul.sidebar-detalle{
+      padding: 0;
+      list-style-type: none;
+      overflow: hidden;
+}
+ul.sidebar-detalle li {
+      list-style-type: none;
+      overflow: hidden;
+      display: block;
+      padding: 0.0625em 0em;
+    }
+ul.sidebar-detalle li a {
+       display: block;
+       width: 9.375em;
+       text-align: right;
+       background-color: white;
+       font-family: flama light;
+       font-weight: normal;
+       color: #575354;
+       padding: 0.0625e 0em;
+       text-decoration: none;
+       text-transform: none;
+       border-bottom: solid #37AB9C;
+    }
+
+
+/*Div con el contenido de cada pagina */
+#content {
+    width: 80%;
+    margin-left: 16%;
+    font-family: flama light;
+    color: #575354;
+}
+
+/*footer de la pagina */
+#footer {
+    font-family: flama light;
+    background-color:#37AB9C;
+    color:white;
+    clear:both;
+    text-align: center;
+    padding: 0em;
+    margin-bottom: 0em;
+}

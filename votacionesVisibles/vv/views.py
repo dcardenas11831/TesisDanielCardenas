@@ -40,6 +40,12 @@ def index(request):
     return render(request, 'vv/base.html', {'proyectos_clave': p_claves})
 
 
+# Metodo para controlar la pagina home con nuevo css
+def prueba(request):
+    p_claves = proyectos_clave()
+    return render(request, 'vv/base-nueva.html', {'proyectos_clave': p_claves})
+
+
 # /proyectos/ Pagina principal de PROYECTOS-----------------------------------------------------------------------------
 # Metodo que contiene la informacion necesari para mostrar todos los proyectos en el treemap
 

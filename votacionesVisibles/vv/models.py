@@ -12,9 +12,9 @@ from django.db import models
 
 
 class ActividadActividad(models.Model):
-    seguido_por = models.ForeignKey('ActividadSiguea', models.DO_NOTHING)
+    seguido_por = models.ForeignKey('ActividadSiguea')
     fecha_hora = models.DateTimeField()
-    tipo = models.ForeignKey('ActividadTipoactividad', models.DO_NOTHING)
+    tipo = models.ForeignKey('ActividadTipoactividad')
     objeto_disparador_id = models.IntegerField(blank=True, null=True)
     objeto_seguido_id = models.IntegerField(blank=True, null=True)
     objeto_seguido_content_type_id = models.IntegerField(blank=True, null=True)
@@ -26,9 +26,9 @@ class ActividadActividad(models.Model):
 
 
 class ActividadSiguea(models.Model):
-    seguido_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
+    seguido_type = models.ForeignKey('DjangoContentType')
     seguido_id = models.IntegerField()
-    seguidor = models.ForeignKey('CongresoPersona', models.DO_NOTHING)
+    seguidor = models.ForeignKey('CongresoPersona')
     fecha = models.DateTimeField(blank=True, null=True)
 
     class Meta:
@@ -54,8 +54,8 @@ class AuthGroup(models.Model):
 
 
 class AuthGroupPermissions(models.Model):
-    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
-    permission = models.ForeignKey('AuthPermission', models.DO_NOTHING)
+    group = models.ForeignKey(AuthGroup)
+    permission = models.ForeignKey('AuthPermission')
 
     class Meta:
         managed = False
@@ -64,7 +64,7 @@ class AuthGroupPermissions(models.Model):
 
 
 class AuthMessage(models.Model):
-    user = models.ForeignKey('AuthUser', models.DO_NOTHING)
+    user = models.ForeignKey('AuthUser')
     message = models.TextField()
 
     class Meta:
@@ -74,7 +74,7 @@ class AuthMessage(models.Model):
 
 class AuthPermission(models.Model):
     name = models.CharField(max_length=50)
-    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
+    content_type = models.ForeignKey('DjangoContentType')
     codename = models.CharField(max_length=100)
 
     class Meta:
@@ -101,8 +101,8 @@ class AuthUser(models.Model):
 
 
 class AuthUserGroups(models.Model):
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
-    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
+    user = models.ForeignKey(AuthUser)
+    group = models.ForeignKey(AuthGroup)
 
     class Meta:
         managed = False
@@ -111,8 +111,8 @@ class AuthUserGroups(models.Model):
 
 
 class AuthUserUserPermissions(models.Model):
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
-    permission = models.ForeignKey(AuthPermission, models.DO_NOTHING)
+    user = models.ForeignKey(AuthUser)
+    permission = models.ForeignKey(AuthPermission)
 
     class Meta:
         managed = False
@@ -137,7 +137,7 @@ class AyudaEnlaceinteres(models.Model):
     titulo = models.CharField(max_length=150)
     enlace = models.CharField(max_length=200)
     descripcion = models.CharField(max_length=240, blank=True, null=True)
-    seccion = models.ForeignKey('AyudaEnlacesseccion', models.DO_NOTHING)
+    seccion = models.ForeignKey('AyudaEnlacesseccion')
     orden = models.IntegerField(blank=True, null=True)
 
     class Meta:
@@ -158,7 +158,7 @@ class AyudaPreguntarespuesta(models.Model):
     orden = models.IntegerField()
     pregunta = models.TextField()
     respuesta = models.TextField()
-    seccion = models.ForeignKey(AyudaAyudaseccion, models.DO_NOTHING)
+    seccion = models.ForeignKey(AyudaAyudaseccion)
 
     class Meta:
         managed = False
@@ -167,10 +167,10 @@ class AyudaPreguntarespuesta(models.Model):
 
 '''
 class BlogBlog(models.Model):
-    autor = models.ForeignKey(AuthUser, models.DO_NOTHING, unique=True)
+    autor = models.ForeignKey(AuthUser, unique=True)
     titulo = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True, null=True)
-    tipo_blog = models.ForeignKey('BlogTipoblog', models.DO_NOTHING)
+    tipo_blog = models.ForeignKey('BlogTipoblog')
     destacado = models.BooleanField()
 
     class Meta:
@@ -194,7 +194,7 @@ class BlogBoletin(models.Model):
 class BlogPost(models.Model):
     created_at = models.DateTimeField()
     edited_at = models.DateTimeField(blank=True, null=True)
-    blog = models.ForeignKey(BlogBlog, models.DO_NOTHING)
+    blog = models.ForeignKey(BlogBlog)
     titulo = models.CharField(max_length=200)
     contenido = models.TextField()
     fecha_publicacion = models.DateTimeField(blank=True, null=True)
@@ -212,8 +212,8 @@ class BlogPost(models.Model):
 
 
 class BlogPostTags(models.Model):
-    post = models.ForeignKey(BlogPost, models.DO_NOTHING)
-    tag = models.ForeignKey('BlogTag', models.DO_NOTHING)
+    post = models.ForeignKey(BlogPost)
+    tag = models.ForeignKey('BlogTag')
 
     class Meta:
         managed = False
@@ -274,10 +274,10 @@ class CongresoActividadpersona(models.Model):
     created_at = models.DateTimeField()
     edited_at = models.DateTimeField(blank=True, null=True)
     fecha_hora = models.DateTimeField()
-    persona = models.ForeignKey('CongresoPersona', models.DO_NOTHING)
-    tipo = models.ForeignKey('CongresoTipoactividad', models.DO_NOTHING)
+    persona = models.ForeignKey('CongresoPersona')
+    tipo = models.ForeignKey('CongresoTipoactividad')
     texto = models.TextField()
-    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
+    content_type = models.ForeignKey('DjangoContentType')
     object_id = models.IntegerField()
     periodo_id = models.IntegerField(blank=True, null=True)
 
@@ -292,7 +292,7 @@ class CongresoAlianza(models.Model):
     congresista_alianza = models.ForeignKey('CongresoCongresista', related_name='congresista_alianza_uno')
     congresista_alianza2 = models.ForeignKey('CongresoCongresista', related_name='congresista_alianza_dos')
     periodo_id = models.IntegerField(blank=True, null=True)
-    partido = models.ForeignKey('CongresoPartido', models.DO_NOTHING, blank=True, null=True)
+    partido = models.ForeignKey('CongresoPartido', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -342,9 +342,9 @@ class CongresoCampania(models.Model):
     created_at = models.DateTimeField()
     edited_at = models.DateTimeField(blank=True, null=True)
     congresista = models.ForeignKey('CongresoCongresista', related_name='campanias')
-    partido = models.ForeignKey('CongresoPartido', models.DO_NOTHING)
+    partido = models.ForeignKey('CongresoPartido')
     aspira = models.IntegerField()
-    departamento = models.ForeignKey('GeneralDepartamento', models.DO_NOTHING, blank=True, null=True)
+    departamento = models.ForeignKey('GeneralDepartamento', blank=True, null=True)
     sitio_web = models.CharField(max_length=200, blank=True, null=True)
     correo = models.CharField(max_length=75, blank=True, null=True)
     propuestas = models.TextField(blank=True, null=True)
@@ -352,7 +352,7 @@ class CongresoCampania(models.Model):
     circunscripcion = models.IntegerField(blank=True, null=True)
     tipo_voto = models.IntegerField(blank=True, null=True)
     formula = models.ForeignKey('CongresoCongresista', related_name='formula', blank=True, null=True)
-    contacto = models.ForeignKey('CongresoPersona', models.DO_NOTHING, blank=True, null=True)
+    contacto = models.ForeignKey('CongresoPersona', blank=True, null=True)
     camara_id = models.IntegerField(blank=True, null=True)
     periodo = models.ForeignKey('CongresoPeriodo', null=True)
     inversion_dinero = models.CharField(max_length=40, blank=True, null=True)
@@ -361,7 +361,7 @@ class CongresoCampania(models.Model):
     financiacion_donaciones = models.CharField(max_length=20, blank=True, null=True)
     financiacion_empresa_privada = models.CharField(max_length=20, blank=True, null=True)
     fuente_financiacion_personas = models.CharField(max_length=20, blank=True, null=True)
-    circunscripcion_model = models.ForeignKey('CongresoCircunscripcion', models.DO_NOTHING, blank=True, null=True)
+    circunscripcion_model = models.ForeignKey('CongresoCircunscripcion', blank=True, null=True)
     numero_lista = models.CharField(max_length=150, blank=True, null=True)
 
     class Meta:
@@ -371,8 +371,8 @@ class CongresoCampania(models.Model):
 
 
 class CongresoCampaniaSectores(models.Model):
-    campania = models.ForeignKey('CongresoCampania', models.DO_NOTHING)
-    sectorindustria = models.ForeignKey('GeneralSectorindustria', models.DO_NOTHING)
+    campania = models.ForeignKey('CongresoCampania')
+    sectorindustria = models.ForeignKey('GeneralSectorindustria')
 
     class Meta:
         managed = False
@@ -392,7 +392,7 @@ class CongresoCandidatosConcejo(models.Model):
     facebook_candidato = models.CharField(max_length=260, blank=True, null=True)
     twitter_candidato = models.CharField(max_length=260, blank=True, null=True)
     biografia = models.TextField(blank=True, null=True)
-    partido = models.ForeignKey('CongresoPartido', models.DO_NOTHING)
+    partido = models.ForeignKey('CongresoPartido')
     propuestas = models.TextField(blank=True, null=True)
     tipo_voto = models.IntegerField(blank=True, null=True)
     imagen_concejo = models.CharField(max_length=100, blank=True, null=True)
@@ -408,8 +408,8 @@ class CongresoCandidatosConcejo(models.Model):
 class CongresoCargo(models.Model):
     created_at = models.DateTimeField()
     edited_at = models.DateTimeField(blank=True, null=True)
-    persona = models.ForeignKey('CongresoPersona', models.DO_NOTHING)
-    sector = models.ForeignKey('GeneralSectorindustria', models.DO_NOTHING, blank=True, null=True)
+    persona = models.ForeignKey('CongresoPersona')
+    sector = models.ForeignKey('GeneralSectorindustria', blank=True, null=True)
     cargo = models.CharField(max_length=140, blank=True, null=True)
     entidad = models.CharField(max_length=140, blank=True, null=True)
     fecha_inicio = models.DateField(blank=True, null=True)
@@ -439,14 +439,14 @@ class CongresoCargocomision(models.Model):
 class CongresoCargopolitico(models.Model):
     created_at = models.DateTimeField()
     edited_at = models.DateTimeField(blank=True, null=True)
-    persona = models.ForeignKey('CongresoPersona', models.DO_NOTHING)
+    persona = models.ForeignKey('CongresoPersona')
     cargo = models.CharField(max_length=140)
     fecha_inicio = models.DateField()
     fecha_final = models.DateField()
-    partido = models.ForeignKey('CongresoPartido', models.DO_NOTHING, blank=True, null=True)
+    partido = models.ForeignKey('CongresoPartido', blank=True, null=True)
     resultado = models.CharField(max_length=1)
-    camara = models.ForeignKey(CongresoCamara, models.DO_NOTHING, blank=True, null=True)
-    comision = models.ForeignKey('CongresoComision', models.DO_NOTHING, blank=True, null=True)
+    camara = models.ForeignKey(CongresoCamara, blank=True, null=True)
+    comision = models.ForeignKey('CongresoComision', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -455,7 +455,7 @@ class CongresoCargopolitico(models.Model):
 
 class CongresoCircunscripcion(models.Model):
     nombre = models.CharField(max_length=140)
-    departamento = models.ForeignKey('GeneralDepartamento', models.DO_NOTHING, blank=True, null=True)
+    departamento = models.ForeignKey('GeneralDepartamento', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -466,12 +466,12 @@ class CongresoComision(models.Model):
     created_at = models.DateTimeField()
     edited_at = models.DateTimeField(blank=True, null=True)
     nombre = models.CharField(max_length=50)
-    camara = models.ForeignKey(CongresoCamara, models.DO_NOTHING, blank=True, null=True)
+    camara = models.ForeignKey(CongresoCamara, blank=True, null=True)
     permanente = models.BooleanField()
     descripcion = models.TextField(blank=True, null=True)
     imagen = models.CharField(max_length=100, blank=True, null=True)
     orden = models.IntegerField(blank=True, null=True)
-    tipo_comision = models.ForeignKey('CongresoTipocomision', models.DO_NOTHING)
+    tipo_comision = models.ForeignKey('CongresoTipocomision')
     correo = models.CharField(max_length=75, blank=True, null=True)
     oficina = models.CharField(max_length=100, blank=True, null=True)
     telefono = models.CharField(max_length=50, blank=True, null=True)
@@ -483,11 +483,11 @@ class CongresoComision(models.Model):
 
 
 class CongresoCongresista(models.Model):
-    persona_ptr = models.OneToOneField('CongresoPersona', models.DO_NOTHING, primary_key=True)
+    persona_ptr = models.OneToOneField('CongresoPersona', primary_key=True)
     partido_politico = models.ForeignKey('CongresoPartido', related_name='partido_congresista')
     es_candidato = models.BooleanField()
     orgullo = models.TextField(blank=True, null=True)
-    se_identifica = models.ForeignKey('self', models.DO_NOTHING, blank=True, null=True)
+    se_identifica = models.ForeignKey('self', blank=True, null=True)
     ha_reemplazado = models.BooleanField()
     es_activo = models.BooleanField()
     cantidad_actividades = models.IntegerField()
@@ -537,8 +537,8 @@ class CongresoCongresistadebancada(models.Model):
     edited_at = models.DateTimeField(blank=True, null=True)
     fecha_inicio = models.DateField(blank=True, null=True)
     fecha_fin = models.DateField(blank=True, null=True)
-    congresista = models.ForeignKey(CongresoCongresista, models.DO_NOTHING)
-    bancada = models.ForeignKey(CongresoBancada, models.DO_NOTHING)
+    congresista = models.ForeignKey(CongresoCongresista)
+    bancada = models.ForeignKey(CongresoBancada)
 
     class Meta:
         managed = False
@@ -550,8 +550,8 @@ class CongresoCongresistadepartido(models.Model):
     edited_at = models.DateTimeField(blank=True, null=True)
     fecha_inicio = models.DateField(blank=True, null=True)
     fecha_fin = models.DateField(blank=True, null=True)
-    congresista = models.ForeignKey(CongresoCongresista, models.DO_NOTHING)
-    partido = models.ForeignKey('CongresoPartido', models.DO_NOTHING)
+    congresista = models.ForeignKey(CongresoCongresista)
+    partido = models.ForeignKey('CongresoPartido')
 
     class Meta:
         managed = False
@@ -561,7 +561,7 @@ class CongresoCongresistadepartido(models.Model):
 class CongresoContadorcongresistas(models.Model):
     congresistas = models.IntegerField()
     candidatos = models.IntegerField()
-    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
+    content_type = models.ForeignKey('DjangoContentType')
     object_id = models.IntegerField()
 
     class Meta:
@@ -595,7 +595,7 @@ class CongresoFinanciador(models.Model):
     telefono = models.CharField(max_length=50)
     direccion = models.CharField(max_length=150)
     porcentaje = models.IntegerField()
-    campania = models.ForeignKey(CongresoCampania, models.DO_NOTHING)
+    campania = models.ForeignKey(CongresoCampania)
 
     class Meta:
         managed = False
@@ -605,12 +605,12 @@ class CongresoFinanciador(models.Model):
 class CongresoIntegrantecamara(models.Model):
     created_at = models.DateTimeField()
     edited_at = models.DateTimeField(blank=True, null=True)
-    cargo = models.ForeignKey(CongresoCargocamara, models.DO_NOTHING, blank=True, null=True)
+    cargo = models.ForeignKey(CongresoCargocamara, blank=True, null=True)
     fecha_inicio = models.DateField(blank=True, null=True)
     fecha_final = models.DateField(blank=True, null=True)
-    congresista = models.ForeignKey(CongresoCongresista, models.DO_NOTHING)
-    camara = models.ForeignKey(CongresoCamara, models.DO_NOTHING)
-    periodo = models.ForeignKey('CongresoPeriodo', models.DO_NOTHING, blank=True, null=True)
+    congresista = models.ForeignKey(CongresoCongresista)
+    camara = models.ForeignKey(CongresoCamara)
+    periodo = models.ForeignKey('CongresoPeriodo', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -620,11 +620,11 @@ class CongresoIntegrantecamara(models.Model):
 class CongresoIntegrantecomision(models.Model):
     created_at = models.DateTimeField()
     edited_at = models.DateTimeField(blank=True, null=True)
-    cargo = models.ForeignKey(CongresoCargocomision, models.DO_NOTHING, blank=True, null=True)
+    cargo = models.ForeignKey(CongresoCargocomision, blank=True, null=True)
     fecha_inicio = models.DateField(blank=True, null=True)
     fecha_final = models.DateField(blank=True, null=True)
-    congresista = models.ForeignKey(CongresoCongresista, models.DO_NOTHING)
-    comision = models.ForeignKey(CongresoComision, models.DO_NOTHING)
+    congresista = models.ForeignKey(CongresoCongresista)
+    comision = models.ForeignKey(CongresoComision)
     periodo_id = models.IntegerField(blank=True, null=True)
 
     class Meta:
@@ -705,8 +705,8 @@ class CongresoPartido(models.Model):
 
 
 class CongresoPartidoAvales(models.Model):
-    partido = models.ForeignKey('CongresoPartido', models.DO_NOTHING)
-    aval = models.ForeignKey('CongresoAval', models.DO_NOTHING)
+    partido = models.ForeignKey('CongresoPartido')
+    aval = models.ForeignKey('CongresoAval')
 
     class Meta:
         managed = False
@@ -715,8 +715,8 @@ class CongresoPartidoAvales(models.Model):
 
 
 class CongresoPartidoSectores(models.Model):
-    partido = models.ForeignKey('CongresoPartido', models.DO_NOTHING)
-    sectorindustria = models.ForeignKey('GeneralSectorindustria', models.DO_NOTHING)
+    partido = models.ForeignKey('CongresoPartido')
+    sectorindustria = models.ForeignKey('GeneralSectorindustria')
 
     class Meta:
         managed = False
@@ -742,10 +742,10 @@ class CongresoPeriodocongresista(models.Model):
     edited_at = models.DateTimeField(blank=True, null=True)
     fecha_inicio = models.DateField(blank=True, null=True)
     fecha_fin = models.DateField(blank=True, null=True)
-    tipo_periodo = models.ForeignKey('CongresoTipoperiodo', models.DO_NOTHING)
-    periodo = models.ForeignKey(CongresoPeriodo, models.DO_NOTHING)
-    partido = models.ForeignKey(CongresoPartido, models.DO_NOTHING)
-    congresista = models.ForeignKey(CongresoCongresista, models.DO_NOTHING)
+    tipo_periodo = models.ForeignKey('CongresoTipoperiodo')
+    periodo = models.ForeignKey(CongresoPeriodo)
+    partido = models.ForeignKey(CongresoPartido)
+    congresista = models.ForeignKey(CongresoCongresista)
     camara_id = models.IntegerField(blank=True, null=True)
     depto_mayor_votacion_id = models.IntegerField(blank=True, null=True)
     numero_lista = models.IntegerField(blank=True, null=True)
@@ -760,7 +760,7 @@ class CongresoPeriodocongresista(models.Model):
 class CongresoPersona(models.Model):
     created_at = models.DateTimeField()
     edited_at = models.DateTimeField(blank=True, null=True)
-    # user = models.ForeignKey(AuthUser, models.DO_NOTHING, unique=True)
+    # user = models.ForeignKey(AuthUser, unique=True)
     facebook_id = models.CharField(max_length=100, blank=True, null=True)
     activation_key = models.CharField(max_length=40)
     nombres = models.CharField(max_length=50)
@@ -776,9 +776,9 @@ class CongresoPersona(models.Model):
     municipio_nacimiento = models.ForeignKey('GeneralMunicipio', related_name='municipio_nacimiento', blank=True,
                                              null=True)
     nivel_educativo = models.CharField(max_length=50, blank=True, null=True)
-    rango_edad = models.ForeignKey('GeneralRangoedad', models.DO_NOTHING, blank=True, null=True)
-    profesion = models.ForeignKey('GeneralProfesion', models.DO_NOTHING, blank=True, null=True)
-    genero = models.ForeignKey('GeneralGenero', models.DO_NOTHING, blank=True, null=True)
+    rango_edad = models.ForeignKey('GeneralRangoedad', blank=True, null=True)
+    profesion = models.ForeignKey('GeneralProfesion', blank=True, null=True)
+    genero = models.ForeignKey('GeneralGenero', blank=True, null=True)
     fecha_fallecimiento = models.DateField(blank=True, null=True)
     flickr_user = models.CharField(max_length=260, blank=True, null=True)
     youtube_user = models.CharField(max_length=260, blank=True, null=True)
@@ -807,7 +807,7 @@ class CongresoPersona(models.Model):
 class CongresoPosicion(models.Model):
     created_at = models.DateTimeField()
     edited_at = models.DateTimeField(blank=True, null=True)
-    congresista = models.ForeignKey(CongresoPersona, models.DO_NOTHING)
+    congresista = models.ForeignKey(CongresoPersona)
     a_favor = models.IntegerField()
     comentario = models.TextField(blank=True, null=True)
 
@@ -819,9 +819,9 @@ class CongresoPosicion(models.Model):
 class CongresoPosicionpartido(models.Model):
     created_at = models.DateTimeField()
     edited_at = models.DateTimeField(blank=True, null=True)
-    partido = models.ForeignKey(CongresoPartido, models.DO_NOTHING)
+    partido = models.ForeignKey(CongresoPartido)
     a_favor = models.IntegerField()
-    tema_opinion = models.ForeignKey('CongresoTemaopinion', models.DO_NOTHING)
+    tema_opinion = models.ForeignKey('CongresoTemaopinion')
 
     class Meta:
         managed = False
@@ -829,8 +829,8 @@ class CongresoPosicionpartido(models.Model):
 
 
 class CongresoPosicionproposicion(models.Model):
-    posicion_ptr = models.OneToOneField('CongresoPosicion', models.DO_NOTHING, primary_key=True)
-    proposicion = models.ForeignKey('CongresoProposicion', models.DO_NOTHING)
+    posicion_ptr = models.OneToOneField('CongresoPosicion', primary_key=True)
+    proposicion = models.ForeignKey('CongresoProposicion')
 
     class Meta:
         managed = False
@@ -838,8 +838,8 @@ class CongresoPosicionproposicion(models.Model):
 
 
 class CongresoPosiciontemaopinion(models.Model):
-    posicion_ptr = models.OneToOneField('CongresoPosicion', models.DO_NOTHING, primary_key=True)
-    tema = models.ForeignKey('CongresoTemaopinion', models.DO_NOTHING)
+    posicion_ptr = models.OneToOneField('CongresoPosicion', primary_key=True)
+    tema = models.ForeignKey('CongresoTemaopinion')
 
     class Meta:
         managed = False
@@ -849,9 +849,9 @@ class CongresoPosiciontemaopinion(models.Model):
 class CongresoProblema(models.Model):
     created_at = models.DateTimeField()
     edited_at = models.DateTimeField(blank=True, null=True)
-    tipo_problema = models.ForeignKey('CongresoTipoproblema', models.DO_NOTHING)
+    tipo_problema = models.ForeignKey('CongresoTipoproblema')
     descripcion = models.TextField()
-    congresista = models.ForeignKey(CongresoCongresista, models.DO_NOTHING)
+    congresista = models.ForeignKey(CongresoCongresista)
 
     class Meta:
         managed = False
@@ -859,8 +859,8 @@ class CongresoProblema(models.Model):
 
 
 class CongresoProblemaLink(models.Model):
-    problema = models.ForeignKey('CongresoProblema', models.DO_NOTHING)
-    link = models.ForeignKey('CongresoLink', models.DO_NOTHING)
+    problema = models.ForeignKey('CongresoProblema')
+    link = models.ForeignKey('CongresoLink')
 
     class Meta:
         managed = False
@@ -885,9 +885,9 @@ class CongresoReemplazo(models.Model):
     congresista_reemplado_por = models.ForeignKey(CongresoCongresista, related_name='congresista_que_reemplazo')
     periodo_inicial = models.DateField()
     periodo_final = models.DateField()
-    partido = models.ForeignKey(CongresoPartido, models.DO_NOTHING, blank=True, null=True)
-    camara = models.ForeignKey(CongresoCamara, models.DO_NOTHING, blank=True, null=True)
-    comision = models.ForeignKey(CongresoComision, models.DO_NOTHING, blank=True, null=True)
+    partido = models.ForeignKey(CongresoPartido, blank=True, null=True)
+    camara = models.ForeignKey(CongresoCamara, blank=True, null=True)
+    comision = models.ForeignKey(CongresoComision, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -895,10 +895,10 @@ class CongresoReemplazo(models.Model):
 
 
 class CongresoSecretario(models.Model):
-    persona_ptr = models.OneToOneField('CongresoPersona', models.DO_NOTHING, primary_key=True)
+    persona_ptr = models.OneToOneField('CongresoPersona', primary_key=True)
     fecha_inicio = models.DateField()
     fecha_final = models.DateField()
-    comision = models.ForeignKey(CongresoComision, models.DO_NOTHING)
+    comision = models.ForeignKey(CongresoComision)
 
     class Meta:
         managed = False
@@ -951,7 +951,7 @@ class CongresoTipoproblema(models.Model):
 
 
 class CongresoTrayectoria(models.Model):
-    id_candidato_concejo = models.ForeignKey(CongresoCandidatosConcejo, models.DO_NOTHING)
+    id_candidato_concejo = models.ForeignKey(CongresoCandidatosConcejo)
     trayectoria_anio = models.IntegerField()
     cargo = models.CharField(max_length=100, blank=True, null=True)
     partido = models.CharField(max_length=100, blank=True, null=True)
@@ -964,18 +964,18 @@ class CongresoTrayectoria(models.Model):
 
 
 class CorteSentencia(models.Model):
-    proyecto = models.ForeignKey('ProyectoDeLeyProyectoley', models.DO_NOTHING, blank=True, null=True)
+    proyecto = models.ForeignKey('ProyectoDeLeyProyectoley', blank=True, null=True)
     anio = models.CharField(max_length=4)
     cod_sentencia = models.CharField(max_length=20)
     num_sentencia = models.CharField(max_length=20)
-    tipo_caso = models.ForeignKey('CorteTipocaso', models.DO_NOTHING)
+    tipo_caso = models.ForeignKey('CorteTipocaso')
     id_norma = models.TextField()
     titulo_norma = models.TextField()
     mas_normas = models.BooleanField()
     otras_normas = models.TextField()
     numero_camara = models.CharField(max_length=100)
     numero_senado = models.CharField(max_length=100)
-    tipo_demanda = models.ForeignKey('CorteTipodemanda', models.DO_NOTHING)
+    tipo_demanda = models.ForeignKey('CorteTipodemanda')
     oficio = models.BooleanField()
     fecha_norma = models.DateField()
 
@@ -1001,7 +1001,7 @@ class CorteTipodemanda(models.Model):
 
 
 class DbsettingsSetting(models.Model):
-    site = models.ForeignKey('DjangoSite', models.DO_NOTHING)
+    site = models.ForeignKey('DjangoSite')
     module_name = models.CharField(max_length=255)
     class_name = models.CharField(max_length=255)
     attribute_name = models.CharField(max_length=255)
@@ -1015,8 +1015,8 @@ class DbsettingsSetting(models.Model):
 '''
 class DjangoAdminLog(models.Model):
     action_time = models.DateTimeField()
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
-    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING, blank=True, null=True)
+    user = models.ForeignKey(AuthUser)
+    content_type = models.ForeignKey('DjangoContentType', blank=True, null=True)
     object_id = models.TextField(blank=True, null=True)
     object_repr = models.CharField(max_length=200)
     action_flag = models.SmallIntegerField()
@@ -1028,8 +1028,8 @@ class DjangoAdminLog(models.Model):
 
 
 class DjangoCommentFlags(models.Model):
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
-    comment = models.ForeignKey('DjangoComments', models.DO_NOTHING)
+    user = models.ForeignKey(AuthUser)
+    comment = models.ForeignKey('DjangoComments')
     flag = models.CharField(max_length=30)
     flag_date = models.DateTimeField()
 
@@ -1040,10 +1040,10 @@ class DjangoCommentFlags(models.Model):
 
 
 class DjangoComments(models.Model):
-    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
+    content_type = models.ForeignKey('DjangoContentType')
     object_pk = models.TextField()
-    site = models.ForeignKey('DjangoSite', models.DO_NOTHING)
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING, blank=True, null=True)
+    site = models.ForeignKey('DjangoSite')
+    user = models.ForeignKey(AuthUser, blank=True, null=True)
     user_name = models.CharField(max_length=50)
     user_email = models.CharField(max_length=75)
     user_url = models.CharField(max_length=200)
@@ -1072,7 +1072,7 @@ class DjangoContentType(models.Model):
 
 '''
 class DjangoEvolution(models.Model):
-    version = models.ForeignKey('DjangoProjectVersion', models.DO_NOTHING)
+    version = models.ForeignKey('DjangoProjectVersion')
     app_label = models.CharField(max_length=200)
     label = models.CharField(max_length=100)
 
@@ -1095,8 +1095,8 @@ class DjangoFlatpage(models.Model):
 
 
 class DjangoFlatpageSites(models.Model):
-    flatpage = models.ForeignKey(DjangoFlatpage, models.DO_NOTHING)
-    site = models.ForeignKey('DjangoSite', models.DO_NOTHING)
+    flatpage = models.ForeignKey(DjangoFlatpage)
+    site = models.ForeignKey('DjangoSite')
 
     class Meta:
         managed = False
@@ -1156,7 +1156,7 @@ class DjangoSite(models.Model):
 '''
 
 class FacebookconnectFacebookprofile(models.Model):
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING, unique=True)
+    user = models.ForeignKey(AuthUser, unique=True)
     facebook_id = models.BigIntegerField(unique=True)
 
     class Meta:
@@ -1176,7 +1176,7 @@ class FacebookconnectFacebooktemplate(models.Model):
 
 class GeneralDepartamento(models.Model):
     nombre = models.CharField(max_length=70)
-    region = models.ForeignKey('GeneralRegion', models.DO_NOTHING)
+    region = models.ForeignKey('GeneralRegion')
     old_id = models.IntegerField(blank=True, null=True)
 
     class Meta:
@@ -1194,7 +1194,7 @@ class GeneralGenero(models.Model):
 
 class GeneralMunicipio(models.Model):
     nombre = models.CharField(max_length=70)
-    departamento = models.ForeignKey(GeneralDepartamento, models.DO_NOTHING)
+    departamento = models.ForeignKey(GeneralDepartamento)
 
     class Meta:
         managed = False
@@ -1248,7 +1248,7 @@ class GeneralTema(models.Model):
 
 '''
 class GrappelliBookmark(models.Model):
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    user = models.ForeignKey(AuthUser)
 
     class Meta:
         managed = False
@@ -1256,7 +1256,7 @@ class GrappelliBookmark(models.Model):
 
 
 class GrappelliBookmarkitem(models.Model):
-    bookmark = models.ForeignKey(GrappelliBookmark, models.DO_NOTHING)
+    bookmark = models.ForeignKey(GrappelliBookmark)
     title = models.CharField(max_length=80)
     link = models.CharField(max_length=200)
     order = models.IntegerField()
@@ -1276,7 +1276,7 @@ class GrappelliHelp(models.Model):
 
 
 class GrappelliHelpitem(models.Model):
-    help = models.ForeignKey(GrappelliHelp, models.DO_NOTHING)
+    help = models.ForeignKey(GrappelliHelp)
     title = models.CharField(max_length=200)
     link = models.CharField(max_length=200)
     body = models.TextField()
@@ -1297,7 +1297,7 @@ class GrappelliNavigation(models.Model):
 
 
 class GrappelliNavigationitem(models.Model):
-    navigation = models.ForeignKey(GrappelliNavigation, models.DO_NOTHING)
+    navigation = models.ForeignKey(GrappelliNavigation)
     title = models.CharField(max_length=30)
     link = models.CharField(max_length=200)
     category = models.CharField(max_length=1)
@@ -1309,8 +1309,8 @@ class GrappelliNavigationitem(models.Model):
 
 
 class GrappelliNavigationitemGroups(models.Model):
-    navigationitem = models.ForeignKey(GrappelliNavigationitem, models.DO_NOTHING)
-    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
+    navigationitem = models.ForeignKey(GrappelliNavigationitem)
+    group = models.ForeignKey(AuthGroup)
 
     class Meta:
         managed = False
@@ -1319,8 +1319,8 @@ class GrappelliNavigationitemGroups(models.Model):
 
 
 class GrappelliNavigationitemUsers(models.Model):
-    navigationitem = models.ForeignKey(GrappelliNavigationitem, models.DO_NOTHING)
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    navigationitem = models.ForeignKey(GrappelliNavigationitem)
+    user = models.ForeignKey(AuthUser)
 
     class Meta:
         managed = False
@@ -1332,7 +1332,7 @@ class GrappelliNavigationitemUsers(models.Model):
 class GrupoGrupo(models.Model):
     created_at = models.DateTimeField()
     edited_at = models.DateTimeField(blank=True, null=True)
-    persona = models.ForeignKey(CongresoPersona, models.DO_NOTHING)
+    persona = models.ForeignKey(CongresoPersona)
     nombre_grupo = models.CharField(max_length=200)
     nombre_contacto = models.CharField(max_length=120, blank=True, null=True)
     email_contacto = models.CharField(max_length=120, blank=True, null=True)
@@ -1413,9 +1413,9 @@ class HomeSeccionhome(models.Model):
 
 '''
 class LibCounter(models.Model):
-    entity_content_type = models.ForeignKey(DjangoContentType, models.DO_NOTHING)
+    entity_content_type = models.ForeignKey(DjangoContentType)
     count = models.IntegerField()
-    counted_content_type = models.ForeignKey(DjangoContentType, models.DO_NOTHING)
+    counted_content_type = models.ForeignKey(DjangoContentType)
     counted_object_id = models.IntegerField()
 
     class Meta:
@@ -1459,8 +1459,8 @@ class OrdenDelDiaCargocitado(models.Model):
 
 
 class OrdenDelDiaCitacion(models.Model):
-    itemdeordendeldia_ptr = models.OneToOneField('OrdenDelDiaItemdeordendeldia', models.DO_NOTHING, primary_key=True)
-    tipo = models.ForeignKey('OrdenDelDiaTipocitacion', models.DO_NOTHING)
+    itemdeordendeldia_ptr = models.OneToOneField('OrdenDelDiaItemdeordendeldia', primary_key=True)
+    tipo = models.ForeignKey('OrdenDelDiaTipocitacion')
     tema_principal = models.ForeignKey(GeneralTema, related_name='citacion_tema_principal', blank=True, null=True)
     tema_secundario = models.ForeignKey(GeneralTema, related_name='citacion_tema_secundario', blank=True, null=True)
     plenaria = models.BooleanField()
@@ -1480,8 +1480,8 @@ class OrdenDelDiaCitacion(models.Model):
 
 
 class OrdenDelDiaCitacionCitantes(models.Model):
-    citacion = models.ForeignKey('OrdenDelDiaCitacion', models.DO_NOTHING)
-    congresista = models.ForeignKey('CongresoCongresista', models.DO_NOTHING)
+    citacion = models.ForeignKey('OrdenDelDiaCitacion')
+    congresista = models.ForeignKey('CongresoCongresista')
 
     class Meta:
         managed = False
@@ -1490,8 +1490,8 @@ class OrdenDelDiaCitacionCitantes(models.Model):
 
 
 class OrdenDelDiaCitacionOtrosInvitados(models.Model):
-    citacion = models.ForeignKey('OrdenDelDiaCitacion', models.DO_NOTHING)
-    persona = models.ForeignKey('CongresoPersona', models.DO_NOTHING)
+    citacion = models.ForeignKey('OrdenDelDiaCitacion')
+    persona = models.ForeignKey('CongresoPersona')
 
     class Meta:
         managed = False
@@ -1503,8 +1503,8 @@ class OrdenDelDiaCitado(models.Model):
     created_at = models.DateTimeField()
     edited_at = models.DateTimeField(blank=True, null=True)
     nombres = models.CharField(max_length=200, blank=True, null=True)
-    entidad = models.ForeignKey('OrdenDelDiaEntidadcitado', models.DO_NOTHING, blank=True, null=True)
-    cargo = models.ForeignKey(OrdenDelDiaCargocitado, models.DO_NOTHING, blank=True, null=True)
+    entidad = models.ForeignKey('OrdenDelDiaEntidadcitado', blank=True, null=True)
+    cargo = models.ForeignKey(OrdenDelDiaCargocitado, blank=True, null=True)
     old_id = models.IntegerField(blank=True, null=True)
     imagen = models.CharField(max_length=100, blank=True, null=True)
 
@@ -1514,8 +1514,8 @@ class OrdenDelDiaCitado(models.Model):
 
 
 class OrdenDelDiaCitadoasistentecitacion(models.Model):
-    citacion = models.ForeignKey(OrdenDelDiaCitacion, models.DO_NOTHING)
-    citado = models.ForeignKey(OrdenDelDiaCitado, models.DO_NOTHING)
+    citacion = models.ForeignKey(OrdenDelDiaCitacion)
+    citado = models.ForeignKey(OrdenDelDiaCitado)
     asiste = models.NullBooleanField()
     delega_asistencia = models.BooleanField()
     excuso = models.BooleanField()
@@ -1537,8 +1537,8 @@ class OrdenDelDiaEntidadcitado(models.Model):
 
 
 class OrdenDelDiaInvitadoasistentecitacion(models.Model):
-    citacion = models.ForeignKey(OrdenDelDiaCitacion, models.DO_NOTHING)
-    citado = models.ForeignKey(OrdenDelDiaCitado, models.DO_NOTHING)
+    citacion = models.ForeignKey(OrdenDelDiaCitacion)
+    citado = models.ForeignKey(OrdenDelDiaCitado)
     asiste = models.NullBooleanField()
     delega_asistencia = models.BooleanField()
     excuso = models.BooleanField()
@@ -1552,7 +1552,7 @@ class OrdenDelDiaItemdeordendeldia(models.Model):
     orden = models.IntegerField()
     proposito = models.TextField(blank=True, null=True)
     importante = models.BooleanField()
-    orden_del_dia = models.ForeignKey('OrdenDelDiaOrdendeldia', models.DO_NOTHING)
+    orden_del_dia = models.ForeignKey('OrdenDelDiaOrdendeldia')
     realizado = models.NullBooleanField()
     menu_realizado = models.CharField(max_length=2, blank=True, null=True)
 
@@ -1565,7 +1565,7 @@ class OrdenDelDiaOrdendeldia(models.Model):
     fecha_programada = models.DateTimeField()
     fecha_realizada = models.DateField(blank=True, null=True)
     comentarios = models.TextField(blank=True, null=True)
-    cuatrienio = models.ForeignKey(CongresoPeriodo, models.DO_NOTHING)
+    cuatrienio = models.ForeignKey(CongresoPeriodo)
     realizado = models.CharField(max_length=2, blank=True, null=True)
 
     class Meta:
@@ -1574,8 +1574,8 @@ class OrdenDelDiaOrdendeldia(models.Model):
 
 
 class OrdenDelDiaOrdendeldiaCamaras(models.Model):
-    ordendeldia = models.ForeignKey('OrdenDelDiaOrdendeldia', models.DO_NOTHING)
-    camara = models.ForeignKey('CongresoCamara', models.DO_NOTHING)
+    ordendeldia = models.ForeignKey('OrdenDelDiaOrdendeldia')
+    camara = models.ForeignKey('CongresoCamara')
 
     class Meta:
         managed = False
@@ -1584,8 +1584,8 @@ class OrdenDelDiaOrdendeldiaCamaras(models.Model):
 
 
 class OrdenDelDiaOrdendeldiaComisiones(models.Model):
-    ordendeldia = models.ForeignKey('OrdenDelDiaOrdendeldia', models.DO_NOTHING)
-    comision = models.ForeignKey('CongresoComision', models.DO_NOTHING)
+    ordendeldia = models.ForeignKey('OrdenDelDiaOrdendeldia')
+    comision = models.ForeignKey('CongresoComision')
 
     class Meta:
         managed = False
@@ -1594,8 +1594,8 @@ class OrdenDelDiaOrdendeldiaComisiones(models.Model):
 
 
 class OrdenDelDiaProyectoenordendia(models.Model):
-    itemdeordendeldia_ptr = models.OneToOneField('OrdenDelDiaItemdeordendeldia', models.DO_NOTHING, primary_key=True)
-    proyecto = models.ForeignKey('ProyectoDeLeyProyectoley', models.DO_NOTHING)
+    itemdeordendeldia_ptr = models.OneToOneField('OrdenDelDiaItemdeordendeldia', primary_key=True)
+    proyecto = models.ForeignKey('ProyectoDeLeyProyectoley')
 
     class Meta:
         managed = False
@@ -1621,9 +1621,9 @@ class OrdenDelDiaTipocitante(models.Model):
 class ProyectoDeLeyAutorproyectoley(models.Model):
     created_at = models.DateTimeField()
     edited_at = models.DateTimeField(blank=True, null=True)
-    tipo_autor = models.ForeignKey(DjangoContentType, models.DO_NOTHING)
+    tipo_autor = models.ForeignKey(DjangoContentType)
     autor_id = models.IntegerField()
-    proyecto_ley = models.ForeignKey('ProyectoDeLeyProyectoley', models.DO_NOTHING)
+    proyecto_ley = models.ForeignKey('ProyectoDeLeyProyectoley')
 
     class Meta:
         managed = False
@@ -1641,8 +1641,8 @@ class ProyectoDeLeyClasevotacion(models.Model):
 
 class ProyectoDeLeyEstadodeproyectodeley(models.Model):
     fecha = models.DateField(blank=True, null=True)
-    estado = models.ForeignKey('ProyectoDeLeyEstadoproyectoley', models.DO_NOTHING)
-    proyecto = models.ForeignKey('ProyectoDeLeyProyectoley', models.DO_NOTHING)
+    estado = models.ForeignKey('ProyectoDeLeyEstadoproyectoley')
+    proyecto = models.ForeignKey('ProyectoDeLeyProyectoley')
     gaceta = models.CharField(max_length=50, blank=True, null=True)
     old_id = models.IntegerField(blank=True, null=True)
     nota = models.TextField(blank=True, null=True)
@@ -1658,8 +1658,8 @@ class ProyectoDeLeyEstadodeproyectodeley(models.Model):
 
 
 class ProyectoDeLeyEstadodeproyectodeleyComisiones(models.Model):
-    estadodeproyectodeley = models.ForeignKey('ProyectoDeLeyEstadodeproyectodeley', models.DO_NOTHING)
-    comision = models.ForeignKey('CongresoComision', models.DO_NOTHING)
+    estadodeproyectodeley = models.ForeignKey('ProyectoDeLeyEstadodeproyectodeley')
+    comision = models.ForeignKey('CongresoComision')
 
     class Meta:
         managed = False
@@ -1668,8 +1668,8 @@ class ProyectoDeLeyEstadodeproyectodeleyComisiones(models.Model):
 
 
 class ProyectoDeLeyEstadodeproyectodeleyPonentes(models.Model):
-    estadodeproyectodeley = models.ForeignKey('ProyectoDeLeyEstadodeproyectodeley', models.DO_NOTHING)
-    congresista = models.ForeignKey('CongresoCongresista', models.DO_NOTHING)
+    estadodeproyectodeley = models.ForeignKey('ProyectoDeLeyEstadodeproyectodeley')
+    congresista = models.ForeignKey('CongresoCongresista')
 
     class Meta:
         managed = False
@@ -1698,7 +1698,7 @@ class ProyectoDeLeyLegislatura(models.Model):
     nombre = models.CharField(max_length=7)
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
-    cuatrienio = models.ForeignKey(CongresoPeriodo, models.DO_NOTHING, blank=True, null=True)
+    cuatrienio = models.ForeignKey(CongresoPeriodo, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -1719,25 +1719,25 @@ class ProyectoDeLeyOtroautor(models.Model):
 class ProyectoDeLeyProyectoley(models.Model):
     created_at = models.DateTimeField()
     edited_at = models.DateTimeField(blank=True, null=True)
-    tipo_proyecto = models.ForeignKey('ProyectoDeLeyTipoproyecto', models.DO_NOTHING)
+    tipo_proyecto = models.ForeignKey('ProyectoDeLeyTipoproyecto')
     titulo = models.TextField()
     tema_principal = models.ForeignKey(GeneralTema, related_name='tema_principal', blank=True, null=True)
     tema_secundario = models.ForeignKey(GeneralTema, related_name='tema_secundario', blank=True, null=True)
     sinapsis = models.TextField(blank=True, null=True)
     numero_camara = models.CharField(max_length=10, blank=True, null=True)
     numero_senado = models.CharField(max_length=10, blank=True, null=True)
-    estado_actual = models.ForeignKey(ProyectoDeLeyEstadoproyectoley, models.DO_NOTHING, blank=True, null=True)
+    estado_actual = models.ForeignKey(ProyectoDeLeyEstadoproyectoley, blank=True, null=True)
     fecha_radicacion = models.DateField(blank=True, null=True)
-    periodo = models.ForeignKey(CongresoPeriodo, models.DO_NOTHING)
-    iniciativa = models.ForeignKey(ProyectoDeLeyIniciativa, models.DO_NOTHING)
+    periodo = models.ForeignKey(CongresoPeriodo)
+    iniciativa = models.ForeignKey(ProyectoDeLeyIniciativa)
     tags = models.CharField(max_length=200, blank=True, null=True)
     old_id = models.IntegerField(blank=True, null=True)
-    se_acumula_a = models.ForeignKey('self', models.DO_NOTHING, blank=True, null=True)
+    se_acumula_a = models.ForeignKey('self', blank=True, null=True)
     camara_id = models.IntegerField(blank=True, null=True)
     legislatura_id = models.IntegerField(blank=True, null=True)
     enlace_a_texto = models.CharField(max_length=200, blank=True, null=True)
     enlace_a_informe_derecho_justo = models.CharField(max_length=200, blank=True, null=True)
-    estado_proyecto_ley_actual = models.ForeignKey(ProyectoDeLeyEstadodeproyectodeley, models.DO_NOTHING, blank=True,
+    estado_proyecto_ley_actual = models.ForeignKey(ProyectoDeLeyEstadodeproyectodeley, blank=True,
                                                    null=True)
     alias = models.CharField(max_length=300, blank=True, null=True)
     importancia = models.FloatField()
@@ -1754,7 +1754,7 @@ class ProyectoDeLeyTextosComparacion(models.Model):
     base = models.ForeignKey('ProyectoDeLeyTextosTextoproyectoley', related_name='base')
     modificado = models.ForeignKey('ProyectoDeLeyTextosTextoproyectoley', related_name='modificado')
     orden = models.SmallIntegerField()
-    proyecto = models.ForeignKey(ProyectoDeLeyProyectoley, models.DO_NOTHING)
+    proyecto = models.ForeignKey(ProyectoDeLeyProyectoley)
     diferencias_encoded = models.TextField()
 
     class Meta:
@@ -1765,8 +1765,8 @@ class ProyectoDeLeyTextosComparacion(models.Model):
 class ProyectoDeLeyTextosTextoproyectoley(models.Model):
     created_at = models.DateTimeField()
     edited_at = models.DateTimeField(blank=True, null=True)
-    proyecto_ley = models.ForeignKey(ProyectoDeLeyProyectoley, models.DO_NOTHING)
-    estado_proyecto_ley = models.ForeignKey(ProyectoDeLeyEstadodeproyectodeley, models.DO_NOTHING)
+    proyecto_ley = models.ForeignKey(ProyectoDeLeyProyectoley)
+    estado_proyecto_ley = models.ForeignKey(ProyectoDeLeyEstadodeproyectodeley)
     texto_html = models.TextField(blank=True, null=True)
     texto_plano = models.TextField(blank=True, null=True)
 
@@ -1797,14 +1797,14 @@ class ProyectoDeLeyVotacion(models.Model):
     created_at = models.DateTimeField()
     edited_at = models.DateTimeField(blank=True, null=True)
     fecha = models.DateField()
-    proyecto = models.ForeignKey(ProyectoDeLeyProyectoley, models.DO_NOTHING, blank=True, null=True)
+    proyecto = models.ForeignKey(ProyectoDeLeyProyectoley, blank=True, null=True)
     motivo = models.TextField()
     a_favor = models.CharField(max_length=50, blank=True, null=True)
     en_contra = models.CharField(max_length=50, blank=True, null=True)
     votosfavor = models.IntegerField(db_column='votosFavor')  # Field name made lowercase.
     votoscontra = models.IntegerField(db_column='votosContra')  # Field name made lowercase.
     aprobado = models.NullBooleanField()
-    tipo_votacion = models.ForeignKey(ProyectoDeLeyTipovotacion, models.DO_NOTHING)
+    tipo_votacion = models.ForeignKey(ProyectoDeLeyTipovotacion)
     gaceta = models.CharField(max_length=50, blank=True, null=True)
     acta = models.CharField(max_length=50, blank=True, null=True)
     observaciones = models.TextField(blank=True, null=True)
@@ -1816,7 +1816,7 @@ class ProyectoDeLeyVotacion(models.Model):
     votosabstencion = models.IntegerField(db_column='votosAbstencion', blank=True,
                                           null=True)  # Field name made lowercase.
     numero_no_asistencias = models.IntegerField()
-    clase_votacion = models.ForeignKey(ProyectoDeLeyClasevotacion, models.DO_NOTHING)
+    clase_votacion = models.ForeignKey(ProyectoDeLeyClasevotacion)
     numero_asistencias = models.IntegerField()
     datos_importacion = models.TextField(blank=True, null=True)
     resultados_importacion = models.TextField(blank=True, null=True)
@@ -1827,8 +1827,8 @@ class ProyectoDeLeyVotacion(models.Model):
 
 
 class ProyectoDeLeyVotacionCamaras(models.Model):
-    votacion = models.ForeignKey('ProyectoDeLeyVotacion', models.DO_NOTHING)
-    camara = models.ForeignKey('CongresoCamara', models.DO_NOTHING)
+    votacion = models.ForeignKey('ProyectoDeLeyVotacion')
+    camara = models.ForeignKey('CongresoCamara')
 
     class Meta:
         managed = False
@@ -1837,8 +1837,8 @@ class ProyectoDeLeyVotacionCamaras(models.Model):
 
 
 class ProyectoDeLeyVotacionComisiones(models.Model):
-    votacion = models.ForeignKey('ProyectoDeLeyVotacion', models.DO_NOTHING)
-    comision = models.ForeignKey('CongresoComision', models.DO_NOTHING)
+    votacion = models.ForeignKey('ProyectoDeLeyVotacion')
+    comision = models.ForeignKey('CongresoComision')
 
     class Meta:
         managed = False
@@ -1847,8 +1847,8 @@ class ProyectoDeLeyVotacionComisiones(models.Model):
 
 
 class ProyectoDeLeyVotacionEstadosProyecto(models.Model):
-    votacion = models.ForeignKey('ProyectoDeLeyVotacion', models.DO_NOTHING)
-    estadodeproyectodeley = models.ForeignKey('ProyectoDeLeyEstadodeproyectodeley', models.DO_NOTHING)
+    votacion = models.ForeignKey('ProyectoDeLeyVotacion')
+    estadodeproyectodeley = models.ForeignKey('ProyectoDeLeyEstadodeproyectodeley')
 
     class Meta:
         managed = False
@@ -1863,8 +1863,8 @@ class ProyectoDeLeyVotacionpartido(models.Model):
     numero_votos_no = models.IntegerField()
     numero_votos_abstencion = models.IntegerField()
     opcion_preferida = models.IntegerField(blank=True, null=True)
-    partido = models.ForeignKey(CongresoPartido, models.DO_NOTHING)
-    votacion = models.ForeignKey(ProyectoDeLeyVotacion, models.DO_NOTHING)
+    partido = models.ForeignKey(CongresoPartido)
+    votacion = models.ForeignKey(ProyectoDeLeyVotacion)
 
     class Meta:
         managed = False
@@ -1874,9 +1874,9 @@ class ProyectoDeLeyVotacionpartido(models.Model):
 class ProyectoDeLeyVoto(models.Model):
     created_at = models.DateTimeField()
     edited_at = models.DateTimeField(blank=True, null=True)
-    votacion = models.ForeignKey(ProyectoDeLeyVotacion, models.DO_NOTHING)
+    votacion = models.ForeignKey(ProyectoDeLeyVotacion)
     voto = models.IntegerField()
-    congresista = models.ForeignKey(CongresoCongresista, models.DO_NOTHING)
+    congresista = models.ForeignKey(CongresoCongresista)
 
     class Meta:
         managed = False
@@ -1885,8 +1885,8 @@ class ProyectoDeLeyVoto(models.Model):
 
 class ProyectoDeLeyVotociudadano(models.Model):
     voto = models.BooleanField()
-    votante = models.ForeignKey(CongresoPersona, models.DO_NOTHING)
-    proyecto = models.ForeignKey(ProyectoDeLeyProyectoley, models.DO_NOTHING)
+    votante = models.ForeignKey(CongresoPersona)
+    proyecto = models.ForeignKey(ProyectoDeLeyProyectoley)
 
     class Meta:
         managed = False
@@ -1932,7 +1932,7 @@ class SocialAuthNonce(models.Model):
 
 '''
 class SocialAuthUsersocialauth(models.Model):
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    user = models.ForeignKey(AuthUser)
     provider = models.CharField(max_length=32)
     uid = models.CharField(max_length=255)
     extra_data = models.TextField()
@@ -1944,7 +1944,7 @@ class SocialAuthUsersocialauth(models.Model):
 
 
 class SocialauthAuthmeta(models.Model):
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING, unique=True)
+    user = models.ForeignKey(AuthUser, unique=True)
     provider = models.CharField(max_length=30)
     is_email_filled = models.BooleanField()
     is_profile_modified = models.BooleanField()
@@ -1956,7 +1956,7 @@ class SocialauthAuthmeta(models.Model):
 
 class SocialauthFacebookuserprofile(models.Model):
     facebook_uid = models.CharField(unique=True, max_length=20)
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    user = models.ForeignKey(AuthUser)
     profile_image_url = models.CharField(max_length=200, blank=True, null=True)
     profile_image_url_big = models.CharField(max_length=200, blank=True, null=True)
     profile_image_url_small = models.CharField(max_length=200, blank=True, null=True)
@@ -1971,7 +1971,7 @@ class SocialauthFacebookuserprofile(models.Model):
 
 class SocialauthLinkedinuserprofile(models.Model):
     linkedin_uid = models.CharField(unique=True, max_length=50)
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    user = models.ForeignKey(AuthUser)
     headline = models.CharField(max_length=120, blank=True, null=True)
     company = models.CharField(max_length=255, blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
@@ -1987,7 +1987,7 @@ class SocialauthLinkedinuserprofile(models.Model):
 
 class SocialauthOpenidprofile(models.Model):
     openid_key = models.CharField(unique=True, max_length=200)
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    user = models.ForeignKey(AuthUser)
     is_username_valid = models.BooleanField()
     email = models.CharField(max_length=75)
     nickname = models.CharField(max_length=100)
@@ -1999,7 +1999,7 @@ class SocialauthOpenidprofile(models.Model):
 
 class SocialauthTwitteruserprofile(models.Model):
     screen_name = models.CharField(unique=True, max_length=200)
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    user = models.ForeignKey(AuthUser)
     access_token = models.CharField(max_length=255, blank=True, null=True)
     profile_image_url = models.CharField(max_length=200, blank=True, null=True)
     location = models.CharField(max_length=100, blank=True, null=True)
