@@ -56,9 +56,9 @@ ul#header-pclave {
     border: 0.125em solid #9D999A;
     box-shadow: 0.0625em 0.125em 0.0625em #575354;
     padding: 0.3em 0.3em;
-    width: 50%;
+    width: 45%;
     height: auto;
-    left: 33%;
+    left: 35%;
 }
 ul#header-pclave li {
     display: inline;
@@ -137,10 +137,14 @@ tr.header-tabla2 td{
 
 #sidebar {
     float: left;
+    position: relative !important;
     line-height: 1.5625em;
     width: 160px;
     padding: 0em 0.3em;
     overflow: auto;
+}
+.sidebar-div {
+    padding-right: 0em;
 }
 ul.sidebar-secciones {
       padding: 0;
@@ -150,7 +154,7 @@ ul.sidebar-secciones {
 ul.sidebar-secciones li {
       display: block;
       width: 100%;
-      padding: 0.4375em 0em;
+      padding: 0.3em 0em;
     }
 ul.sidebar-secciones li a {
        display: block;
@@ -159,7 +163,7 @@ ul.sidebar-secciones li a {
        font-family: flama light;
        background-color: #37AB9C;
        color: white;
-       padding: 0.03125em 0.3125em;
+       padding: 0.02em 0.3125em;
        text-decoration: none;
        text-transform: uppercase;
     }
@@ -184,7 +188,7 @@ ul.sidebar-detalle li {
       list-style-type: none;
       overflow: hidden;
       display: block;
-      padding: 0.0625em 0em;
+      padding: 0.03em 0em;
     }
 ul.sidebar-detalle li a {
        display: block;
@@ -199,7 +203,9 @@ ul.sidebar-detalle li a {
        text-transform: none;
        border-bottom: solid #37AB9C;
     }
-
+.sidebar-div ul.sidebar-detalle:hover {
+       color: #37AB9C;
+    }
 
 /*Div con el contenido de cada pagina */
 #content {

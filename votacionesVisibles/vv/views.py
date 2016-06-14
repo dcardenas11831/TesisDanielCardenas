@@ -19,7 +19,7 @@ MEDIA_URL = "http://congresovisible.org/media/"
 
 def proyectos_clave():
     claves = ProyectoDeLeyProyectoley.objects.filter(periodo__id=ID_PERIODO, destacado=True) \
-                 .order_by('-fecha_radicacion')[:4]
+                 .order_by('-fecha_radicacion')[:3]
     resultado = []
     for pc in claves:
         sp = pc.titulo.split("[")
