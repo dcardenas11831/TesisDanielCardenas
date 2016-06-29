@@ -380,7 +380,7 @@ ul.sidebar-detalle li a {
     width: 84%;
     font-family: flama light;
     color: #575354;
-    border: 0.03125em solid #9D999A;
+    border: 2px solid #9D999A;
     font-size: medium;
 }
 .ui-widget{

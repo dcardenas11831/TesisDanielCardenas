@@ -43,6 +43,12 @@ hr {
   margin: 20px 0;
 }
 
+mark{
+    font-weight: bold;
+    background: none;
+    color: #37AB9C;
+}
+
 img.header-img {
     width: 27%;
     position: relative;
@@ -218,11 +224,12 @@ ul.sidebar-detalle li a {
 /*Para las páginas dividias en dos*/
 #columna_derecha {
   float: right;
-  width: 40%;
+  **width: 40%;
+  padding-left: 10px;
 }
 #columna_izquierda {
   float: left;
-  width: 60%;
+  **width: 60%;
 }
 /*Para las imágenes en los círculos*/
 .circle {
@@ -249,11 +256,11 @@ ul.sidebar-detalle li a {
     top: 0em;
     left: 0.625em;
     width: 100%;
+    height: 100%;
     float: left;
     color: #575354;
     font-size: small;
-    height: 40em;
-    overflow: auto;
+    overflow: visible;
 }
 .tabla-camara table{
     border-spacing: 0px;
@@ -297,7 +304,7 @@ ul.sidebar-detalle li a {
     position: relative;
     top: 0em;
     left: 0.625em;
-    width: 80%;
+    width: 100%;
     float: left;
     color: #575354;
     font-size: small;
@@ -367,4 +374,200 @@ ul.sidebar-detalle li a {
     text-align: center;
     padding: 0em;
     margin-bottom: 0em;
+}
+
+/*Tabla de la pagina de los proyectos*/
+.tabla td {
+    padding: 4px 5px;
+    border: 1px solid #9D999A;
+}
+.chart_panel_proyectos {
+    cursor: pointer;
+}
+/* Detalle de proyecto*/
+#busqueda{
+    width: 84%;
+    font-family: flama light;
+    color: #575354;
+    border: 0.03125em solid #9D999A;
+    font-size: medium;
+}
+.ui-widget{
+    font-family: flama light;
+
+}
+.styled-select{
+   font-family: flama light;
+   color: #575354;
+   background: transparent;
+   font-size: small;
+   height: 2em;
+   -webkit-appearance: none;
+   position: relative;
+   float: right;
+   right: 30em;
+}
+.styled-select input{
+   font-family: flama light;
+   color: #9D999A;
+   padding: 2px;
+   width: 200px;
+}
+.ui-menu .ui-menu-item a{
+    height:3em;
+    font-size:small;
+    font-family: flama light;
+}
+.ui-widget ul{
+    color: #575354;
+    list-style-type: none;
+    overflow: hidden;
+    float: left;
+}
+.ui-widget li{
+    list-style-type: none;
+    font-size: small;
+    padding: 0em 0em;
+    text-decoration: none;
+    width: 30%;
+    overflow: hidden;
+    display: block;
+}
+#tabs {
+    font-family: flama light;
+    color: #575354;
+    border: 0em solid transparent;
+    font-size: small;
+    background: none;
+    width: 100%;
+}
+.ui-widget-header {
+    border: 1px transparent !important;
+    background: transparent !important;
+}
+.ui-widget-header .ui-state-default{
+    border: 1px solid white !important;
+    background: #9D999A !important;
+    color: #37AB9C !important;
+}
+.ui-state-hover {
+    color: #37AB9C !important;
+}
+.ui-widget-header .ui-state-active{
+    border: 1px solid #575354 !important;
+    background: transparent !important;
+    color: #575354 !important;
+}
+.ui-tabs .ui-tabs-nav li {
+    white-space: normal !important;
+}
+.tabla-detalle{
+    position: relative;
+    top: 0em;
+    left: 0.625em;
+    width: 80%;
+    float: left;
+    color: #575354;
+    font-size: small;
+}
+.tabla-detalle table {
+    border-spacing: 0px;
+}
+.tabla-detalle td {
+    padding: 0.01em 0.625em;
+    border: 0.01em solid #9D999A;
+    text-align: center;
+}
+.tabla-detalle th {
+    text-align: left;
+}
+.tabla-detalle a{
+    color: #575354;
+    text-decoration: none;
+}
+.tabla-detalle a:hover{
+    color: #37AB9C;
+}
+.chart_container{
+    height: 43em;
+    width: 100%;
+    color: #575354 !important;
+}
+.chart_panel_votaciones {
+    font-size: small;
+    background: none;
+    margin: 0em 0em;
+    padding: 0em 0em;
+    float: left;
+    width: 38em;
+    height: 33em;
+}
+.highcharts-container {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/*Detalle partido*/
+.numberCircle {
+    border-radius: 50%;
+    display: inline-block;
+    width: 1.6em;
+    height: 1.6em;
+    border: 2px solid;
+    text-align: center;
+    font-size: large;
+    margin: 0em 20px;
+}
+
+#combobox select{
+   font-family: flama light;
+   color: #9D999A;
+}
+.custom-combobox a{
+   color: #9D999A;
+   width: 18px;
+   height: 17px;
+}
+.custom-combobox input{
+   color: #9D999A;
+   font-family: flama light;
+}
+.tabla-detalle-partido {
+    width: 100%;
+    text-align: center;
+}
+
+.tabla-detalle-partido h4{
+    text-align: left;
+    padding: 0em 0em;
+}
+.tabla-detalle-partido table{
+    border: 1px solid #9D999A;
+    border-spacing: 0px;
+    table-layout: fixed;
+    font-size: small;
+    width: 100%;
+}
+.tabla-partido td{
+    padding: 3px 3px;
+    border: 0px solid black;
+    white-space: wrap;
+}
+.tabla-partido-td-imagen{
+    width: 2%;
+}
+.tabla-partido tr{
+    border: 0 solid transparent;
+    width: 100%;
+}
+.tabla-partido-tr-lleno {
+    background: #9D999A;
+    width: 100%;
+}
+.tabla-partido-tr-lleno a{
+    color: white;
+    font-size: medium;
+}
+.tabla-partido-tr-lleno a:hover{
+    color: #37AB9C;
 }

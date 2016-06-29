@@ -1,4 +1,4 @@
-{% extends "vv/base.html" %}
+{% extends "vv/base-nueva.html" %}
 
 {% block imports%}
 {% load staticfiles %}
@@ -14,48 +14,48 @@
 {% block content %}
     <h1 id="tema_seleccionado">PROYECTO DE LEY</h1>
     <h2 id="proyecto_seleccionado"> {{proyecto.titulo}}</h2>
-
-    <div id="columna_izquierda">
-        <p>    <mark>TEMA PRINCIPAL:</mark> {{proyecto.tema_principal.nombre}}</p>
-        <p>    <mark>RESUMEN:</mark> {{proyecto.sinapsis}}</p>
-        <p>    <mark>ESTADO ACTUAL:</mark> {{proyecto.estado_proyecto_ley_actual.estado.nombre}}
-            ({{proyecto.estado_proyecto_ley_actual.fecha}})</p>
-        <p>    <mark>PALABRAS CLAVE:</mark> {{proyecto.tags}}</p>
-        <p>    <mark>INICIATIVA:</mark> {{proyecto.iniciativa.nombre}}</p>
-        <p>    <mark>TIPO PROYECTO:</mark> {{proyecto.tipo_proyecto.nombre}}</p>
-        <p>    <mark>FECHA RADICACIÓN:</mark> {{proyecto.fecha_radicacion}}</p>
-        <p>    <mark>VOTACIONES:</mark>  <br>
-            (Haga clic en una de las burbujas para ver los votos de los miembros de ese partido) </p>
-        <div id="tabs" class="tabrow">
-            <ul>
-                {% for estado in estados %}
-                <li><a href="#{{estado.id}}"> {{estado.estado.nombre}}</a></li>
-                {% endfor %}
-            </ul>
-            <div class="chart_container">
-                {% for estado in estados %}
-                <div id="{{estado.id}}">
-                    <br> <h3> Realizada el {{estado.fecha}}</h3>
-                    <div id="{{estado.id}}-votaciones" class="chart_panel_votaciones"></div>
+    <div class="w3-row">
+        <div id="columna_izquierda" class="w3-col m6">
+            <p>    <mark>TEMA PRINCIPAL:</mark> {{proyecto.tema_principal.nombre}}</p>
+            <p class="w3-padding-right">    <mark>RESUMEN:</mark> {{proyecto.sinapsis}}</p>
+            <p>    <mark>ESTADO ACTUAL:</mark> {{proyecto.estado_proyecto_ley_actual.estado.nombre}}
+                ({{proyecto.estado_proyecto_ley_actual.fecha}})</p>
+            <p>    <mark>PALABRAS CLAVE:</mark> {{proyecto.tags}}</p>
+            <p>    <mark>INICIATIVA:</mark> {{proyecto.iniciativa.nombre}}</p>
+            <p>    <mark>TIPO PROYECTO:</mark> {{proyecto.tipo_proyecto.nombre}}</p>
+            <p>    <mark>FECHA RADICACIÓN:</mark> {{proyecto.fecha_radicacion}}</p>
+            <p>    <mark>VOTACIONES:</mark>  <br>
+                (Haga clic en una de las burbujas para ver los votos de los miembros de ese partido) </p>
+            <div id="tabs" class="tabrow">
+                <ul>
+                    {% for estado in estados %}
+                    <li><a href="#{{estado.id}}"> {{estado.estado.nombre}}</a></li>
+                    {% endfor %}
+                </ul>
+                <div class="chart_container">
+                    {% for estado in estados %}
+                    <div id="{{estado.id}}">
+                        <br> <h4> <br> Realizada el {{estado.fecha}}</h4>
+                        <div id="{{estado.id}}-votaciones" class="chart_panel_votaciones"></div>
+                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
         </div>
-    </div>
 
-    <div id="columna_derecha">
-        <p>Digite el nombre del congresista o partido de su inter&#233;s para ver sus votos en este proyecto</p>
-        <div class="ui-widget">
-            <form id="votos" method="GET">
-                <input id="busqueda" name="busqueda">
-                <input type="hidden" name="ids_estados" value={{str_estados}}>
-                <input type="hidden" name="ids_votaciones" value={{str_votaciones}}>
-                <input id="submit" type="submit" class="btn-buscar" value="">
-            </form>
+        <div id="columna_derecha" class="w3-col m6">
+            <p>Digite el nombre del congresista o partido de su inter&#233;s para ver sus votos en este proyecto</p>
+            <div class="ui-widget">
+                <form id="votos" method="GET">
+                    <input id="busqueda" name="busqueda">
+                    <input type="hidden" name="ids_estados" value={{str_estados}}>
+                    <input type="hidden" name="ids_votaciones" value={{str_votaciones}}>
+                    <input id="submit" type="submit" class="btn-buscar" value="">
+                </form>
+            </div>
+            <div id="tabla" class="tabla-detalle"></div>
         </div>
-        <div id="tabla" class="tabla-detalle"></div>
     </div>
-
 
     <script type="text/javascript" charset="UTF-8">
 			$(function () {

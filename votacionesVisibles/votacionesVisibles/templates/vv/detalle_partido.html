@@ -1,4 +1,4 @@
-{% extends "vv/base.html" %}
+{% extends "vv/base-nueva.html" %}
 
 {% block imports%}
 {% load staticfiles %}
@@ -15,59 +15,55 @@
         <img id="logo" class="img-circle" style="border-color:{{partido.get_color}}" src="{{ partido.logo }}">
         <label for="logo">{{ partido.nombre|upper }}</label>
     </h1>
-    <div class="styled-select">
-            <label>TEMA: </label>
-            <select id="combobox" size="10">
-                <option value="-1">Todos los temas</option>
-                {% for tema in temas %}
-                <option value="{{ tema.id }}">{{ tema.nombre }}</option>
-                {% endfor %}
-            </select>
+    <div class="w3-row">
+        <div class="w3-container w3-half">
+            <div class="numberCircle" style="border-color:{{partido.get_color}}">{{ num_senadores }}</div> senadores  <p></p>
+            <div class="numberCircle" style="border-color:{{partido.get_color}}">{{ num_representantes }}</div> representantes
         </div>
-        <div class="numberCircle" style="border-color:{{partido.get_color}}">{{ num_senadores }}</div> senadores  <p></p>
-        <div class="numberCircle" style="border-color:{{partido.get_color}}">{{ num_representantes }}</div> representantes
+        <div class="w3-container w3-half">
+                <label>Filtre por tema los proyectos incluidos en el análisis </label>
+                <select id="combobox">
+                    <option value="-1">Todos los temas</option>
+                    {% for tema in temas %}
+                    <option value="{{ tema.id }}">{{ tema.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+    </div>
     <br>
-    <div id="columna_izquierda">
-        <div id="charts_titulo"></div>
-        <table>
-            <tr>
-                <td>
-                    <h6 id="titulo_gubernamental"></h6>
-                </td>
-                <td>
-                    <h6 id="titulo_partido"></h6>
-                </td>
-                <td>
-                    <h6 id="titulo_otros_partidos"></h6>
-                </td>
-                <td>
-                    <h6 id="titulo_otras"></h6>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div id="chart_gubernamental" class="chart_resumen_votos"></div>
-                </td>
-                <td>
-                    <div id="chart_partido" class="chart_resumen_votos"></div>
-                </td>
-                <td>
-                    <div id="chart_otros_partidos" class="chart_resumen_votos"></div>
-                </td>
-                <td>
-                    <div id="chart_otras" class="chart_resumen_votos"></div>
-                </td>
-            </tr>
-        </table>
-
-    </div>
-    <div id="columna_derecha">
-        <div id="tabla" class="tabla-detalle-partido"></div>
-    </div>
-
-    <div id="disciplina">
-        <div id="titulo_disciplina"></div>
-        <div id="chart_disciplina"></div>
+    <div class="w3-row">
+        <div id="columna_izquierda" class="w3-twothird">
+            <div id="charts_titulo"></div>
+            <div class="w3-content">
+            <table>
+                <tr>
+                    <td class="w3-quarter w3-center">
+                        <h6 id="titulo_gubernamental"></h6>
+                        <div id="chart_gubernamental" class="chart_resumen_votos"></div>
+                    </td>
+                    <td class="w3-quarter w3-center">
+                        <h6 id="titulo_partido"></h6>
+                        <div id="chart_partido" class="chart_resumen_votos"></div>
+                    </td>
+                    <td class="w3-quarter w3-center">
+                        <h6 id="titulo_otros_partidos"></h6>
+                        <div id="chart_otros_partidos" class="chart_resumen_votos"></div>
+                    </td>
+                    <td class="w3-quarter w3-center">
+                        <h6 id="titulo_otras"></h6>
+                        <div id="chart_otras" class="chart_resumen_votos"></div>
+                    </td>
+                </tr>
+            </table>
+            </div>
+            <div id="disciplina">
+                <div id="titulo_disciplina"></div>
+                <div id="chart_disciplina"></div>
+            </div>
+        </div>
+        <div id="columna_derecha" class="w3-third">
+            <div id="tabla" class="tabla-detalle-partido"></div>
+        </div>
     </div>
 <script type="text/javascript" charset="UTF-8">
 (function( $ ) {
@@ -89,7 +85,7 @@
 				this.input = $( "<input>" )
 					.appendTo( this.wrapper )
 					//.val( value )
-					.val( "Seleccione" )
+					.val( "Todos los temas" )
 					.attr( "title", "" )
 					.autocomplete({
 						delay: 0,
@@ -297,13 +293,13 @@
                      '        <td colspan=8 class="tabla-partido-tr-lleno"><a href=" '+url+' ">'+ proyecto.nombre +"</a></td>"+
                      "    </tr>"+
                      "    <tr>"+
-                     "        <td class='tabla-partido-td-imagen'><img src= '{% static "vv/images/si.png" %}'/></td>"+
+                     "        <td class='tabla-partido-td-imagen'><img class='w3-padding-8' src= '{% static "vv/images/si.png" %}'/></td>"+
                      "        <td>"+ votos_partido[2] +" / "+ votos_totales[2] +"</td>"+
-                     "        <td class='tabla-partido-td-imagen'><img src= '{% static "vv/images/no.png" %}'/></td>"+
+                     "        <td class='tabla-partido-td-imagen'><img class='w3-padding-8' src= '{% static "vv/images/no.png" %}'/></td>"+
                      "        <td>"+ votos_partido[1] +" / "+ votos_totales[1] +"</td>"+
-                     "        <td class='tabla-partido-td-imagen'><img src= '{% static "vv/images/abstencion.png" %}'/></td>"+
+                     "        <td class='tabla-partido-td-imagen'><img class='w3-padding-8' src= '{% static "vv/images/abstencion.png" %}'/></td>"+
                      "        <td>"+ votos_partido[0] +" / "+ votos_totales[0] +"</td>"+
-                     "        <td class='tabla-partido-td-imagen'><img src= '{% static "vv/images/inasistencia.png" %}'/></td>"+
+                     "        <td class='tabla-partido-td-imagen'><img class='w3-padding-8' src= '{% static "vv/images/inasistencia.png" %}'/></td>"+
                      "        <td>"+ votos_partido[3] +" / "+ votos_totales[3] +"</td>"+
                      "    </tr>";
             }
@@ -320,6 +316,7 @@
     }
     function dibujarDisciplina(partidos, anios) {
         var html = "<br> <br> <h4>" + "DISCIPLINA DEL PARTIDO <br> Índice RICE</h4>";
+        html += "<h6>" + "Seleccione los partidos que desea comparar</h6>";
         document.getElementById("titulo_disciplina").innerHTML = html;
         partidos_chart = [];
         for (nombre_partido in partidos){
@@ -343,6 +340,7 @@
 	                plotBackgroundColor: null,
 	                plotBorderWidth: null,
 	                plotShadow: true,
+	                height: 600,
 	                type: 'line',
 	                style: {
                         fontFamily: 'sans-serif',
@@ -369,8 +367,8 @@
 		        },
 		        legend: {
                     layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'middle',
+                    align: 'center',
+                    verticalAlign: 'bottom',
                 },
 	            tooltip: {
 	                pointFormat: '{point.series.name}<br><b>{point.y}</b>'

@@ -1,4 +1,6 @@
 from django.conf.urls import url
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.views.generic import RedirectView
 
 from . import views
 
@@ -25,4 +27,9 @@ urlpatterns = [
     url(r'^busqueda/ultimas_votaciones_congresista/', views.ultimas_votaciones_congresista,
         name='ultimas_votaciones_congresista'),
     url(r'^busqueda/disciplina_congresista/', views.disciplina_congresista, name='disciplina_congresista'),
+
+    url(r'^favicon.ico$',
+        RedirectView.as_view(url=staticfiles_storage.url('favicon.ico'), permanent=False),
+        name="favicon"),
+
 ]
