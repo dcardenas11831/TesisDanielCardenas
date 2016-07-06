@@ -17,68 +17,59 @@
         <label for="logo">{{ persona.nombre_completo|upper }}</label><br> </h1>
         <h3 id="congresista_seleccionado_h3" style="color:{{partido.get_color}}">{{ partido.nombre|upper }}</h3>
     <br><br>
-    <div class="styled-select">
-            <label>TEMA: </label>
-            <select id="combobox" size="10">
+    <div class="w3-container w3-center">
+            <label>Filtre por tema los proyectos incluidos en el análisis <br></label>
+            <select id="combobox">
                 <option value="-1">Todos los temas</option>
                 {% for tema in temas %}
                 <option value="{{ tema.id }}">{{ tema.nombre }}</option>
                 {% endfor %}
             </select>
-        </div>
+    </div>
 
     <br>
-    <div id="columna_izquierda">
-        <div id="charts_titulo"></div>
-        <table>
-            <tr>
-                <td>
-                    <h6 id="titulo_gubernamental"></h6>
-                </td>
-                <td>
-                    <h6 id="titulo_partido"></h6>
-                </td>
-                <td>
-                    <h6 id="titulo_otros_partidos"></h6>
-                </td>
-                <td>
-                    <h6 id="titulo_otras"></h6>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div id="chart_gubernamental" class="chart_resumen_votos"></div>
-                </td>
-                <td>
-                    <div id="chart_partido" class="chart_resumen_votos"></div>
-                </td>
-                <td>
-                    <div id="chart_otros_partidos" class="chart_resumen_votos"></div>
-                </td>
-                <td>
-                    <div id="chart_otras" class="chart_resumen_votos"></div>
-                </td>
-            </tr>
-        </table>
-
-    </div>
-    <div id="columna_derecha">
-        <div id="tabla" class="tabla-detalle-partido"></div>
-    </div>
-
-    <div id="disciplina">
-        <div id="titulo_disciplina"></div>
-        <div id="chart_disciplina">
+    <div class="w3-row">
+        <div id="columna_izquierda" class="w3-twothird">
+            <div id="charts_titulo"></div>
             <table>
                 <tr>
-                {% for leg in anios %}
-                <td><h5 id="titulo_{{ leg }}"></h5>
-                <div id="chart_{{ forloop.counter0 }}" class="chart_disciplina_cong"></div></td>
-                {% endfor %}
+                    <td class="w3-quarter w3-center">
+                        <h6 id="titulo_gubernamental"></h6>
+                        <div id="chart_gubernamental" class="chart_resumen_votos"></div>
+                    </td>
+                    <td class="w3-quarter w3-center">
+                        <h6 id="titulo_partido"></h6>
+                        <div id="chart_partido" class="chart_resumen_votos"></div>
+                    </td>
+                    <td class="w3-quarter w3-center">
+                        <h6 id="titulo_otros_partidos"></h6>
+                        <div id="chart_otros_partidos" class="chart_resumen_votos"></div>
+                    </td>
+                    <td class="w3-quarter w3-center">
+                        <h6 id="titulo_otras"></h6>
+                        <div id="chart_otras" class="chart_resumen_votos"></div>
+                    </td>
                 </tr>
             </table>
+            <div id="disciplina">
+                <div id="titulo_disciplina"></div>
+                <div id="chart_disciplina" class="w3-row">
+                    <table>
+                        <tr>
+                        {% for leg in anios %}
+                        <td class="w3-quarter w3-center"><h5 id="titulo_{{ leg }}"></h5>
+                        <div id="chart_{{ forloop.counter0 }}" class="chart_disciplina_cong"></div></td>
+                        {% endfor %}
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="columna_derecha" class="w3-third">
+            <div id="tabla" class="tabla-detalle-partido"></div>
         </div>
     </div>
+
 <script type="text/javascript" charset="UTF-8">
 (function( $ ) {
 		$.widget( "custom.combobox", {
@@ -304,39 +295,39 @@
                 var voto_congresista = proyecto.voto_congresista;
                 var vci = "";
                 if (voto_congresista==2) {
-                    vci = "<img src= '{% static "vv/images/si.png" %}'/>";
+                    vci = "<img class='w3-padding-8' src= '{% static "vv/images/si.png" %}'/>";
                 } else if (voto_congresista==1) {
-                    vci = "<img src= '{% static "vv/images/no.png" %}'/>";
+                    vci = "<img class='w3-padding-8' src= '{% static "vv/images/no.png" %}'/>";
                 } else if (voto_congresista==0) {
-                    vci = "<img src= '{% static "vv/images/abstencion.png" %}'/>";
+                    vci = "<img class='w3-padding-8' src= '{% static "vv/images/abstencion.png" %}'/>";
                 } else if (voto_congresista==3) {
-                    vci = "<img src= '{% static "vv/images/inasistencia.png" %}'/>";
+                    vci = "<img class='w3-padding-8' src= '{% static "vv/images/inasistencia.png" %}'/>";
                 }
                 var votos_totales = proyecto.votos_totales;
                 html += "<tr>"+
                      '        <td colspan=10 class="tabla-partido-tr-lleno"><a href=" '+url+' ">'+ proyecto.nombre +"</a></td>"+
                      "    </tr>"+
                      "    <tr>"+
-                     "        <td class='tabla-partido-td-imagen'><img src= '{% static "vv/images/si.png" %}'/></td>"+
+                     "        <td class='tabla-partido-td-imagen'><img class='w3-padding-8' src= '{% static "vv/images/si.png" %}'/></td>"+
                      "        <td>"+ votos_totales[2] +"</td>"+
-                     "        <td class='tabla-partido-td-imagen'><img src= '{% static "vv/images/no.png" %}'/></td>"+
+                     "        <td class='tabla-partido-td-imagen'><img class='w3-padding-8' src= '{% static "vv/images/no.png" %}'/></td>"+
                      "        <td>"+ votos_totales[1] +"</td>"+
-                     "        <td class='tabla-partido-td-imagen'><img src= '{% static "vv/images/abstencion.png" %}'/></td>"+
+                     "        <td class='tabla-partido-td-imagen'><img class='w3-padding-8' src= '{% static "vv/images/abstencion.png" %}'/></td>"+
                      "        <td>"+ votos_totales[0] +"</td>"+
-                     "        <td class='tabla-partido-td-imagen'><img src= '{% static "vv/images/inasistencia.png" %}'/></td>"+
+                     "        <td class='tabla-partido-td-imagen'><img class='w3-padding-8' src= '{% static "vv/images/inasistencia.png" %}'/></td>"+
                      "        <td>"+ votos_totales[3] +"</td>"+
-                     "        <td class='tabla-partido-td-imagen'><img src= '{% static "vv/images/persona.png" %}'/></td>"+
+                     "        <td class='tabla-partido-td-imagen'><img class='w3-padding-8' src= '{% static "vv/images/persona.png" %}'/></td>"+
                      "        <td>"+ vci +"</td>"+
                      "    </tr>";
             }
 
             html += "</table>";
             html += "</table><p>"
-                            +"<img src= '{% static "vv/images/si.png" %}'/> Sí  "
-                            +"<img src= '{% static "vv/images/no.png" %}'/> No  "
-                            +"<img src= '{% static "vv/images/abstencion.png" %}'/> Se abstuvo  "
-                            +"<img src= '{% static "vv/images/inasistencia.png" %}'/> No asistió  "
-                            +"<br><img src= '{% static "vv/images/persona.png" %}'/> Donde se ubicó  <br>"
+                            +"<img class='w3-padding-8' src= '{% static "vv/images/si.png" %}'/> Sí  "
+                            +"<img class='w3-padding-8' src= '{% static "vv/images/no.png" %}'/> No  "
+                            +"<img class='w3-padding-8' src= '{% static "vv/images/abstencion.png" %}'/> Se abstuvo  "
+                            +"<img class='w3-padding-8' src= '{% static "vv/images/inasistencia.png" %}'/> No asistió  "
+                            +"<br><img class='w3-padding-8' src= '{% static "vv/images/persona.png" %}'/> Donde se ubicó  <br>"
                             +"</p>";
 
             document.getElementById("tabla").innerHTML = html;
@@ -360,7 +351,7 @@
                         title: null,
                         pane: {
                             center: ['50%', '85%'],
-                            size: '140%',
+                            size: '100%',
                             startAngle: -90,
                             endAngle: 90,
                             background: {
@@ -423,10 +414,10 @@
                             dataLabels: {
                                 format: '<div style="text-align:center"><span style="font-size:25px;color:' +
                                     ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span><br/>' +
-                                       '<span style="font-size:12px;color:silver">Nivel de disciplina</span></div>'
+                                       '<span style="font-size:12px;color:silver"></span></div>'
                             },
                             tooltip: {
-                                valueSuffix: 'Nivel de disciplina',
+                                valueSuffix: '',
                             }
                         }]
 

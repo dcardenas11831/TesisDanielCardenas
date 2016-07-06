@@ -28,7 +28,7 @@
                     <option value="{{ tema.id }}">{{ tema.nombre }}</option>
                     {% endfor %}
                 </select>
-            </div>
+        </div>
     </div>
     <br>
     <div class="w3-row">
@@ -306,10 +306,10 @@
 
             html += "</table>";
             html += "</table><p>"
-                            +"<img src= '{% static "vv/images/si.png" %}'/> Sí  "
-                            +"<img src= '{% static "vv/images/no.png" %}'/> No  "
-                            +"<img src= '{% static "vv/images/abstencion.png" %}'/> Se abstuvo  "
-                            +"<img src= '{% static "vv/images/inasistencia.png" %}'/> No asistió  <br>"
+                            +"<img class='w3-padding-8' src= '{% static "vv/images/si.png" %}'/> Sí  "
+                            +"<img class='w3-padding-8' src= '{% static "vv/images/no.png" %}'/> No  "
+                            +"<img class='w3-padding-8' src= '{% static "vv/images/abstencion.png" %}'/> Se abstuvo  "
+                            +"<img class='w3-padding-8' src= '{% static "vv/images/inasistencia.png" %}'/> No asistió  <br>"
                             +"Los datos se muestran así:<br> votación del partido/votación total</p>";
 
             document.getElementById("tabla").innerHTML = html;

@@ -571,3 +571,9 @@ ul.sidebar-detalle li a {
 .tabla-partido-tr-lleno a:hover{
     color: #37AB9C;
 }
+/*Detalle Congresista*/
+.chart_disciplina_cong {
+    font-size: small;
+    background: none;
+    height: 150px;
+}
