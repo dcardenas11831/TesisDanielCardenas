@@ -1,0 +1,28 @@
+{% extends "vv/base-nueva.html" %}
+
+{% block imports%}
+{% load staticfiles %}
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.2/themes/base/jquery-ui.css" type="text/css" media="all" />
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/highcharts-more.js"></script>
+{% endblock %}
+{% block title %}{{ partido.nombre }} - Votaciones Visibles{% endblock %}
+
+{% block content %}
+    <h1 id="partido_seleccionado">
+        RESULTADOS DE LA BUSQUEDA
+    </h1>
+    <div class="w3-row">
+        <div class="w3-third">
+
+        </div>
+        <div class="w3-third">
+
+        </div>
+        <div class="w3-third">
+
+        </div>
+    </div>
+{% endblock %}

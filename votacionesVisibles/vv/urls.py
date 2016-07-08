@@ -28,6 +28,10 @@ urlpatterns = [
         name='ultimas_votaciones_congresista'),
     url(r'^busqueda/disciplina_congresista/', views.disciplina_congresista, name='disciplina_congresista'),
 
+    # BUSCAR
+    url(r'^buscar/?texto_buscado=(?P<texto_buscado>w+)/$', views.buscar, name='buscar'),
+
+    # FAVICON
     url(r'^favicon.ico$',
         RedirectView.as_view(url=staticfiles_storage.url('favicon.ico'), permanent=False),
         name="favicon"),

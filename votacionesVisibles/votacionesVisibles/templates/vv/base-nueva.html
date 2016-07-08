@@ -21,11 +21,12 @@
                 {% endfor %}
         </ul>
 
-        <form method="post" action="#" class="header-buscar">
+        <form action="/buscar/" method="get" class="header-buscar">
             <table class="header-tabla w3-display-topright">
                 <tr class="header-tabla">
                     <td><input type="submit" class="btn-buscar" value="">
-                    <input type="text" class="txt-buscar" name="q" placeholder="Buscar"></td>
+                        <input type="text" class="txt-buscar" name="texto_buscado" placeholder="Buscar">
+                    </td>
                 </tr>
                 <tr class="header-tabla2">
                     <td>

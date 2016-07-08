@@ -43,7 +43,7 @@
             </div>
         </div>
 
-        <div id="columna_derecha" class="w3-col m6">
+        <div id="columna_derecha" class="w3-col m6 w3-padding-medium">
             <p>Digite el nombre del congresista o partido de su inter&#233;s para ver sus votos en este proyecto</p>
             <div class="ui-widget">
                 <form id="votos" method="GET">
@@ -328,16 +328,16 @@
                                 str_html +="<tr>";
                                 v = congresista.votos[c];
                                 if (v == 0){
-                                    str_html +="<td><img src= '{% static "vv/images/abstencion.png" %}'/></td>";
+                                    str_html +="<td><img class='w3-padding-8' src= '{% static "vv/images/abstencion.png" %}'/></td>";
                                 }
                                 else if (v == 1){
-                                    str_html +="<td><img src= '{% static "vv/images/no.png" %}'/></td>";
+                                    str_html +="<td><img class='w3-padding-8' src= '{% static "vv/images/no.png" %}'/></td>";
                                 }
                                 else if (v == 2){
-                                    str_html +="<td><img src= '{% static "vv/images/si.png" %}'/></td>";
+                                    str_html +="<td><img class='w3-padding-8' src= '{% static "vv/images/si.png" %}'/></td>";
                                 }
                                 else if (v == 3){
-                                    str_html +="<td><img src= '{% static "vv/images/inasistencia.png" %}'/></td>";
+                                    str_html +="<td><img class='w3-padding-8' src= '{% static "vv/images/inasistencia.png" %}'/></td>";
                                 }
                                 else {
                                     str_html +="<td> </td>";
@@ -347,10 +347,10 @@
                                 c++;
                             }
                             str_html += "</table><br><p>Leyenda:<br>"
-                            +"<img src= '{% static "vv/images/si.png" %}'/> S\xED  "
-                            +"<img src= '{% static "vv/images/no.png" %}'/> No  "
-                            +"<img src= '{% static "vv/images/abstencion.png" %}'/> Se abstuvo  "
-                            +"<img src= '{% static "vv/images/inasistencia.png" %}'/> No asisti\xF3  <br>"
+                            +"<img class='w3-padding-8' src= '{% static "vv/images/si.png" %}'/> S\xED  "
+                            +"<img class='w3-padding-8' src= '{% static "vv/images/no.png" %}'/> No  "
+                            +"<img class='w3-padding-8' src= '{% static "vv/images/abstencion.png" %}'/> Se abstuvo  "
+                            +"<img class='w3-padding-8' src= '{% static "vv/images/inasistencia.png" %}'/> No asisti\xF3  <br>"
                             +"Nota: si un campo est\xE1 vac\xEDo es porque el congresista no particip\xF3 de esa votaci\xF3n o porque fue"
                             +" aprobada de manera ordinal, es decir, no se registr\xF3 el voto de cada congresista.</p>";
                         }

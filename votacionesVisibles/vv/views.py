@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+from __future__ import print_function
+from __future__ import print_function
+from __future__ import print_function
 from __future__ import division
 from __future__ import unicode_literals
 from operator import itemgetter
@@ -68,7 +72,7 @@ def main_proyectos(request):
             'En debate': [],
             'Archivados': [],
         }
-    print len(temas)
+    print(len(temas))
     for proyecto in proyectos_periodo:
         estado = proyecto.estado_proyecto_ley_actual.estado
         json_proyecto = {
@@ -102,14 +106,14 @@ def detalle_proyecto(request, proyecto_id):
     proyecto = ProyectoDeLeyProyectoley.objects.get(id=proyecto_id)
     estados = ProyectoDeLeyEstadodeproyectodeley.objects.filter(proyecto=proyecto).order_by('fecha')
     estados_cambio_debate = []
-    print "-------------------------------------------------------------"
+    print("-------------------------------------------------------------")
     fecha_anterior = ""
     votaciones = []
     votaciones_grafico = []
     str_votaciones = ""
     for estado in estados:
-        print "nuemero de estados........................................"
-        print str(len(estados)) + "estado: " + estado.estado.nombre
+        print("nuemero de estados........................................")
+        print(str(len(estados)) + "estado: " + estado.estado.nombre)
         votaciones_estado = []
         if estado.estado.id in range(16, 32) or estado.estado.id == 73:  # el ultimo es para los aprobados en 1 y 3 deb
             estados_cambio_debate.append(estado)
@@ -163,9 +167,9 @@ def detalle_proyecto(request, proyecto_id):
                 str_votaciones += "0-"
             fecha_anterior = estado.fecha
 
-        print votaciones_estado
-        print "nuemero de votaciones........................................"
-        print len(votaciones)
+        print(votaciones_estado)
+        print("nuemero de votaciones........................................")
+        print(len(votaciones))
 
     # Todas las votaciones tienen que estar en un dict que contenga como clave el id del estado
 
@@ -328,7 +332,7 @@ def senado(request):
     json_partidos = []
     json_congresistas = {}
     senadores = CongresoCongresista.objects.filter(es_senador=True).select_related('partido_politico', 'persona_ptr')
-    print ".-.-.-.-..-.-.-.-numero de partidos: " + str(len(senadores))
+    print(".-.-.-.-..-.-.-.-numero de partidos: " + str(len(senadores)))
     for senador in senadores:
         partido = senador.partido_politico
         if partido.nombre not in index_partidos:  # se pone un nuevo partido si no se tenia ya en el index
@@ -366,7 +370,7 @@ def camara(request):
                                                          congresista__es_representante_camara=True
                                                          ) \
         .select_related('partido', 'congresista__persona_ptr')
-    print ".-.-.numero de represenatntes: " + str(len(periodos))
+    print(".-.-.numero de represenatntes: " + str(len(periodos)))
     for periodo in periodos:
         partido = periodo.partido
         representante = periodo.congresista.persona_ptr
@@ -380,7 +384,7 @@ def camara(request):
         if partido.nombre not in json_circunscripciones[periodo.circunscripcion_id]['data']:
             if periodo.tipo_periodo.id == 2:
                 es_reemplazo = periodo.tipo_periodo.nombre
-                print "reemplazo " + str(periodo.circunscripcion_id)
+                print("reemplazo " + str(periodo.circunscripcion_id))
             p = {
                 'nombre': partido.nombre,
                 'color': partido.get_color(),
@@ -410,7 +414,7 @@ def detalle_partido(request, partido_id):
     num_representantes = CongresoPeriodocongresista.objects.filter(periodo__id=ID_PERIODO, camara_id=2,
                                                                    tipo_periodo__id=1,
                                                                    congresista__partido_politico=partido).count()
-    print "-------------------"
+    print("-------------------")
     partido.logo = MEDIA_URL + partido.logo  # se pone la url completa de la imagen
     temas = GeneralTema.objects.all().order_by('nombre')
     return render(request, 'vv/detalle_partido.html', {'proyectos_clave': p_claves,
@@ -449,7 +453,7 @@ def resumen_votos_partido(request):
             ids_proyectos = ProyectoDeLeyProyectoley.objects.filter(periodo__id=ID_PERIODO,
                                                                     tema_principal=tema).order_by('id') \
                 .values_list('id', flat=True)
-        print len(ids_proyectos)
+        print(len(ids_proyectos))
         resumen_votos['total_proyectos'] = len(ids_proyectos)
         # me retorna los ids de los proyectos que hicieron estos congresistas
         ids_proyectos_autores_partido = ProyectoDeLeyAutorproyectoley.objects \
@@ -457,8 +461,8 @@ def resumen_votos_partido(request):
             .order_by('proyecto_ley__id').values_list('proyecto_ley__id', flat=True).distinct()
         # toma los ids de los proyectos que hicieron otros
         ids_proyectos_autores_otros = list(set(ids_proyectos) - set(ids_proyectos_autores_partido))
-        print len(ids_proyectos_autores_partido)
-        print len(ids_proyectos_autores_otros)
+        print(len(ids_proyectos_autores_partido))
+        print(len(ids_proyectos_autores_otros))
         gub = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
                                                 Q(votacion__motivo__icontains="título ")),
                                                votacion__proyecto__id__in=ids_proyectos,
@@ -512,7 +516,7 @@ def resumen_votos_partido(request):
             'resumen_votos': resumen_votos,
         }
         data = json.dumps(results)
-        print "////////////////////////////////////"
+        print("////////////////////////////////////")
 
     else:
         data = 'fail'
@@ -545,7 +549,7 @@ def ultimas_votaciones_partido(request):
                                                       votacion__proyecto__id__in=ids_proyectos,
                                                       votacion__tipo_votacion_id__lte=3,
                                                       congresista__partido_politico=partido) \
-            .values_list('votacion__id', flat=True).distinct().order_by('-votacion__fecha')[:20]
+                         .values_list('votacion__id', flat=True).distinct().order_by('-votacion__fecha')[:20]
         for votacion_id in votaciones:
             votacion = ProyectoDeLeyVotacion.objects.get(id=votacion_id)
             proyecto = votacion.proyecto
@@ -572,7 +576,7 @@ def ultimas_votaciones_partido(request):
             'ultimas_votaciones': proyectos_partido,
         }
         data = json.dumps(results)
-        print "////////////////////////////////////"
+        print("////////////////////////////////////")
 
     else:
         data = 'fail'
@@ -632,15 +636,15 @@ def disciplina_partido(request):
                     'disciplina': float("%.2f" % abs(p['si'] / p['total'] - p['no'] / p['total'])),
                 }
             anio_inicio += 1
-        print "-=-=-=-==-=-=-=-=-=-=-=-=-=-="
-        print disciplina_rice
+        print("-=-=-=-==-=-=-=-=-=-=-=-=-=-=")
+        print(disciplina_rice)
         anios = [str(l['fecha_inicio'].year) + " - " + str(l['fecha_fin'].year) for l in legislaturas]
         results = {
             'disciplina_rice': disciplina_rice,
             'anios': anios
         }
         data = json.dumps(results)
-        print "////////////////////////////////////"
+        print("////////////////////////////////////")
 
     else:
         data = 'fail'
@@ -654,12 +658,12 @@ def detalle_congresista(request, congresista_id):
     p_claves = proyectos_clave()
     congresista = CongresoCongresista.objects.get(persona_ptr_id=congresista_id)
 
-    print "-------------------"
+    print("-------------------")
     foto = MEDIA_URL + congresista.persona_ptr.imagen  # se pone la url completa de la imagen
     temas = GeneralTema.objects.all().order_by('nombre')
     legislaturas = ProyectoDeLeyLegislatura.objects.filter(cuatrienio__id=ID_PERIODO,
                                                            fecha_inicio__lte=datetime.now().date()).order_by(
-            'fecha_inicio').values()
+        'fecha_inicio').values()
     anios = [str(l['fecha_inicio'].year) + " - " + str(l['fecha_fin'].year) for l in legislaturas]
     return render(request, 'vv/detalle_congresista.html', {'proyectos_clave': p_claves, 'congresista': congresista,
                                                            'partido': congresista.partido_politico, 'temas': temas,
@@ -698,7 +702,7 @@ def resumen_votos_congresista(request):
             ids_proyectos = ProyectoDeLeyProyectoley.objects.filter(periodo__id=ID_PERIODO,
                                                                     tema_principal=tema).order_by('id') \
                 .values_list('id', flat=True)
-        print len(ids_proyectos)
+        print(len(ids_proyectos))
         resumen_votos['total_proyectos'] = len(ids_proyectos)
         # me retorna los ids de los proyectos que hicieron estos congresistas
         ids_proyectos_autores_partido = ProyectoDeLeyAutorproyectoley.objects \
@@ -706,8 +710,8 @@ def resumen_votos_congresista(request):
             .order_by('proyecto_ley__id').values_list('proyecto_ley__id', flat=True).distinct()
         # toma los ids de los proyectos que hicieron otros
         ids_proyectos_autores_otros = list(set(ids_proyectos) - set(ids_proyectos_autores_partido))
-        print len(ids_proyectos_autores_partido)
-        print len(ids_proyectos_autores_otros)
+        print(len(ids_proyectos_autores_partido))
+        print(len(ids_proyectos_autores_otros))
         gub = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
                                                 Q(votacion__motivo__icontains="título ")),
                                                votacion__proyecto__id__in=ids_proyectos,
@@ -761,7 +765,7 @@ def resumen_votos_congresista(request):
             'resumen_votos': resumen_votos,
         }
         data = json.dumps(results)
-        print "////////////////////////////////////"
+        print("////////////////////////////////////")
 
     else:
         data = 'fail'
@@ -794,7 +798,7 @@ def ultimas_votaciones_congresista(request):
                                                       votacion__proyecto__id__in=ids_proyectos,
                                                       votacion__tipo_votacion_id__lte=3,
                                                       congresista=congresista) \
-            .values_list('votacion__id', flat=True).distinct().order_by('-votacion__fecha')[:20]
+                         .values_list('votacion__id', flat=True).distinct().order_by('-votacion__fecha')[:20]
         for votacion_id in votaciones:
             votacion = ProyectoDeLeyVotacion.objects.get(id=votacion_id)
             proyecto = votacion.proyecto
@@ -819,7 +823,7 @@ def ultimas_votaciones_congresista(request):
             'ultimas_votaciones': proyectos_partido,
         }
         data = json.dumps(results)
-        print "////////////////////////////////////"
+        print("////////////////////////////////////")
 
     else:
         data = 'fail'
@@ -867,12 +871,12 @@ def disciplina_congresista(request):
                                                                 votacion__id__in=ids_votaciones,
                                                                 votacion__tipo_votacion_id__lte=3,
                                                                 votacion__fecha__range=(
-                                                                leg['fecha_inicio'], leg['fecha_fin']),
+                                                                    leg['fecha_inicio'], leg['fecha_fin']),
                                                                 voto__in=(0, 1, 2, 3)) \
                 .values_list('votacion__id', 'voto')
             disc_congresista = dict(disc_congresista)
-            print "------------------------"
-            print disc_congresista
+            print("------------------------")
+            print(disc_congresista)
             disc = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
                                                      Q(votacion__motivo__icontains="título ")),
                                                     congresista__partido_politico=partido,
@@ -903,10 +907,56 @@ def disciplina_congresista(request):
             'color': partido.get_color(),
         }
         data = json.dumps(results)
-        print "////////////////////////////////////"
+        print("////////////////////////////////////")
 
     else:
         data = 'fail'
 
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
+
+
+# ---------------------------------------------------------------
+# Resultados de buscar
+def buscar(request, texto_buscado):
+    p_claves = proyectos_clave()
+    # se toma la cadena de texto a buscar
+    # texto_buscado = request.GET.get('term', '')
+    # Toma los 10 priemro partidos activos que tienen el item buscado
+    partidos = CongresoPartido.objects.filter(nombre__icontains=texto_buscado, estado_id=1)[:10]
+    # Busca por el apellido que contenga el item y luego el nombre
+    congresistas = CongresoCongresista.objects.filter((Q(persona_ptr__apellidos__icontains=texto_buscado) |
+                                                       Q(persona_ptr__nombres__icontains=texto_buscado)),
+                                                      es_congresista=True)[:10]
+    # Busca por el titulo que contenga el texto buscado
+    proyectos = ProyectoDeLeyProyectoley.objects.filter(periodo__id=ID_PERIODO, titulo__icontains=texto_buscado) \
+                    .order_by('-fecha_radicacion')[:10]
+
+    data_partidos = []
+    for partido in partidos:
+        drug_json = {'value_id': partido.id, 'label': partido.nombre, 'foto': MEDIA_URL + partido.logo,
+                     'color': partido.get_color()}
+        data_partidos.append(drug_json)
+
+    data_congresistas = []
+    for congresista in congresistas:
+        nombre = congresista.persona_ptr.nombre_completo()
+        partido = congresista.partido_politico
+        drug_json = {'value_id': congresista.persona_ptr.id, 'label': nombre, 'color': partido.get_color(),
+                     'foto': MEDIA_URL + str(congresista.persona_ptr.imagen), 'partido': partido.nombre}
+        data_congresistas.append(drug_json)
+
+    data_proyectos = []
+    for proyecto in proyectos:
+        sp = proyecto.titulo.split("[")
+        nombre_corto = sp[len(sp) - 1][:-1]  # se toma el nombre corto cuando es posible
+        if nombre_corto == "":
+            nombre_corto = proyecto.titulo
+            sp[0] = ""
+        estado = proyecto.estado_proyecto_ley_actual.estado
+        drug_json = {'value_id': proyecto.id, 'label': nombre_corto, 'titulo': sp[0],
+                     'iniciativa': proyecto.iniciativa.nombre, 'estado': estado.nombre}
+        data_proyectos.append(drug_json)
+
+    return render(request, 'vv/resultados_buscar.html', {'congresistas': data_congresistas, 'partidos': data_partidos,
+                                                         'proyectos': data_proyectos, 'proyectos_clave': p_claves})
