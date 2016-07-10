@@ -38,16 +38,34 @@ def proyectos_clave():
     return resultado
 
 
+def ultimas_votaciones():
+    ultimas = ProyectoDeLeyVotacion.objects.filter((Q(motivo__icontains="tránsito") |
+                                                    Q(motivo__icontains="título ")),
+                                                   tipo_votacion_id__lte=3,
+                                                   ).order_by('-fecha')[:4]
+    resultado = []
+    for votacion in ultimas:
+        proyecto = votacion.proyecto
+        sp = proyecto.titulo.split("[")
+        nombre_corto = sp[len(sp) - 1][:-1]  # se toma el nombre corto cuando es posible
+        if nombre_corto == "":
+            nombre_corto = proyecto.titulo
+        p = {
+            'nombre': nombre_corto,
+            'id': proyecto.id,
+            'fecha': votacion.fecha,
+            'tema': proyecto.tema_principal.nombre,
+            'texto': sp[0]
+        }
+        resultado.append(p)
+    return resultado
+
+
 # Metodo para controlar la pagina home
 def index(request):
     p_claves = proyectos_clave()
-    return render(request, 'vv/base.html', {'proyectos_clave': p_claves})
-
-
-# Metodo para controlar la pagina home con nuevo css
-def prueba(request):
-    p_claves = proyectos_clave()
-    return render(request, 'vv/base-nueva.html', {'proyectos_clave': p_claves})
+    p_ultimos = ultimas_votaciones()
+    return render(request, 'vv/index.html', {'proyectos_clave': p_claves, 'ultimos': p_ultimos})
 
 
 # /proyectos/ Pagina principal de PROYECTOS-----------------------------------------------------------------------------

@@ -6,7 +6,6 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    url(r'^prueba$', views.prueba, name='prueba'),
 
     # SECCION PROYECTOS DE LEY
     url(r'^proyectos/$', views.main_proyectos, name='proyectos'),
@@ -29,7 +28,7 @@ urlpatterns = [
     url(r'^busqueda/disciplina_congresista/', views.disciplina_congresista, name='disciplina_congresista'),
 
     # BUSCAR
-    url(r'^buscar/?texto_buscado=(?P<texto_buscado>w+)/$', views.buscar, name='buscar'),
+    url(r'^buscar/(?P<texto_buscado>w+)/$', views.buscar, name='buscar'),
 
     # FAVICON
     url(r'^favicon.ico$',

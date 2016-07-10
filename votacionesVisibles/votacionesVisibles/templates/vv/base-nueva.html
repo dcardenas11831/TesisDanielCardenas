@@ -12,8 +12,9 @@
 <body>
     {% block header %}
     <div id="header" class="w3-content" style="width:100%; height:100px">
-        <img class="header-img w3-display-topleft" src= "{% static 'vv/images/logo.png' %}" />
-
+        <a href="{% url 'index' %}">
+            <img class="header-img w3-display-topleft" src= "{% static 'vv/images/logo.png' %}" />
+        </a>
         <ul id="header-pclave" class="w3-display-topmiddle w3-hide-small">
                 <li>PROYECTOS CLAVE:</li>
                 {% for p in proyectos_clave %}
@@ -21,7 +22,7 @@
                 {% endfor %}
         </ul>
 
-        <form action="/buscar/" method="get" class="header-buscar">
+        <form action="/buscar/" method="post" class="header-buscar">
             <table class="header-tabla w3-display-topright">
                 <tr class="header-tabla">
                     <td><input type="submit" class="btn-buscar" value="">
