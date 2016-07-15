@@ -814,9 +814,8 @@ def ultimas_votaciones_congresista(request):
         votaciones = ProyectoDeLeyVoto.objects.filter((Q(votacion__motivo__icontains="tránsito") |
                                                        Q(votacion__motivo__icontains="título ")),
                                                       votacion__proyecto__id__in=ids_proyectos,
-                                                      votacion__tipo_votacion_id__lte=3,
-                                                      congresista=congresista) \
-                         .values_list('votacion__id', flat=True).distinct().order_by('-votacion__fecha')[:20]
+                                                      votacion__tipo_votacion_id__lte=3, congresista=congresista) \
+                .values_list('votacion__id', flat=True).distinct().order_by('-votacion__fecha')[:20]
         for votacion_id in votaciones:
             votacion = ProyectoDeLeyVotacion.objects.get(id=votacion_id)
             proyecto = votacion.proyecto
@@ -936,10 +935,10 @@ def disciplina_congresista(request):
 
 # ---------------------------------------------------------------
 # Resultados de buscar
-def buscar(request, texto_buscado):
+def buscar(request):
     p_claves = proyectos_clave()
     # se toma la cadena de texto a buscar
-    # texto_buscado = request.GET.get('term', '')
+    texto_buscado = request.GET.get('texto_buscado')
     # Toma los 10 priemro partidos activos que tienen el item buscado
     partidos = CongresoPartido.objects.filter(nombre__icontains=texto_buscado, estado_id=1)[:10]
     # Busca por el apellido que contenga el item y luego el nombre
@@ -952,7 +951,7 @@ def buscar(request, texto_buscado):
 
     data_partidos = []
     for partido in partidos:
-        drug_json = {'value_id': partido.id, 'label': partido.nombre, 'foto': MEDIA_URL + partido.logo,
+        drug_json = {'id': partido.id, 'label': partido.nombre, 'foto': MEDIA_URL + partido.logo,
                      'color': partido.get_color()}
         data_partidos.append(drug_json)
 
@@ -960,7 +959,7 @@ def buscar(request, texto_buscado):
     for congresista in congresistas:
         nombre = congresista.persona_ptr.nombre_completo()
         partido = congresista.partido_politico
-        drug_json = {'value_id': congresista.persona_ptr.id, 'label': nombre, 'color': partido.get_color(),
+        drug_json = {'id': congresista.persona_ptr.id, 'label': nombre, 'color': partido.get_color(),
                      'foto': MEDIA_URL + str(congresista.persona_ptr.imagen), 'partido': partido.nombre}
         data_congresistas.append(drug_json)
 
@@ -972,7 +971,7 @@ def buscar(request, texto_buscado):
             nombre_corto = proyecto.titulo
             sp[0] = ""
         estado = proyecto.estado_proyecto_ley_actual.estado
-        drug_json = {'value_id': proyecto.id, 'label': nombre_corto, 'titulo': sp[0],
+        drug_json = {'id': proyecto.id, 'label': nombre_corto, 'titulo': sp[0],
                      'iniciativa': proyecto.iniciativa.nombre, 'estado': estado.nombre}
         data_proyectos.append(drug_json)
 

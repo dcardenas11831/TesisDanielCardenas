@@ -6,7 +6,7 @@
 {% block title %}Votaciones Visibles{% endblock %}
 
 {% block content %}
-    <div class="w3-container">
+    <div class="w3-row">
         <div id="columna_izquierda" class="w3-third w3-grey w3-content w3-padding">
             <h2 class="w3-text-white w3-center">¿Qué es Votaciones Visibles?</h2>
             <p>Es un sitio web que le permite ver, de manera fácil y sencilla, cómo han sido las votaciones del Congreso
@@ -14,7 +14,7 @@
                 Además, acá puede conocer qué proyectos de ley están en curso, cómo fueron sus votaciones y analizar
                 cómo ha sido el comportamiento de los congresistas y de los partidos políticos</p>
         </div>
-        <div id="columna_derecha" class="w3-twothird w3-content w3-display-container w3-padding w3-light-grey">
+        <div id="columna_derecha" class="w3-twothird w3-content w3-display-container w3-padding w3-light-grey w3-hide-small">
             <div class="mySlides">
                 <h2 class="w3-center">¿Quiénes proponen proyectos de ley en el Congreso?</h2>
                 <p>Un proyecto puede tener uno o varios autores. Pueden ser congresistas, alguna entidad del gobierno
@@ -55,10 +55,11 @@
             </div>
         </div>
     </div>
-    <div class="w3-section w3-border-top w3-border-teal">
+    <div class="w3-section w3-row w3-border-top w3-border-teal">
         <h2>Últimas votaciones registradas</h2>
         {% for p in ultimos %}
-            <div class="w3-border w3-border-teal w3-quarter w3-margin-right w3-padding" style="width: 23%; height: 250px">
+            <div class="w3-border w3-border-teal w3-quarter w3-margin-right w3-margin-bottom w3-padding w3-col m4 l3"
+                 style="width: 23%; height: 300px">
                 <p class="w3-small w3-left w3-hover-none">{{ p.tema }} <br> {{ p.fecha }}</p> <br> <br>
                 <h3 class="w3-medium w3-center"><a href='/proyectos/{{ p.id }}'>{{ p.nombre|upper }}</a></h3>
                 <p class="w3-small w3-left w3-hover-none">{{ p.texto }}</p>

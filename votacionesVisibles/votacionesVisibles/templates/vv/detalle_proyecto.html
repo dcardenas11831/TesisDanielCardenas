@@ -280,16 +280,16 @@
                                 str_temp ="<tr> <td>"+c.nombre+"</td>";
                                 for (v of c.votos){
                                     if (v == 0){
-                                        str_temp +="<td><img src= '{% static "vv/images/abstencion.png" %}'/></td>";
+                                        str_temp +="<td><img class='w3-padding-8' src= '{% static "vv/images/abstencion.png" %}'/></td>";
                                     }
                                     else if (v == 1){
-                                        str_temp +="<td><img src= '{% static "vv/images/no.png" %}'/></td>";
+                                        str_temp +="<td><img class='w3-padding-8' src= '{% static "vv/images/no.png" %}'/></td>";
                                     }
                                     else if (v == 2){
-                                        str_temp +="<td><img src= '{% static "vv/images/si.png" %}'/></td>";
+                                        str_temp +="<td><img class='w3-padding-8' src= '{% static "vv/images/si.png" %}'/></td>";
                                     }
                                     else if (v == 3){
-                                        str_temp +="<td><img src= '{% static "vv/images/inasistencia.png" %}'/></td>";
+                                        str_temp +="<td><img class='w3-padding-8' src= '{% static "vv/images/inasistencia.png" %}'/></td>";
                                     }
                                     else {
                                         str_temp +="<td> </td>";
@@ -311,10 +311,10 @@
                             str_html += str_rep+"</table>";
                         }
                         str_html += "<p>Leyenda:<br>"
-                        +"<img src= '{% static "vv/images/si.png" %}'/> S\xED  "
-                        +"<img src= '{% static "vv/images/no.png" %}'/> No  "
-                        +"<img src= '{% static "vv/images/abstencion.png" %}'/> Se abstuvo  "
-                        +"<img src= '{% static "vv/images/inasistencia.png" %}'/> No asistio  <br>"
+                        +"<img class='w3-padding-8' src= '{% static "vv/images/si.png" %}'/> S\xED  "
+                        +"<img class='w3-padding-8' src= '{% static "vv/images/no.png" %}'/> No  "
+                        +"<img class='w3-padding-8' src= '{% static "vv/images/abstencion.png" %}'/> Se abstuvo  "
+                        +"<img class='w3-padding-8' src= '{% static "vv/images/inasistencia.png" %}'/> No asistio  <br>"
                         +"Nota: si un campo est\xE1 vac\xEDo es porque el congresista no particip\xF3 de esa votaci\xF3n o porque fue"
                         +" aprobada de manera ordinal, es decir, no se registr\xF3 el voto de cada congresista.</p>";
                         }

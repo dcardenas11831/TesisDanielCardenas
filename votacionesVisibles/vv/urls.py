@@ -28,7 +28,7 @@ urlpatterns = [
     url(r'^busqueda/disciplina_congresista/', views.disciplina_congresista, name='disciplina_congresista'),
 
     # BUSCAR
-    url(r'^buscar/(?P<texto_buscado>w+)/$', views.buscar, name='buscar'),
+    url(r'^buscar/$', views.buscar, name='buscar'),
 
     # FAVICON
     url(r'^favicon.ico$',

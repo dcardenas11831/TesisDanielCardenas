@@ -15,14 +15,66 @@
         RESULTADOS DE LA BUSQUEDA
     </h1>
     <div class="w3-row">
-        <div class="w3-third">
-
+        <div class="w3-half w3-padding">
+            <h2>Congresistas</h2>
+            {% if not congresistas %}
+                <p>No hay congresistas que coincidan con la búsqueda</p>
+            {% else %}
+            <table class="w3-table w3-striped w3-border">
+                {% for congresista in congresistas %}
+                <tr>
+                    <td>
+                        <img id="foto" class="img-circle" style="border-color:{{ congresista.color }}" src="{{ congresista.foto }}">
+                    </td>
+                    <td>
+                        <a href='/congresistas/{{ congresista.id }}'>{{ congresista.label }}<br>
+                            {{ congresista.partido }}</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% endif %}
         </div>
-        <div class="w3-third">
-
+        <div class="w3-half w3-padding">
+            <h2>Partidos</h2>
+            {% if not partidos %}
+                <p>No hay partidos que coincidan con la búsqueda</p>
+            {% else %}
+            <table class="w3-table w3-striped w3-border">
+                {% for partido in partidos %}
+                <tr>
+                    <td>
+                        <img id="logo" class="img-circle" style="border-color:{{ partido.color }}" src="{{ partido.foto }}">
+                    </td>
+                    <td>
+                        <a href='/partidos/{{ partido.id }}'>{{ partido.label }}</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% endif %}
         </div>
-        <div class="w3-third">
-
+    </div>
+    <div class="w3-row">
+        <div class="w3-container w3-margin">
+            <h2>Proyectos</h2>
+            {% if not proyectos %}
+                <p>No hay proyectos que coincidan con la búsqueda</p>
+            {% else %}
+            <table class="w3-table w3-striped w3-border">
+                {% for proyecto in proyectos %}
+                <tr class="w3-padding">
+                    <td class="w3-quarter">
+                        <p><b>Iniciativa:</b> {{ proyecto.iniciativa }} <br><br> <b>Estado:</b> {{ proyecto.estado }}</p>
+                    </td>
+                    <td class="w3-threequarter">
+                        <a href='/proyectos/{{ proyecto.id }}'><b>{{ proyecto.label|upper }}</b>
+                            <p>{{ proyecto.titulo }}</p></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
